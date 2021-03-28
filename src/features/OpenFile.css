@@ -1,0 +1,11 @@
+:root {
+  --form-item-label-align: right;
+}
+
+.so-form-control {
+  width: 20em;
+}
+
+.so-upload-view-value {
+  padding-left: 0;
+}
