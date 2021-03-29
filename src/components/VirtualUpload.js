@@ -23,7 +23,7 @@ function VirtualUpload(props) {
 
 		return xhr;
 	};
-console.log('virtualUpload value', props.tempid, props.value && props.value.nativeValue, props.value);
+
 	return (
 		<Upload
 			accept="*"

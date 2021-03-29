@@ -7,8 +7,8 @@ import Error404 from './features/Error404.js';
 
 import './App.css';
 
-const OpenMusic = lazy(() => import('./features/music/OpenMusic.js'));
-const OpenArchive = lazy(() => import('./features/archive/OpenArchive.js'));
+const Music = lazy(() => import('./features/music/Music.js'));
+const Archive = lazy(() => import('./features/archive/Archive.js'));
 const Game = lazy(() => import('./features/game/Game'));
 
 function App() {
@@ -18,8 +18,8 @@ function App() {
 				<Switch>
 					<Route exact path="/" component={Welcome}/>
 					<Route path="/game" component={Game}/>
-					<Route path="/music" component={OpenMusic}/>
-					<Route path="/archive" component={OpenArchive}/>
+					<Route path="/music" component={Music}/>
+					<Route path="/archive" component={Archive}/>
 					<Route component={Error404}/>
 				</Switch>
 			</Suspense>
