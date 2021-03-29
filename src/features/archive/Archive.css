@@ -1,0 +1,21 @@
+.toolbar {
+  padding: 1em;
+  background-color: #eee;
+}
+
+.fileList {
+  margin: 1em;
+}
+
+.toolbar {
+  display: flex;
+}
+
+.separator {
+  flex-grow: 1;
+}
+
+.exit {
+  margin-top: 2px;
+  font-size: 150%;
+}
