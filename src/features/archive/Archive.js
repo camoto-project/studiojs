@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link as RRLink } from 'react-router-dom';
 
 import {
@@ -13,6 +13,14 @@ import iconFile from '@iconify/icons-fa-solid/file';
 import iconFolderOpen from '@iconify/icons-fa-solid/folder-open';
 import iconSave from '@iconify/icons-fa-solid/download';
 import iconClose from '@iconify/icons-fa-solid/times';
+import iconExtract from '@iconify/icons-fa-solid/file-export';
+import iconReplace from '@iconify/icons-fa-solid/file-import';
+import iconRename from '@iconify/icons-fa-solid/edit';
+import iconDelete from '@iconify/icons-fa-solid/trash-alt';
+import iconInsertBefore from '@iconify/icons-fa-solid/level-up-alt';
+
+import { saveAs } from 'file-saver';
+import { File } from '@camoto/gamearchive';
 
 import OpenFile from '../OpenFile.js';
 
@@ -29,10 +37,22 @@ function humanFileSize(size) {
 function Archive() {
 	const [ archive, setArchive ] = useState(null);
 	const [ archiveFiles, setArchiveFiles ] = useState([]);
+	const [ idxRename, setIdxRename ] = useState(null);
+	const [ renameNewName, setRenameNewName ] = useState(null);
+	const elRename = useRef(null);
+
+	// Focus the text box on rename.
+	useEffect(() => {
+		if (elRename && elRename.current) elRename.current.focus();
+	});
+
+	function updateFiles(arch) {
+		setArchiveFiles(arch.files.map((f, i) => ({index: i, ...f})));
+	}
 
 	function openArchive(newArchive) {
 		setArchive(newArchive);
-		setArchiveFiles(newArchive.files);
+		updateFiles(newArchive);
 	}
 
 	// If no archive has been opened, prompt for one.
@@ -83,12 +103,91 @@ function Archive() {
 		);
 	}
 
-	function renderName(d) {
+	function onExtract(d, i) {
+		const blobContent = new Blob([d.getContent()]);
+		saveAs(blobContent, d.name, { type: d.type || 'application/octet-stream' });
+	}
+
+	function onReplace(d, i) {
+		updateFiles(archive);
+	}
+
+	function onRename(d, i) {
+		setIdxRename(i);
+		setRenameNewName(d.name);
+	}
+
+	function onDelete(d, i) {
+		archive.files.splice(i, 1);
+		updateFiles(archive);
+	}
+
+	function onInsertBefore(d, i) {
+		let f = new File();
+		f.name = 'todo';
+		f.diskSize = f.nativeSize = 0;
+		f.getContent = () => null;
+		archive.files.splice(i, 0, f);
+		updateFiles(archive);
+	}
+
+	function renderName(d, i) {
+		let content;
+		if (idxRename === i) {
+			return (
+				<input
+					type="text"
+					ref={elRename}
+					value={renameNewName}
+					onChange={ev => setRenameNewName(ev.target.value)}
+					size="small"
+					onBlur={ev => {
+						archive.files[i].name = ev.target.value;
+						updateFiles(archive);
+						setIdxRename(null);
+					}}
+					onKeyDown={ev => {
+						if (ev.key === 'Escape') {
+							setIdxRename(null);
+							setRenameNewName(d.name);
+						}
+					}}
+				/>
+			);
+		}
 		return (
-			<>
-				<Icon icon={iconFile} style={{marginRight: 6, marginBottom: -1}} />
+			<span onClick={() => onRename(d, i)}>
 				{d.name}
-			</>
+			</span>
+		);
+	}
+
+	function renderActions(d, i) {
+		return (
+			<span className="hover actions">
+				<span className="action" onClick={() => onExtract(d, i)}>
+					<Icon icon={iconExtract} style={{marginRight: 6, marginBottom: -1}} />
+					Extract
+				</span>
+				<span className="action" onClick={() => onReplace(d, i)}>
+					<Icon icon={iconReplace} style={{marginRight: 6, marginBottom: -1}} />
+					Replace
+				</span>
+				<span className="action" onClick={() => onRename(d, i)}>
+					<Icon icon={iconRename} style={{marginRight: 6, marginBottom: -1}} />
+					Rename
+				</span>
+				<span className="action" onClick={() => onDelete(d, i)}>
+					<Icon icon={iconDelete} style={{marginRight: 6, marginBottom: -1}} />
+					Delete
+				</span>
+				<Tooltip tip="Add a new file before this one">
+					<span className="action" onClick={() => onInsertBefore(d, i)}>
+						<Icon icon={iconInsertBefore} style={{marginRight: 6, marginBottom: -1}} />
+						Insert before
+					</span>
+				</Tooltip>
+			</span>
 		);
 	}
 
@@ -110,12 +209,16 @@ function Archive() {
 			</div>
 			<Table
 				className="fileList"
-				keygen={(d, i) => `${i}.${d.name}`}
+				keygen={d => `${d.index}.${d.name}`}
 				data={archiveFiles}
 				columns={[
+					{render: d => (
+						<Icon icon={iconFile} style={{marginRight: 6, marginBottom: -1}} />
+					)},
 					{title: 'Filename', render: renderName},
 					{title: 'Size', render: d => humanFileSize(d.nativeSize)},
 					{title: 'Attributes', render: renderAttributes},
+					{title: 'Actions', render: renderActions},
 				]}
 			/>
 		</div>
