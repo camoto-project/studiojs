@@ -246,6 +246,10 @@ function OpenFile(props) {
 
 				<Card.Body>
 					<Form onSubmit={onOpen}>
+						<p>
+							None of these files will be changed, so it is safe to choose your
+							original game files.
+						</p>
 
 						<Form.Item label="File to open">
 							<VirtualUpload
