@@ -23,6 +23,7 @@ import { saveAs } from 'file-saver';
 import { File } from '@camoto/gamearchive';
 
 import OpenFile from '../OpenFile.js';
+import SaveFile from '../SaveFile.js';
 
 import './Archive.css';
 
@@ -35,10 +36,13 @@ function humanFileSize(size) {
 }
 
 function Archive() {
+	const [ archiveFormat, setArchiveFormat ] = useState(null);
 	const [ archive, setArchive ] = useState(null);
 	const [ archiveFiles, setArchiveFiles ] = useState([]);
+	const [ originalFilenames, setOriginalFilenames ] = useState({});
 	const [ idxRename, setIdxRename ] = useState(null);
 	const [ renameNewName, setRenameNewName ] = useState(null);
+	const [ saveVisible, setSaveVisible ] = useState(false);
 	const elRename = useRef(null);
 
 	// Focus the text box on rename.
@@ -50,8 +54,10 @@ function Archive() {
 		setArchiveFiles(arch.files.map((f, i) => ({index: i, ...f})));
 	}
 
-	function openArchive(newArchive) {
+	function openArchive(newArchive, idFormat, filenames) {
+		setArchiveFormat(idFormat);
 		setArchive(newArchive);
+		setOriginalFilenames(filenames);
 		updateFiles(newArchive);
 	}
 
@@ -61,7 +67,7 @@ function Archive() {
 			<OpenFile
 				category="archive"
 				title="Select an archive file"
-				onOpen={newArchive => openArchive(newArchive)}
+				onOpen={openArchive}
 				renderCancel={(
 					<RRLink to="/">
 						Cancel
@@ -69,10 +75,6 @@ function Archive() {
 				)}
 			/>
 		);
-	}
-
-	// Save the archive with any modifications.
-	function save() {
 	}
 
 	// Render the value for the 'Attributes' column.
@@ -198,7 +200,7 @@ function Archive() {
 					<Icon icon={iconFolderOpen} style={{marginRight: 6, marginBottom: -1}} />
 					Open new archive
 				</Button>
-				<Button type="primary" onClick={() => save()}>
+				<Button type="primary" onClick={() => setSaveVisible(true)}>
 					<Icon icon={iconSave} style={{marginRight: 6, marginBottom: -1}} />
 					Save
 				</Button>
@@ -221,6 +223,16 @@ function Archive() {
 					{title: 'Actions', render: renderActions},
 				]}
 			/>
+			{saveVisible && (
+				<SaveFile
+					category="archive"
+					document={archive}
+					title="Save archive"
+					defaultFormat={archiveFormat}
+					originalFilenames={originalFilenames}
+					onClose={() => setSaveVisible(false)}
+				/>
+			)}
 		</div>
 	);
 }

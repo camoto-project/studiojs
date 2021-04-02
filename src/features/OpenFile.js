@@ -5,7 +5,6 @@ import {
 	Button,
 	Card,
 	Form,
-	Grid,
 	Input,
 	Select,
 } from 'shineout';
@@ -67,17 +66,22 @@ function OpenFile(props) {
 		let content = {
 			main: file.content,
 		};
-		content.main.filename = file.filename;
+		content.main.filename = file.name;
+		// Keep the filenames separately for when we need to save the files later.
+		let originalFilenames = {
+			main: file.name,
+		};
 
 		for (const [idSupp, s] of Object.entries(supps)) {
 			content[idSupp] = s.virtualUpload.content;
 			content[idSupp].filename = s.virtualUpload.name;
+			originalFilenames[idSupp] = s.virtualUpload.name;
 		}
 		switch (props.category) {
 			case 'archive':
 				try {
 					const archive = handler.parse(content);
-					props.onOpen(archive);
+					props.onOpen(archive, chosenFormat, originalFilenames);
 				} catch (e) {
 					setErrorMessage(e.message);
 				}
@@ -86,7 +90,7 @@ function OpenFile(props) {
 	}
 
 	// User supplied a main file to use.
-	function onFileChanged(newFile) {
+	function onFileChange(newFile) {
 		setErrorMessage(null);
 		if (!newFile) {
 			setPossibleFormats(null);
@@ -102,7 +106,7 @@ function OpenFile(props) {
 	}
 
 	// User supplied one of the supplementary files we requested.
-	function onSuppChanged(id, newFile) {
+	function onSuppChange(id, newFile) {
 		setErrorMessage(null);
 		if (!supps[id]) {
 			console.error(`Tried to set a file for invalid supp ID "${id}"`);
@@ -116,7 +120,7 @@ function OpenFile(props) {
 
 	// User changed the format suggested by the autodetect, for cases where the
 	// autodetect algorithm matches multiple formats.
-	function onChosenFormatChanged(idNewFormat) {
+	function onChosenFormatChange(idNewFormat) {
 		setErrorMessage(null);
 		setChosenFormat(idNewFormat);
 		prepareSupps(idNewFormat, file);
@@ -146,7 +150,12 @@ function OpenFile(props) {
 		if (mainFile) {
 			let handlers = [];
 			if (catFindHandler) {
-				handlers = catFindHandler(mainFile.content, mainFile.name);
+				try {
+					handlers = catFindHandler(mainFile.content, mainFile.name);
+				} catch (e) {
+					console.error(e);
+					setErrorMessage(`BUG: Autodetection crashed - please report this as a bug.  The error was: ${e.message}`);
+				}
 			}
 			const pf = handlers.map(h => {
 				const md = h.metadata();
@@ -173,6 +182,7 @@ function OpenFile(props) {
 			if (handler) {
 				const handlerSupps = handler.supps(mainFile.name) || {};
 				for (const [id, filename] of Object.entries(handlerSupps)) {
+					if (id === 'main') continue;
 					newSupps[id] = {
 						defaultFilename: filename,
 						virtualUpload: supps[id] && supps[id].virtualUpload, // keep existing one if present
@@ -201,7 +211,7 @@ function OpenFile(props) {
 					keygen="id"
 					format="id"
 					renderItem="title"
-					onChange={d => onChosenFormatChanged(d)}
+					onChange={d => onChosenFormatChange(d)}
 					value={chosenFormat}
 					disabled={possibleFormats.length <= 1}
 					autoAdapt
@@ -226,7 +236,7 @@ function OpenFile(props) {
 					return (
 						<Form.Item key={id} label={s.defaultFilename}>
 							<VirtualUpload
-								onChange={f => onSuppChanged(id, f)}
+								onChange={f => onSuppChange(id, f)}
 								value={s.virtualUpload}
 								type="primary"
 							/>
@@ -253,7 +263,7 @@ function OpenFile(props) {
 
 						<Form.Item label="File to open">
 							<VirtualUpload
-								onChange={onFileChanged}
+								onChange={onFileChange}
 								value={file}
 								type="primary"
 							/>
