@@ -2,6 +2,23 @@
   "name": "studiojs",
   "version": "0.1.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/camoto-project/studiojs.git"
+  },
+  "keywords": [
+    "camoto",
+    "dos",
+    "ms-dos",
+    "games",
+    "modding"
+  ],
+  "author": "Adam Nielsen <malvineous@shikadi.net>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/camoto-project/studiojs/issues"
+  },
+  "homepage": "https://github.com/camoto-project/studiojs#readme",
   "dependencies": {
     "@reduxjs/toolkit": "^1.5.0",
     "@testing-library/jest-dom": "^5.11.9",
