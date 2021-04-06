@@ -1,0 +1,42 @@
+# Build the project and upload to S3
+#
+# Credentials are stored in GitHub Actions secrets named `AWS_ACCESS_KEY_ID`
+# and `AWS_SECRET_ACCESS_KEY`.
+
+on:
+  workflow_dispatch:
+  release:
+    types: [created]
+
+name: Deploy to Amazon S3
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-2
+
+    - name: Install dependencies
+      run: |
+        npm ci
+
+    - name: Build project
+      id: build-image
+      run: |
+        npm run-script build
+
+    - name: Upload to S3
+      id: deploy-image
+      run: |
+        cd build && aws s3 sync --delete --exclude 'libgamemusic/*' . s3://camoto.shikadi.net/
