@@ -1,0 +1,38 @@
+.toolbar {
+  padding: 1em;
+  background-color: #eee;
+}
+
+.fileList {
+  margin: 1em;
+}
+
+.toolbar {
+  display: flex;
+}
+
+.separator {
+  flex-grow: 1;
+}
+
+.exit {
+  margin-top: 2px;
+  font-size: 150%;
+}
+
+table tr .hover {
+  visibility: hidden;
+}
+
+table tr:hover .hover {
+  visibility: visible;
+}
+
+.action {
+  margin-left: 2em;
+  cursor: pointer;
+}
+
+table input {
+  height: 90%;
+}

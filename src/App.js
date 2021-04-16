@@ -9,7 +9,7 @@ import './App.css';
 
 const Music = lazy(() => import('./features/music/Music.js'));
 const Archive = lazy(() => import('./features/archive/Archive.js'));
-const Game = lazy(() => import('./features/game/Game'));
+const Game = lazy(() => import('./features/game/Game.js'));
 
 function App() {
 	return (

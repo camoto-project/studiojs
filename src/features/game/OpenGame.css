@@ -1,0 +1,21 @@
+:root {
+  --form-item-label-align: right;
+}
+
+.so-form-control {
+  width: 20em;
+}
+
+.so-upload-view-value {
+  padding-left: 0;
+}
+
+.so-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.cancel {
+  flex-grow: 1;
+}

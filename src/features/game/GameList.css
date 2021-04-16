@@ -1,0 +1,16 @@
+.gameItem {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	cursor: pointer;
+}
+
+.gameItem img {
+	margin-right: 6px;
+	width: 16px;
+	height: 16px;
+}
+
+.selected {
+	background-color: #ccc;
+}

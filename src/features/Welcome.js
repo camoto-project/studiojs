@@ -3,8 +3,6 @@ import { Link as RRLink } from 'react-router-dom';
 
 import {
 	Card,
-	Grid,
-	Link,
 	Menu,
 } from 'shineout';
 import { Icon } from '@iconify/react';
