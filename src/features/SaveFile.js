@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 
 import {
 	Button,
 	Form,
-	Input,
 	Modal,
-	Select,
 } from 'shineout';
 import { Icon } from '@iconify/react';
 import iconDownload from '@iconify/icons-fa-solid/download';
@@ -14,17 +11,14 @@ import iconDownload from '@iconify/icons-fa-solid/download';
 import { saveAs } from 'file-saver';
 import {
 	all as gamemusicFormats,
-	findHandler as gamemusicFindHandler,
 } from '@camoto/gamemusic';
 
 import {
 	all as gamearchiveFormats,
-	findHandler as gamearchiveFindHandler,
 } from '@camoto/gamearchive';
 
 import Error from '../components/Error.js';
 import FormatList from '../components/FormatList.js';
-import VirtualUpload from '../components/VirtualUpload.js';
 
 const allFormats = {
 	music: gamemusicFormats,
@@ -81,7 +75,7 @@ function SaveFile(props) {
 
 	function onDownload(id, dl) {
 		const blobContent = new Blob([dl]);
-		const t = saveAs(blobContent, dl.filename, { type: 'application/octet-stream' });
+		saveAs(blobContent, dl.filename, { type: 'application/octet-stream' });
 		setDownloadsComplete({
 			...downloadsComplete,
 			[id]: true,

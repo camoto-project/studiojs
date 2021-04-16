@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 
 import {
-	Button,
 	Card,
 	Form,
-	Input,
 	Select,
 } from 'shineout';
 import { Icon } from '@iconify/react';
-import iconFolderOpen from '@iconify/icons-fa-solid/folder-open';
 import iconEdit from '@iconify/icons-fa-solid/edit';
 
 import {
@@ -146,7 +142,6 @@ function OpenFile(props) {
 	function autodetect(mainFile) {
 		setErrorMessage(null);
 		setManualFormat('auto');
-		let newSupps = {};
 		if (mainFile) {
 			let handlers = [];
 			if (catFindHandler) {

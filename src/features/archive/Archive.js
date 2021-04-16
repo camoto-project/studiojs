@@ -31,7 +31,7 @@ import './Archive.css';
 function humanFileSize(size) {
 	if (size === undefined) return '?';
 	if (size < 0) return '!!';
-	let i = (size == 0) ? 0 : Math.floor(Math.log(size) / Math.log(1024));
+	let i = (size === 0) ? 0 : Math.floor(Math.log(size) / Math.log(1024));
 	return (size / Math.pow(1024, i)).toFixed(1) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
 }
 
@@ -134,7 +134,6 @@ function Archive() {
 	}
 
 	function renderName(d, i) {
-		let content;
 		if (idxRename === i) {
 			return (
 				<input
