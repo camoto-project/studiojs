@@ -4,9 +4,9 @@ import {
 import { Icon } from '@iconify/react';
 import iconError from '@iconify/icons-fa-solid/exclamation-triangle';
 
-import './Error.css';
+import './ErrorBox.css';
 
-function Error(props) {
+function ErrorBox(props) {
 	return (
 		<Alert type="danger" className="error">
 			<h3>
@@ -20,4 +20,4 @@ function Error(props) {
 	);
 }
 
-export default Error;
+export default ErrorBox;

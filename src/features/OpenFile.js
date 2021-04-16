@@ -18,7 +18,7 @@ import {
 	findHandler as gamearchiveFindHandler,
 } from '@camoto/gamearchive';
 
-import Error from '../components/Error.js';
+import ErrorBox from '../components/ErrorBox.js';
 import FormatList from '../components/FormatList.js';
 import VirtualUpload from '../components/VirtualUpload.js';
 
@@ -284,9 +284,9 @@ function OpenFile(props) {
 					</Form>
 
 					{errorMessage && (
-						<Error summary={`Error`}>
+						<ErrorBox summary={`Error`}>
 							{errorMessage}
-						</Error>
+						</ErrorBox>
 					)}
 
 				</Card.Body>

@@ -17,7 +17,7 @@ import {
 	all as gamearchiveFormats,
 } from '@camoto/gamearchive';
 
-import Error from '../components/Error.js';
+import ErrorBox from '../components/ErrorBox.js';
 import FormatList from '../components/FormatList.js';
 
 const allFormats = {
@@ -115,9 +115,9 @@ function SaveFile(props) {
 
 
 				{errorMessage && (
-					<Error summary={`Error`}>
+					<ErrorBox summary={`Error`}>
 						{errorMessage}
-					</Error>
+					</ErrorBox>
 				)}
 
 				{downloads && (

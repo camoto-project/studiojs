@@ -9,7 +9,7 @@ import {
 	all as gamearchiveFormats,
 } from '@camoto/gamearchive';
 
-import Error from './Error.js';
+import ErrorBox from './ErrorBox.js';
 
 const cbSort = (a, b) => {
 	if (a.id < b.id) return -1;
@@ -39,9 +39,9 @@ function FormatList(props) {
 	let formats = formatLists[props.category];
 	if (!formats) {
 		return (
-			<Error summary={`Unknown file format category "${props.category}".`}>
+			<ErrorBox summary={`Unknown file format category "${props.category}".`}>
 				The format category &quot;{props.category}&quot; was not recognised.
-			</Error>
+			</ErrorBox>
 		);
 	}
 
