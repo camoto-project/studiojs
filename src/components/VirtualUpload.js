@@ -8,27 +8,28 @@ function VirtualUpload(props) {
 	// the file and passes an object with the data to onLoad(), which ultimately
 	// ends up in the <Upload/> onChange handler.
 	const request = options => {
-		const { file, onLoad } = options;
-		const xhr = new XMLHttpRequest();
+		const { file, onLoad, onError } = options;
 		const reader = new FileReader();
-		reader.onload = r => {
-			const data = new Uint8Array(r.target.result);
+		reader.addEventListener('load', () => {
 			onLoad({ status: 200, response: {
 				nativeValue: file,
 				name: file.name,
-				content: data,
+				content: new Uint8Array(reader.result),
 			}});
-		};
-		reader.readAsArrayBuffer(file);
+		});
+		reader.addEventListener('error', () => {
+			onError({ statusText: 'Unknown error reading selected file.' });
+		});
 
-		return xhr;
+		reader.readAsArrayBuffer(file);
 	};
 
 	return (
 		<Upload
 			accept="*"
 			drop
-			limit={1}
+			limit={props.multiple ? undefined : 1}
+			onSuccess={(response, file) => response}
 			request={request}
 			renderResult={d => (
 				<>
@@ -37,8 +38,6 @@ function VirtualUpload(props) {
 				</>
 			)}
 			{...props}
-			value={props.value && props.value.nativeValue && [props.value.nativeValue]}
-			onChange={f => props.onChange(f && f[0])}
 		>
 			<Button type={props.type}>
 				<Icon icon={iconFolderOpen} style={{marginRight: 6, marginBottom: -1}}/>

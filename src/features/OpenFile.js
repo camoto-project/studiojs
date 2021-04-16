@@ -60,18 +60,18 @@ function OpenFile(props) {
 		}
 
 		let content = {
-			main: file.content,
+			main: file[0].content,
 		};
-		content.main.filename = file.name;
+		content.main.filename = file[0].name;
 		// Keep the filenames separately for when we need to save the files later.
 		let originalFilenames = {
-			main: file.name,
+			main: file[0].name,
 		};
 
 		for (const [idSupp, s] of Object.entries(supps)) {
-			content[idSupp] = s.virtualUpload.content;
-			content[idSupp].filename = s.virtualUpload.name;
-			originalFilenames[idSupp] = s.virtualUpload.name;
+			content[idSupp] = s.virtualUpload[0].content;
+			content[idSupp].filename = s.virtualUpload[0].name;
+			originalFilenames[idSupp] = s.virtualUpload[0].name;
 		}
 		switch (props.category) {
 			case 'archive':
@@ -95,9 +95,9 @@ function OpenFile(props) {
 		}
 		setFile(newFile);
 		if (manualFormat === 'auto'){
-			autodetect(newFile);
+			autodetect(newFile[0]);
 		} else {
-			prepareSupps(newFile);
+			prepareSupps(newFile[0]);
 		}
 	}
 
