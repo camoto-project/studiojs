@@ -23,24 +23,18 @@ import iconSave from '@iconify/icons-fa-solid/download';
 import { saveAs } from 'file-saver';
 import { File } from '@camoto/gamearchive';
 
+import Document from '../Document.js';
 import OpenGame from './OpenGame.js';
 import SaveFile from '../SaveFile.js';
 
 import './Game.css';
-
-// https://stackoverflow.com/a/20732091/308237
-function humanFileSize(size) {
-	if (size === undefined) return '?';
-	if (size < 0) return '!!';
-	let i = (size === 0) ? 0 : Math.floor(Math.log(size) / Math.log(1024));
-	return (size / Math.pow(1024, i)).toFixed(1) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
-}
 
 function Game() {
 	const [ gameId, setGameId ] = useState(null);
 	const [ game, setGame ] = useState(null);
 	const [ gameItems, setGameItems ] = useState({});
 	const [ gameItemsTree, setGameItemsTree ] = useState([]);
+	const [ openInstance, setOpenInstance ] = useState(null);
 	const [ saveVisible, setSaveVisible ] = useState(false);
 	const elRename = useRef(null);
 
@@ -55,8 +49,7 @@ function Game() {
 			for (const [id, desc] of Object.entries(items)) {
 				treeItems.push({
 					id,
-					title: desc.title,
-					type: desc.type,
+					...desc,
 					children: desc.children && addChildren(desc.children),
 				});
 			}
@@ -80,6 +73,17 @@ function Game() {
 		);
 	}
 
+	function openItem(d) {
+		console.log('open', d);
+		try {
+			let doc = d.fnOpen();
+			setOpenInstance(doc);
+		} catch (e) {
+			console.error(e);
+			setOpenInstance(e);
+		}
+	}
+
 	function renderGameItem(d) {
 		const iconItemType = {
 			b800: iconB800,
@@ -92,7 +96,7 @@ function Game() {
 			sound: iconAudio,
 		}[d.type] || iconFile;
 		return (
-			<span>
+			<span onClick={() => openItem(d)}>
 				<Icon icon={iconItemType} style={{marginRight: 6, marginBottom: -1}} />
 				{d.title}
 			</span>
@@ -115,11 +119,18 @@ function Game() {
 					<Icon icon={iconClose} style={{marginBottom: -1}} />
 				</RRLink>
 			</div>
-			<Tree
-				data={gameItemsTree}
-				keygen="id"
-				renderItem={renderGameItem}
-			/>
+			<div className="body">
+				<span className="itemList">
+					<Tree
+						data={gameItemsTree}
+						keygen="id"
+						renderItem={renderGameItem}
+					/>
+				</span>
+				<span className="document">
+					<Document doc={openInstance} />
+				</span>
+			</div>
 			{saveVisible && (
 				<SaveFile
 					category="archive"

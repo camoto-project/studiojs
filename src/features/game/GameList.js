@@ -30,7 +30,7 @@ function GameList(props) {
 			bordered
 			renderItem={d => (
 				<span className={`gameItem ${props.value && props.value.id === d.id ? 'selected' : ''}`}>
-					<img src={`/game-icons/${d.id}.png`} />
+					<img src={`/game-icons/${d.id}.png`} alt="" />
 					{d.title}
 				</span>
 			)}

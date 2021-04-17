@@ -1,21 +1,27 @@
 :root {
-  --form-item-label-align: right;
+	--form-item-label-align: right;
 }
 
 .so-form-control {
-  width: 20em;
+	width: 20em;
 }
 
 .so-upload-view-value {
-  padding-left: 0;
+	padding-left: 0;
 }
 
 .so-card-footer {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
 }
 
 .cancel {
-  flex-grow: 1;
+	flex-grow: 1;
+}
+
+.openDialog {
+	display: flex;
+	justify-content: center;
+	padding-top: 15%;
 }

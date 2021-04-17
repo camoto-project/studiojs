@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import {
 	Card,
 	Form,
-	Select,
 } from 'shineout';
 import { Icon } from '@iconify/react';
 import iconEdit from '@iconify/icons-fa-solid/edit';
@@ -70,7 +69,7 @@ function OpenGame(props) {
 	let openEnabled = (selectedGames.length === 1) && files && files.length > 0;
 
 	return (
-		<div style={{ display: 'flex', justifyContent: 'center', marginTop: '15%' }}>
+		<div className="openDialog">
 			<Card style={{ width: 600 }}>
 				<Card.Header>
 					Select a game

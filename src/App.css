@@ -1,10 +1,14 @@
 @import '~shineout/dist/theme.default.css';
 
+body, #root {
+	height: 100vh;
+}
+
 .so-card-header {
-  background-color: #DDDDDD;
-  font-weight: bold;
+	background-color: #DDDDDD;
+	font-weight: bold;
 }
 
 .so-form p {
-  margin-bottom: 1.5em;
+	margin-bottom: 1.5em;
 }

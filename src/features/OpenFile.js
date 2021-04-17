@@ -243,7 +243,7 @@ function OpenFile(props) {
 	}
 
 	return (
-		<div style={{ display: 'flex', justifyContent: 'center', marginTop: '15%' }}>
+		<div className="openDialog">
 			<Card style={{ width: 600 }}>
 				<Card.Header>
 					{props.title || 'Open a file'}
