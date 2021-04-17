@@ -34,7 +34,7 @@ function Game() {
 	const [ game, setGame ] = useState(null);
 	const [ gameItems, setGameItems ] = useState({});
 	const [ gameItemsTree, setGameItemsTree ] = useState([]);
-	const [ openInstance, setOpenInstance ] = useState(null);
+	const [ openInstance, setOpenInstance ] = useState({});
 	const [ saveVisible, setSaveVisible ] = useState(false);
 	const elRename = useRef(null);
 
@@ -57,6 +57,7 @@ function Game() {
 		}
 		const treeItems = addChildren(items);
 		setGameItemsTree(treeItems);
+		setOpenInstance({});
 	}
 
 	// If no game has been opened, prompt for one.
@@ -76,10 +77,16 @@ function Game() {
 	function openItem(d) {
 		try {
 			let doc = d.fnOpen();
-			setOpenInstance(doc);
+			setOpenInstance({
+				type: d.type,
+				document: doc,
+			});
 		} catch (e) {
 			console.error(e);
-			setOpenInstance(e);
+			setOpenInstance({
+				type: 'error',
+				document: e,
+			});
 		}
 	}
 
@@ -127,7 +134,7 @@ function Game() {
 					/>
 				</span>
 				<span className="document">
-					<Document doc={openInstance} />
+					<Document {...openInstance} />
 				</span>
 			</div>
 			{saveVisible && (

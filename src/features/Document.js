@@ -13,9 +13,8 @@ const Music = lazy(() => import('./music/Music.js'));
 
 function Document(props) {
 	let element;
-	const docType = props.doc && props.doc.constructor.name || 'null';
-	switch (docType) {
-		case 'null':
+	switch (props.type) {
+		case undefined:
 			element = (
 				<>
 					<h3>
@@ -28,11 +27,11 @@ function Document(props) {
 			);
 			break;
 
-		case 'Image':
-			element = <Image doc={props.doc} />;
+		case 'image':
+			element = <Image doc={props.document} />;
 			break;
 
-		case 'TypeError':
+		case 'error':
 			element = (
 				<ErrorBox summary={`Error opening item`}>
 					The item could not be opened.  The reason given was:
@@ -43,7 +42,7 @@ function Document(props) {
 
 		default:
 			element = (
-				<ErrorBox summary={`Unknown document type "${docType}"`}>
+				<ErrorBox summary={`Unknown document type "${props.type}"`}>
 					Editing items of this type is not yet implemented.
 				</ErrorBox>
 			);
