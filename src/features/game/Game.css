@@ -61,6 +61,10 @@ table input {
 .body .itemList .so-tree-content {
 	text-indent: -3ex;
 	padding-left: 3ex;
+	cursor: pointer;
+}
+.body .itemList .so-tree-content:hover {
+	color: #4040FF;
 }
 
 .body .document {

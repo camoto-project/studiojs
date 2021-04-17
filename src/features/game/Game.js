@@ -74,7 +74,6 @@ function Game() {
 	}
 
 	function openItem(d) {
-		console.log('open', d);
 		try {
 			let doc = d.fnOpen();
 			setOpenInstance(doc);

@@ -8,13 +8,12 @@ import {
 
 import ErrorBox from '../components/ErrorBox.js';
 
+const Image = lazy(() => import('./image/Image.js'));
 const Music = lazy(() => import('./music/Music.js'));
 
 function Document(props) {
-
 	let element;
 	const docType = props.doc && props.doc.constructor.name || 'null';
-	console.log(props.doc);
 	switch (docType) {
 		case 'null':
 			element = (
@@ -27,6 +26,10 @@ function Document(props) {
 					</p>
 				</>
 			);
+			break;
+
+		case 'Image':
+			element = <Image doc={props.doc} />;
 			break;
 
 		case 'TypeError':
