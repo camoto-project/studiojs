@@ -13,9 +13,7 @@ function ErrorBox(props) {
 			<Icon icon={iconError} style={{marginRight: 6, marginBottom: -1}}/>
 				{props.summary}
 			</h3>
-			<p>
-				{props.children}
-			</p>
+			{props.children}
 		</Alert>
 	);
 }

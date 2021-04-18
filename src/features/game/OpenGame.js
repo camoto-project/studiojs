@@ -104,7 +104,9 @@ function OpenGame(props) {
 
 					{errorMessage && (
 						<ErrorBox summary={`Error`}>
-							{errorMessage}
+							<p>
+								{errorMessage}
+							</p>
 						</ErrorBox>
 					)}
 

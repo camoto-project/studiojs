@@ -34,8 +34,10 @@ function Document(props) {
 		case 'error':
 			element = (
 				<ErrorBox summary={`Error opening item`}>
-					The item could not be opened.  The reason given was:
-					{" "}<b>{props.doc.message}</b>
+					<p>
+						The item could not be opened.  The reason given was:
+						{" "}<b>{props.document.message}</b>
+					</p>
 				</ErrorBox>
 			);
 			break;

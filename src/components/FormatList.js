@@ -40,7 +40,9 @@ function FormatList(props) {
 	if (!formats) {
 		return (
 			<ErrorBox summary={`Unknown file format category "${props.category}".`}>
-				The format category &quot;{props.category}&quot; was not recognised.
+				<p>
+					The format category &quot;{props.category}&quot; was not recognised.
+				</p>
 			</ErrorBox>
 		);
 	}
