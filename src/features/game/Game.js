@@ -34,9 +34,11 @@ function Game() {
 	const [ saveVisible, setSaveVisible ] = useState(false);
 
 	async function openGame(newGame, idGame) {
+		// Load the items first so any errors are thrown and caught by <OpenGame/>.
+		let items = await newGame.items();
+
 		setGameId(idGame);
 		setGame(newGame);
-		let items = await newGame.items();
 
 		function addChildren(items) {
 			let treeItems = [];

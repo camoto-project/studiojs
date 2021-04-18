@@ -53,7 +53,7 @@ function OpenGame(props) {
 		try {
 			const warnings = await gameHandler.open();
 			// TODO: Display warnings and let user retry or proceed
-			props.onOpen(gameHandler, gameId);
+			await props.onOpen(gameHandler, gameId);
 		} catch (e) {
 			setErrorMessage(e.message);
 		}
