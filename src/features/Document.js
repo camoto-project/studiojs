@@ -7,6 +7,7 @@ import {
 } from 'shineout';
 
 import Loading from './Loading.js';
+import ErrorBoundary from '../components/ErrorBoundary.js';
 import ErrorBox from '../components/ErrorBox.js';
 
 const Image = lazy(() => import('./image/Image.js'));
@@ -56,7 +57,9 @@ function Document(props) {
 
 	return (
 		<Suspense fallback={<Loading/>}>
-			{element}
+			<ErrorBoundary>
+				{element}
+			</ErrorBoundary>
 		</Suspense>
 	);
 }

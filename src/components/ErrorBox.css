@@ -1,6 +1,8 @@
 .error {
   overflow-y: auto;
   max-height: 100%;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .error h3 {
@@ -10,4 +12,16 @@
 
 .error p {
 	word-break: normal;
+}
+
+.error p.exception-message,
+.error p.stacktrace {
+	margin-left: 1em;
+}
+
+.error p.stacktrace div {
+	display: block;
+	text-indent: -2ex;
+	padding-left: 2ex;
+	word-break: break-all;
 }
