@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Link as RRLink } from 'react-router-dom';
 
 import {
@@ -20,9 +20,6 @@ import iconMusic from '@iconify/icons-fa-solid/music';
 import iconPalette from '@iconify/icons-fa-solid/palette';
 import iconSave from '@iconify/icons-fa-solid/download';
 
-import { saveAs } from 'file-saver';
-import { File } from '@camoto/gamearchive';
-
 import Document from '../Document.js';
 import OpenGame from './OpenGame.js';
 import SaveFile from '../SaveFile.js';
@@ -32,17 +29,14 @@ import './Game.css';
 function Game() {
 	const [ gameId, setGameId ] = useState(null);
 	const [ game, setGame ] = useState(null);
-	const [ gameItems, setGameItems ] = useState({});
 	const [ gameItemsTree, setGameItemsTree ] = useState([]);
 	const [ openInstance, setOpenInstance ] = useState({});
 	const [ saveVisible, setSaveVisible ] = useState(false);
-	const elRename = useRef(null);
 
 	async function openGame(newGame, idGame) {
 		setGameId(idGame);
 		setGame(newGame);
 		let items = await newGame.items();
-		setGameItems(items);
 
 		function addChildren(items) {
 			let treeItems = [];

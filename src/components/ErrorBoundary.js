@@ -62,7 +62,7 @@ class ErrorBoundary extends React.Component
 						There was an error, but Camoto Studio didn't cope with it properly,
 						which it is supposed to.  If you can come up with a short list of
 						steps that will cause this error to happen every time, please{' '}
-						<a href="https://github.com/camoto-project/studiojs/issues" target="_blank">
+						<a href="https://github.com/camoto-project/studiojs/issues" target="_blank" rel="noreferrer">
 							check the list of known issues on GitHub
 						</a>
 						.  If this one is not in the list, please create a new issue and

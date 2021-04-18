@@ -82,6 +82,10 @@ function OpenFile(props) {
 					setErrorMessage(e.message);
 				}
 				break;
+
+			default:
+				setErrorMessage(`Unable to open files of type "${props.category}".`);
+				break;
 		}
 	}
 
