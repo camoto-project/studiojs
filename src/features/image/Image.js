@@ -9,8 +9,6 @@ import {
 import { Icon } from '@iconify/react';
 import iconCompressed from '@iconify/icons-fa-solid/file-archive';
 
-//import { img_png } from '@camoto/gamegraphics';
-
 import { saveAs } from 'file-saver';
 
 import OpenFile from '../OpenFile.js';
@@ -54,19 +52,22 @@ function Image(props) {
 		const context = canvas.getContext('2d');
 		let frameCount = 0;
 		let animationFrameId;
+		let timerId;
 
-		//Our draw came here
 		const render = () => {
-			frameCount++;
+			frameCount = (frameCount + 1) % img.frames.length;
 			draw(context, frameCount);
 			if (img.frames.length > 1) {
-				animationFrameId = window.requestAnimationFrame(render);
+				timerId = setTimeout(() => {
+					animationFrameId = window.requestAnimationFrame(render);
+				}, img.frames[frameCount].postDelay || 300);
 			}
 		}
 		render();
 
 		return () => {
-			window.cancelAnimationFrame(animationFrameId)
+			clearTimeout(timerId);
+			window.cancelAnimationFrame(animationFrameId);
 		}
 	}, [img])
 
