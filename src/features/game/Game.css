@@ -67,6 +67,11 @@ table input {
 	color: #4040FF;
 }
 
+.body .itemList .so-tree-content .disabled {
+	color: #ccc;
+	cursor: not-allowed;
+}
+
 .body .document {
 	padding: 6px;
 	flex-grow: 4;

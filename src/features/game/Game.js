@@ -75,6 +75,7 @@ function Game() {
 	}
 
 	function openItem(d) {
+		if (d.disabled) return;
 		try {
 			let doc = d.fnOpen();
 			setOpenInstance({
@@ -102,7 +103,7 @@ function Game() {
 			sound: iconAudio,
 		}[d.type] || iconFile;
 		return (
-			<span onClick={() => openItem(d)}>
+			<span onClick={() => openItem(d)} className={d.disabled ? 'disabled' : ''}>
 				<Icon icon={iconItemType} style={{marginRight: 6, marginBottom: -1}} />
 				{d.title}
 			</span>
