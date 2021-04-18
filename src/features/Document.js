@@ -30,7 +30,11 @@ function Document(props) {
 			break;
 
 		case 'image':
-			element = <Image doc={props.document} />;
+			element = <Image document={props.document} />;
+			break;
+
+		case 'music':
+			element = <Music document={props.document} />;
 			break;
 
 		case 'error':

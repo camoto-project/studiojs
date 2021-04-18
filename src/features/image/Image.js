@@ -21,7 +21,7 @@ import SaveFile from '../SaveFile.js';
 function Image(props) {
 	const refCanvas = useRef(null);
 
-	const img = props.doc;
+	const img = props.document;
 
 	let extentX = img.width || 0, extentY = img.height || 0;
 	for (const frame of img.frames) {
