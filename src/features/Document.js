@@ -6,6 +6,7 @@ import {
 	Tree,
 } from 'shineout';
 
+import Loading from './Loading.js';
 import ErrorBox from '../components/ErrorBox.js';
 
 const Image = lazy(() => import('./image/Image.js'));
@@ -45,13 +46,19 @@ function Document(props) {
 		default:
 			element = (
 				<ErrorBox summary={`Unknown document type "${props.type}"`}>
-					Editing items of this type is not yet implemented.
+					<p>
+						Editing items of this type is not yet implemented.
+					</p>
 				</ErrorBox>
 			);
 			break;
 	}
 
-	return element;
+	return (
+		<Suspense fallback={<Loading/>}>
+			{element}
+		</Suspense>
+	);
 }
 
 export default Document;
