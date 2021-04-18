@@ -102,12 +102,21 @@ function Game() {
 			palette: iconPalette,
 			sound: iconAudio,
 		}[d.type] || iconFile;
-		return (
+		const content = (
 			<span onClick={() => openItem(d)} className={d.disabled ? 'disabled' : ''}>
 				<Icon icon={iconItemType} style={{marginRight: 6, marginBottom: -1}} />
 				{d.title}
 			</span>
 		);
+		if (d.disabled && d.disabledReason) {
+			return (
+				<Tooltip tip={d.disabledReason} position="top">
+					{content}
+				</Tooltip>
+			);
+		} else {
+			return content;
+		}
 	}
 
 	return (
