@@ -1,7 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+	Tooltip,
+} from 'shineout';
+import { Icon } from '@iconify/react';
+import iconImport from '@iconify/icons-fa-solid/file-import';
+import iconExport from '@iconify/icons-fa-solid/file-export';
+import iconZoom from '@iconify/icons-fa-solid/search-plus';
+
+import './Image.css';
 
 function Image(props) {
 	const refCanvas = useRef(null);
+	const [ zoom, setZoom ] = useState(2);
 
 	const img = props.document;
 
@@ -9,7 +19,7 @@ function Image(props) {
 	for (const frame of img.frames) {
 		if (frame.width && frame.height) {
 			extentX = Math.max(extentX, frame.offsetX + frame.width);
-			extentY = Math.max(extentX, frame.offsetY + frame.height);
+			extentY = Math.max(extentY, frame.offsetY + frame.height);
 		}
 	}
 
@@ -55,12 +65,42 @@ function Image(props) {
 		}
 	}, [img])
 
+	function onZoom() {
+		switch (zoom) {
+			default: setZoom(2); break;
+			case 2: setZoom(4); break;
+			case 4: setZoom(1); break;
+		}
+	}
+
 	return (
-		<canvas
-			ref={refCanvas}
-			width={extentX}
-			height={extentY}
-		/>
+		<>
+			<div className="toolbar">
+				<Tooltip tip="Save this image to a file" position="bottom">
+					<button>
+						<Icon icon={iconExport} />
+					</button>
+				</Tooltip>
+				<Tooltip tip="Replace this image with one loaded from a file" position="bottom">
+					<button>
+						<Icon icon={iconImport} />
+					</button>
+				</Tooltip>
+				<Tooltip tip="Adjust zoom level in the preview only" position="bottom">
+					<button onClick={onZoom}>
+						<Icon icon={iconZoom} />
+					</button>
+				</Tooltip>
+			</div>
+			<div className="content">
+				<canvas
+					ref={refCanvas}
+					width={extentX}
+					height={extentY}
+					style={{width: extentX * zoom, height: extentY * zoom}}
+				/>
+			</div>
+		</>
 	);
 }
 

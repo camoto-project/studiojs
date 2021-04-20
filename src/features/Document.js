@@ -55,8 +55,10 @@ function Document(props) {
 
 	return (
 		<Suspense fallback={<Loading/>}>
-			<ErrorBoundary>
-				{element}
+			<ErrorBoundary key={props.docOpenCount}>
+				<div className="document">
+					{element}
+				</div>
 			</ErrorBoundary>
 		</Suspense>
 	);

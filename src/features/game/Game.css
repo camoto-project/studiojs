@@ -4,17 +4,8 @@
 	height: 100%;
 }
 
-.toolbar {
-	padding: 1em;
-	background-color: #eee;
-}
-
 .fileList {
 	margin: 1em;
-}
-
-.toolbar {
-	display: flex;
 }
 
 .separator {
@@ -45,9 +36,10 @@ table input {
 
 .root > .body {
 	flex-grow: 1;
-	overflow-y: hidden;
+	overflow: hidden;
 	display: flex;
-	background-color: #eee;
+	flex-direction: row;
+	align-items: stretch;
 	max-width: 100%;
 }
 
@@ -75,13 +67,27 @@ table input {
 }
 
 .body .document {
-	padding: 6px;
-	flex-grow: 4;
-	background-color: white;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
 }
 
 .body .itemList,
-.body .document {
-	margin: 2px;
+.body .document .content {
+	padding: 6px;
+	margin: 1px;
 	box-shadow: inset -1px -1px #fff,inset 1px 1px grey,inset -2px -2px #dfdfdf,inset 2px 2px #0a0a0a;
+}
+
+.body .itemList {
+	background-color: white;
+}
+
+.document .content {
+	flex-grow: 1;
+	overflow: auto;
+	width: 100%;
+	height: 100%;
+	display: flex;
 }

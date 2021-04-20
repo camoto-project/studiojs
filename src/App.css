@@ -1,7 +1,29 @@
 @import '~shineout/dist/theme.default.css';
 
+:root {
+	--surface: #D4D0C8;
+	--button-highlight: #ffffff;
+	--button-face: #dfdfdf;
+	--button-shadow: #808080;
+	--window-frame: #0a0a0a;
+
+	--border-raised-outer: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight);
+	--border-raised-inner: inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
+	--border-sunken-outer: inset -1px -1px var(--button-highlight), inset 1px 1px var(--window-frame);
+	--border-sunken-inner: inset -2px -2px var(--button-face), inset 2px 2px var(--button-shadow);
+	--border-single-raised:
+		inset -1px -1px 0 0 var(--button-shadow),
+		inset 1px 1px 0 0 var(--button-highlight)
+	;
+	--border-single-sunken:
+		inset -1px -1px 0 0 var(--button-highlight),
+		inset 1px 1px 0 0 var(--button-shadow)
+	;
+}
+
 body, #root {
 	height: 100vh;
+	background-color: var(--surface);
 }
 
 .so-card-header {
@@ -11,4 +33,38 @@ body, #root {
 
 .so-form p {
 	margin-bottom: 1.5em;
+}
+
+/* Toolbars */
+
+.toolbar {
+	display: flex;
+  background: var(--surface);
+	line-height: 1;
+	padding: 2px;
+  box-shadow: var(--border-single-raised);
+}
+
+.toolbar button {
+  box-sizing: border-box;
+  border: none;
+  background: var(--surface);
+  box-shadow: none;
+	padding: 0 4px;
+	width: 28px;
+	height: 28px;
+}
+
+.toolbar button:hover {
+  box-shadow: var(--border-single-raised);
+}
+
+.toolbar button:not(:disabled):active {
+  box-shadow: var(--border-single-sunken);
+  padding: 2px 0 0 2px;
+}
+
+.toolbar button svg {
+	width: 16px;
+	height: 16px;
 }

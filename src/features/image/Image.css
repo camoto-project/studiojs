@@ -1,0 +1,29 @@
+.document .content canvas {
+	margin: auto;
+	image-rendering: crisp-edges;
+	box-shadow:
+		0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+		0 6.7px 5.3px rgba(0, 0, 0, 0.048),
+		0 12.5px 10px rgba(0, 0, 0, 0.06),
+		0 22.3px 17.9px rgba(0, 0, 0, 0.072),
+		0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+		0 100px 80px rgba(0, 0, 0, 0.12)
+	;
+}
+
+/* Checkerbox background for transparent images
+ * From: https://stackoverflow.com/a/65887831/308237
+ */
+:root {
+	--checker-color-1: #ddd;
+	--checker-color-2: #bbb;
+	--checker-size: 8px;
+	--checker-gradient: linear-gradient(45deg, var(--checker-color-1) 25%, transparent 25%, transparent 75%, var(--checker-color-1) 75%);
+}
+
+.content canvas {
+	background-color: var(--checker-color-2);
+	background-image: var(--checker-gradient), var(--checker-gradient);
+	background-position: 0 0, var(--checker-size) var(--checker-size);
+	background-size: calc(var(--checker-size) * 2) calc(var(--checker-size) * 2);
+}
