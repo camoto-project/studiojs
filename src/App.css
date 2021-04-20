@@ -55,13 +55,17 @@ body, #root {
 	height: 28px;
 }
 
-.toolbar button:hover {
+.toolbar button:not(:disabled):hover {
   box-shadow: var(--border-single-raised);
 }
 
 .toolbar button:not(:disabled):active {
   box-shadow: var(--border-single-sunken);
   padding: 2px 0 0 2px;
+}
+
+.toolbar button:disabled {
+	cursor: not-allowed;
 }
 
 .toolbar button svg {
