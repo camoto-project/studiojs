@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	Tooltip,
 } from 'shineout';
@@ -6,64 +6,24 @@ import { Icon } from '@iconify/react';
 import iconImport from '@iconify/icons-fa-solid/file-import';
 import iconExport from '@iconify/icons-fa-solid/file-export';
 import iconZoom from '@iconify/icons-fa-solid/search-plus';
+import iconFilm from '@iconify/icons-fa-solid/film';
+import iconColInc from '@iconify/icons-fa-solid/plus-square';
+import iconColDec from '@iconify/icons-fa-solid/minus-square';
 
+import {
+	frameFromTileset,
+} from '@camoto/gamegraphics';
+
+import Frame from './Frame.js';
 import './Image.css';
 
 function Image(props) {
-	const refCanvas = useRef(null);
+	const defaultImages = props.document.length ? props.document : [props.document];
 	const [ zoom, setZoom ] = useState(2);
-
-	const img = props.document;
-
-	let extentX = img.width || 0, extentY = img.height || 0;
-	for (const frame of img.frames) {
-		if (frame.width && frame.height) {
-			extentX = Math.max(extentX, frame.offsetX + frame.width);
-			extentY = Math.max(extentY, frame.offsetY + frame.height);
-		}
-	}
-
-	useEffect(() => {
-		const draw = (ctx, frameCount) => {
-			if (!img) return;
-
-			const frame = img.frames[frameCount % img.frames.length];
-			const frameWidth = (frame.width === undefined) ? img.width : frame.width;
-			const frameHeight = (frame.height === undefined) ? img.height : frame.height;
-			const pal = img.palette; // TODO: or default EGA pal
-
-			let pxCanvas = ctx.createImageData(frameWidth, frameHeight);
-			for (let i = 0; i < frameWidth * frameHeight; i++) {
-				const px = frame.pixels[i];
-				for (let j = 0; j < 4; j++) {
-					pxCanvas.data[i * 4 + j] = pal[px][j];
-				}
-			}
-			ctx.putImageData(pxCanvas, 0, 0);
-		}
-
-		const canvas = refCanvas.current;
-		const context = canvas.getContext('2d');
-		let frameCount = 0;
-		let animationFrameId;
-		let timerId;
-
-		const render = () => {
-			frameCount = (frameCount + 1) % img.frames.length;
-			draw(context, frameCount);
-			if (img.frames.length > 1) {
-				timerId = setTimeout(() => {
-					animationFrameId = window.requestAnimationFrame(render);
-				}, img.frames[frameCount].postDelay || 300);
-			}
-		}
-		render();
-
-		return () => {
-			clearTimeout(timerId);
-			window.cancelAnimationFrame(animationFrameId);
-		}
-	}, [img])
+	const [ animation, setAnimation ] = useState(true);
+	const [ images, setImages ] = useState(defaultImages);
+	const [ tilesetFixed, setTilesetFixed ] = useState(false);
+	const [ fixedWidth, setFixedWidth ] = useState(defaultImages[0].fixedWidth || 8);
 
 	function onZoom() {
 		switch (zoom) {
@@ -71,6 +31,53 @@ function Image(props) {
 			case 2: setZoom(4); break;
 			case 4: setZoom(1); break;
 		}
+	}
+
+	useEffect(() => {
+		const defaultImages = props.document.length ? props.document : [props.document];
+		if (!animation) {
+			// Convert any animations into fixed images.
+			let imgsFixed = defaultImages.map(img => {
+				let i2 = img.clone(0, 0);
+				i2.frames = [
+					frameFromTileset(img, fixedWidth),
+				];
+				return i2;
+			});
+			setTilesetFixed(true);
+			setImages(imgsFixed);
+		} else {
+			setTilesetFixed(false);
+			setImages(defaultImages);
+		}
+	}, [
+		animation,
+		fixedWidth,
+		props.document,
+	]);
+
+	function onToggleAnimation() {
+		setAnimation(!animation);
+	}
+
+	function maxWidth() {
+		return defaultImages.reduce((a, v) => Math.max(a, v.frames.length), 0);
+	}
+
+	function onColInc() {
+		setFixedWidth(Math.min(maxWidth(), fixedWidth + 1));
+	}
+
+	function onColDec() {
+		setFixedWidth(
+			Math.max(
+				1,
+				Math.min(
+					maxWidth() - 1,
+					fixedWidth - 1
+				)
+			)
+		);
 	}
 
 	return (
@@ -91,14 +98,36 @@ function Image(props) {
 						<Icon icon={iconZoom} />
 					</button>
 				</Tooltip>
+				<Tooltip tip="Toggle between animation and frame list" position="bottom">
+					<button onClick={onToggleAnimation}>
+						<Icon icon={iconFilm} />
+					</button>
+				</Tooltip>
+				<Tooltip tip="Increase the frame list width" position="bottom">
+					<button onClick={onColInc} disabled={!tilesetFixed}>
+						<Icon icon={iconColInc} />
+					</button>
+				</Tooltip>
+				<Tooltip tip="Decrease the frame list width" position="bottom">
+					<button onClick={onColDec} disabled={!tilesetFixed}>
+						<Icon icon={iconColDec} />
+					</button>
+				</Tooltip>
 			</div>
 			<div className="content">
-				<canvas
-					ref={refCanvas}
-					width={extentX}
-					height={extentY}
-					style={{width: extentX * zoom, height: extentY * zoom}}
-				/>
+				<div className="frames">
+					{images.map((img, i) => (
+						<Frame
+							key={i}
+							frames={img.frames}
+							animation={img.animation}
+							palette={img.palette}
+							imgWidth={img.width}
+							imgHeight={img.height}
+							zoom={zoom}
+						/>
+					))}
+				</div>
 			</div>
 		</>
 	);
