@@ -21,6 +21,7 @@ function Image(props) {
 	const defaultImages = props.document.length ? props.document : [props.document];
 	const [ zoom, setZoom ] = useState(2);
 	const [ animation, setAnimation ] = useState(true);
+	const [ animationAllowed, setAnimationAllowed ] = useState(true);
 	const [ images, setImages ] = useState(defaultImages);
 	const [ tilesetFixed, setTilesetFixed ] = useState(false);
 	const [ fixedWidth, setFixedWidth ] = useState(defaultImages[0].fixedWidth || 8);
@@ -32,6 +33,24 @@ function Image(props) {
 			case 4: setZoom(1); break;
 		}
 	}
+
+	// Figure out in the initial state whether we should enable animations or not.
+	// If any image has animations they are enabled, but if none of them are
+	// animated then they are disabled and all frames shown like a tileset.
+	useEffect(() => {
+		const defaultImages = props.document.length ? props.document : [props.document];
+		for (const img of defaultImages) {
+			if (img.animation.length > 0) {
+				setAnimation(true);
+				setAnimationAllowed(true);
+				return;
+			}
+		}
+		setAnimation(false);
+		setAnimationAllowed(false);
+	}, [
+		props.document,
+	]);
 
 	useEffect(() => {
 		const defaultImages = props.document.length ? props.document : [props.document];
@@ -99,7 +118,7 @@ function Image(props) {
 					</button>
 				</Tooltip>
 				<Tooltip tip="Toggle between animation and frame list" position="bottom">
-					<button onClick={onToggleAnimation}>
+					<button onClick={onToggleAnimation} disabled={!animationAllowed}>
 						<Icon icon={iconFilm} />
 					</button>
 				</Tooltip>
