@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 
 import {
-	Card,
+	Button,
 	Form,
+	Modal,
 } from 'shineout';
 import { Icon } from '@iconify/react';
 import iconEdit from '@iconify/icons-fa-solid/edit';
@@ -69,62 +70,62 @@ function OpenGame(props) {
 	let openEnabled = (selectedGames.length === 1) && files && files.length > 0;
 
 	return (
-		<div className="openDialog">
-			<Card style={{ width: 600 }}>
-				<Card.Header>
-					Select a game
-				</Card.Header>
-
-				<Card.Body>
-					<Form onSubmit={onOpen}>
-
-						<Form.Item label="Game">
-							<GameList
-								category={props.category}
-								onChange={onGameChange}
-								value={selectedGames}
-							/>
-						</Form.Item>
-
-						<p>
-							None of these files will be changed, so it is safe to choose your
-							original game files.
-						</p>
-
-						<Form.Item label="Game files:">
-							<VirtualUpload
-								onChange={f => setFiles(f)}
-								value={files}
-								multiple
-								type="primary"
-							/>
-						</Form.Item>
-
-					</Form>
-
-					{errorMessage && (
-						<ErrorBox summary={`Error`}>
-							<p>
-								{errorMessage}
-							</p>
-						</ErrorBox>
-					)}
-
-				</Card.Body>
-
-				<Card.Footer>
-					{props.renderCancel && (
-						<span className="cancel">
-							{props.renderCancel}
-						</span>
-					)}
-					<Card.Submit disabled={!openEnabled}>
+		<Modal
+			visible={props.visible}
+			width={600}
+			title={props.title || 'Select a game'}
+			onClose={props.onClose}
+			footer={(
+				<>
+					<a onClick={props.onCancel} className="cancel">
+						Cancel
+					</a>
+					<Button
+						disabled={!openEnabled}
+						onClick={onOpen}
+						type="primary"
+					>
 						<Icon icon={iconEdit} style={{marginRight: 6, marginBottom: -1}} />
 						Open
-					</Card.Submit>
-				</Card.Footer>
-			</Card>
-		</div>
+					</Button>
+				</>
+			)}
+		>
+			<Form>
+
+				<Form.Item label="Game">
+					<GameList
+						category={props.category}
+						onChange={onGameChange}
+						value={selectedGames}
+					/>
+				</Form.Item>
+
+				<p>
+					None of these files will be changed, so it is safe to choose your
+					original game files.
+				</p>
+
+				<Form.Item label="Game files:">
+					<VirtualUpload
+						onChange={f => setFiles(f)}
+						value={files}
+						multiple
+						type="primary"
+					/>
+				</Form.Item>
+
+			</Form>
+
+			{errorMessage && (
+				<ErrorBox summary={`Error`}>
+					<p>
+						{errorMessage}
+					</p>
+				</ErrorBox>
+			)}
+
+		</Modal>
 	);
 }
 

@@ -11,6 +11,12 @@ function Document(props) {
 	let element;
 	switch (props.type) {
 		case undefined:
+			// No game loaded yet.
+			element = null;
+			break;
+
+		case '_new':
+			// Game loaded, no item selected.
 			element = (
 				<>
 					<h3>

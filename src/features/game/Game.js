@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link as RRLink } from 'react-router-dom';
+import { useHistory, Link as RRLink } from 'react-router-dom';
 
 import {
 	Button,
@@ -16,6 +16,7 @@ import iconFolderOpen from '@iconify/icons-fa-solid/folder-open';
 import iconImage from '@iconify/icons-fa-solid/image';
 import iconInstruments from '@iconify/icons-fa-solid/drum';
 import iconMap from '@iconify/icons-fa-solid/drafting-compass';
+import iconMenu from '@iconify/icons-fa-solid/bars';
 import iconMusic from '@iconify/icons-fa-solid/music';
 import iconPalette from '@iconify/icons-fa-solid/palette';
 import iconSave from '@iconify/icons-fa-solid/download';
@@ -27,11 +28,22 @@ import SaveFile from '../SaveFile.js';
 import './Game.css';
 
 function Game() {
+	const history = useHistory();
+
 	const [ gameId, setGameId ] = useState(null);
 	const [ game, setGame ] = useState(null);
 	const [ gameItemsTree, setGameItemsTree ] = useState([]);
 	const [ openInstance, setOpenInstance ] = useState({});
+	const [ openVisible, setOpenVisible ] = useState(true);
 	const [ saveVisible, setSaveVisible ] = useState(false);
+	const [ treeVisible, setTreeVisible ] = useState(true);
+	// The docOpenState increments each time the open document changes.  This
+	// value is passed to the document's error boundary as a `key` prop, which
+	// will cause it to re-render every time a new document is opened.  Without
+	// this, the error state is never reset so once an error happens, the error
+	// message can never be closed.
+	const [ docOpenCount, setDocOpenCount ] = useState(0);
+	const [ gameOpenCount, setGameOpenCount ] = useState(0);
 
 	async function openGame(newGame, idGame) {
 		// Load the items first so any errors are thrown and caught by <OpenGame/>.
@@ -53,25 +65,27 @@ function Game() {
 		}
 		const treeItems = addChildren(items);
 		setGameItemsTree(treeItems);
-		setOpenInstance({});
+		setOpenInstance({type: '_new'});
+		setOpenVisible(false);
+		setGameOpenCount(gameOpenCount + 1);
 	}
 
-	// If no game has been opened, prompt for one.
-	if (!game) {
-		return (
-			<OpenGame
-				onOpen={openGame}
-				renderCancel={(
-					<RRLink to="/">
-						Cancel
-					</RRLink>
-				)}
-			/>
-		);
+	function cancelOpen() {
+		if (!game) {
+			// No game so no existing game to go back to.
+			history.push('/');
+		} else {
+			// Go back to open game
+			setOpenVisible(false);
+			// Make it re-render to lose its state, so any partial selections are
+			// reset on the next show.
+			setGameOpenCount(gameOpenCount + 1);
+		}
 	}
 
 	function openItem(d) {
 		if (d.disabled) return;
+		if (!d.fnOpen) return; // folders
 		try {
 			let doc = d.fnOpen();
 			setOpenInstance({
@@ -85,6 +99,11 @@ function Game() {
 				document: e,
 			});
 		}
+		setDocOpenCount(docOpenCount + 1);
+	}
+
+	function toggleTree() {
+		setTreeVisible(!treeVisible);
 	}
 
 	function renderGameItem(d) {
@@ -118,31 +137,36 @@ function Game() {
 	return (
 		<div className="root">
 			<div className="toolbar">
-				<Button type="secondary" onClick={() => setGame(null)}>
-					<Icon icon={iconFolderOpen} style={{marginRight: 6, marginBottom: -1}} />
-					Open new game
-				</Button>
-				<Button type="primary" onClick={() => setSaveVisible(true)}>
-					<Icon icon={iconSave} style={{marginRight: 6, marginBottom: -1}} />
-					Save
-				</Button>
+				<button onClick={toggleTree}>
+					<Icon icon={iconMenu} />
+				</button>
+				<button type="secondary" onClick={() => setOpenVisible(true)}>
+					<Icon icon={iconFolderOpen} />
+				</button>
+				<button type="primary" onClick={() => setSaveVisible(true)}>
+					<Icon icon={iconSave} />
+				</button>
 				<div className="separator" />
 				<RRLink to="/" className="exit">
 					<Icon icon={iconClose} style={{marginBottom: -1}} />
 				</RRLink>
 			</div>
 			<div className="body">
-				<span className="itemList">
+				<span className="itemList" style={{display: treeVisible ? 'block' : 'none'}}>
 					<Tree
 						data={gameItemsTree}
 						keygen="id"
 						renderItem={renderGameItem}
 					/>
 				</span>
-				<span className="document">
-					<Document {...openInstance} />
-				</span>
+				<Document docOpenCount={docOpenCount} {...openInstance} />
 			</div>
+			<OpenGame
+				key={gameOpenCount}
+				visible={openVisible || !game}
+				onOpen={openGame}
+				onCancel={cancelOpen}
+			/>
 			{saveVisible && (
 				<SaveFile
 					category="archive"
