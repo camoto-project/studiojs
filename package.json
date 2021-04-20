@@ -21,6 +21,7 @@
   "homepage": "https://github.com/camoto-project/studiojs#readme",
   "dependencies": {
     "@camoto/gamearchive": "^4.0.0",
+    "@camoto/gamegraphics": "^2.1.0",
     "@camoto/gameinfo": "^0.0.7",
     "@camoto/gamemusic": "^2.0.3",
     "@iconify/icons-fa-solid": "^1.1.1",
