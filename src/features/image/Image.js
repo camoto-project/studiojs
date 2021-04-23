@@ -118,7 +118,7 @@ function Image(props) {
 					</button>
 				</Tooltip>
 				<Tooltip tip="Toggle between animation and frame list" position="bottom">
-					<button onClick={onToggleAnimation} disabled={!animationAllowed}>
+					<button onClick={onToggleAnimation} disabled={!animationAllowed} className={animation ? 'hold' : ''}>
 						<Icon icon={iconFilm} />
 					</button>
 				</Tooltip>

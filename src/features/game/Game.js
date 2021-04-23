@@ -137,7 +137,7 @@ function Game() {
 	return (
 		<div className="root">
 			<div className="toolbar">
-				<button onClick={toggleTree}>
+				<button onClick={toggleTree} className={treeVisible ? 'hold' : '' }>
 					<Icon icon={iconMenu} />
 				</button>
 				<button type="secondary" onClick={() => setOpenVisible(true)}>

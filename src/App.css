@@ -45,6 +45,7 @@ body, #root {
   box-shadow: var(--border-single-raised);
 }
 
+.toolbar button.hold,
 .toolbar button {
   box-sizing: border-box;
   border: none;
@@ -62,6 +63,23 @@ body, #root {
 .toolbar button:not(:disabled):active {
   box-shadow: var(--border-single-sunken);
   padding: 2px 0 0 2px;
+}
+
+.toolbar button.hold {
+	box-shadow: var(--border-single-sunken);
+	padding: 1px 0 0 1px;
+	background: var(--button-highlight);
+}
+
+.toolbar button.hold:not(:disabled):hover {
+	box-shadow:
+		inset -1px -1px 0 0 var(--surface),
+		inset 1px 1px 0 0 var(--surface)
+	;
+}
+
+.toolbar button.hold:not(:disabled):active {
+	background: var(--button-highlight);
 }
 
 .toolbar button:disabled {
