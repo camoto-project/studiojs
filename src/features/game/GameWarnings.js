@@ -1,12 +1,5 @@
 import React from 'react';
 
-import {
-	Button,
-	Form,
-	List,
-	Modal,
-} from 'shineout';
-
 import MessageBox from '../../components/MessageBox.js';
 
 function GameWarnings(props) {

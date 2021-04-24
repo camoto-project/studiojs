@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import {
-	Button,
 	Tooltip,
 	Tree,
 } from 'shineout';
@@ -41,28 +40,31 @@ function Game(props) {
 
 	// When a 'game' is passed through in the props, update the list of items in
 	// the tree view.
-	useEffect(async () => {
-		let items;
-		try {
-			items = await props.game.items();
-		} catch (e) {
-			// TODO: handle error
-			console.log(e);
-		}
-
-		function addChildren(items) {
-			let treeItems = [];
-			for (const [id, desc] of Object.entries(items)) {
-				treeItems.push({
-					id,
-					...desc,
-					children: desc.children && addChildren(desc.children),
-				});
+	useEffect(() => {
+		async function loadItems() {
+			let items;
+			try {
+				items = await props.game.items();
+			} catch (e) {
+				// TODO: handle error
+				console.log(e);
 			}
-			return treeItems;
+
+			function addChildren(items) {
+				let treeItems = [];
+				for (const [id, desc] of Object.entries(items)) {
+					treeItems.push({
+						id,
+						...desc,
+						children: desc.children && addChildren(desc.children),
+					});
+				}
+				return treeItems;
+			}
+			const treeItems = addChildren(items);
+			setGameItemsTree(treeItems);
 		}
-		const treeItems = addChildren(items);
-		setGameItemsTree(treeItems);
+		loadItems();
 	}, [
 		props.game,
 	]);

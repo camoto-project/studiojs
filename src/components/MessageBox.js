@@ -33,9 +33,9 @@ function MessageBox(props) {
 	let jsxFooterPrefix = null;
 	if (props.confirm) {
 		jsxFooterPrefix = (
-			<a onClick={props.onClose} className="cancel">
+			<button onClick={props.onClose} className="link">
 				Cancel
-			</a>
+			</button>
 		);
 	}
 

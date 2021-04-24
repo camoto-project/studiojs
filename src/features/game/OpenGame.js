@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import {
 	Button,
 	Card,
 	Divider,
-	Form,
-	List,
 } from 'shineout';
 import { Icon } from '@iconify/react';
 import iconEdit from '@iconify/icons-fa-solid/edit';
@@ -21,13 +19,7 @@ import './OpenGame.css';
 function OpenGame(props) {
 	const history = useHistory();
 
-	// State for creating a new mod.
 	const [ newMod, setNewMod ] = useState({});
-	//const [ selectedGame, setSelectedGame ] = useState(null);
-	//const [ files, setFiles ] = useState([]);
-
-
-	// Shared state.
 	const [ errorMessage, setErrorMessage ] = useState(null);
 
 	// Create a new mod.
@@ -117,9 +109,9 @@ function OpenGame(props) {
 				</Card.Body>
 
 				<Card.Footer>
-					<a onClick={onCancel} className="cancel">
+					<button onClick={onCancel} className="link">
 						Cancel
-					</a>
+					</button>
 					<Button
 						disabled={!openEnabled}
 						onClick={onOpen}

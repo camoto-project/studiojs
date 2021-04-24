@@ -17,7 +17,7 @@ export default class Storage
 					});
 				}
 				if (!db.objectStoreNames.contains('files')) {
-					const storeFiles = db.createObjectStore('files', {
+					db.createObjectStore('files', {
 						keyPath: [ 'idMod', 'filename' ],
 					});
 				}
@@ -99,7 +99,7 @@ export default class Storage
 	static async updateMod(idMod, modInfo) {
 		const db = await this.openDB();
 		const tx = db.transaction('mods', 'readwrite');
-		const idNewMod = await tx.store.put({
+		await tx.store.put({
 			...modInfo,
 			id: idMod,
 		});
@@ -124,7 +124,7 @@ export default class Storage
 		let cursor = await tx.objectStore('files').openCursor();
 		while (cursor) {
 			// Only process files for this mod.
-			if (cursor.key[0] == idMod) {
+			if (cursor.key[0] === idMod) {
 				cursor.delete();
 			}
 			cursor = await cursor.continue();

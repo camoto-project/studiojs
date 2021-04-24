@@ -114,9 +114,19 @@ body, #root {
 .mainCard {
 	display: flex;
 	justify-content: center;
-	margin-top: 5%;
+	padding-top: 5%;
+	padding-bottom: 5%;
 }
 
 .mainCard .so-card {
 	width: 50em;
+}
+
+/* Make a button look like a link */
+button.link {
+	border: none;
+	background-color: inherit;
+	color: #3CAEE6;
+	cursor: pointer;
+	padding: 0 !important;
 }

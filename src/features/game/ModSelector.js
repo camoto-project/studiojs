@@ -9,10 +9,7 @@ import iconDelete from '@iconify/icons-fa-solid/trash-alt';
 
 import Storage from '../../util/storage.js';
 import ErrorBox from '../../components/ErrorBox.js';
-import GameList from './GameList.js';
-import Loading from '../Loading.js';
 import MessageBox from '../../components/MessageBox.js';
-import VirtualUpload from '../../components/VirtualUpload.js';
 
 import './OpenGame.css';
 
@@ -22,14 +19,17 @@ function ModSelector(props) {
 	const [ modToDelete, setModToDelete ] = useState(null);
 	const [ deleteInProgress, setDeleteInProgress ] = useState(false);
 
-	useEffect(async () => {
-		setErrorMessage(null);
-		try {
-			setMods(await Storage.getMods());
-		} catch (e) {
-			console.error(e);
-			setErrorMessage('Unable to load mod list: ' + e.message);
+	useEffect(() => {
+		async function populateMods() {
+			setErrorMessage(null);
+			try {
+				setMods(await Storage.getMods());
+			} catch (e) {
+				console.error(e);
+				setErrorMessage('Unable to load mod list: ' + e.message);
+			}
 		}
+		populateMods();
 	}, []);
 
 	function deleteMod(mod, event) {

@@ -1,14 +1,9 @@
 import React from 'react';
 
-import {
-	Button,
-	Modal,
-} from 'shineout';
 import { Icon } from '@iconify/react';
 import iconError from '@iconify/icons-fa-solid/times-circle';
 import iconExclamation from '@iconify/icons-fa-solid/exclamation-triangle';
 import iconInfo from '@iconify/icons-fa-solid/info-circle';
-import iconOK from '@iconify/icons-fa-solid/check';
 
 import './Tip.css';
 

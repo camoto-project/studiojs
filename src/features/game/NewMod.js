@@ -5,7 +5,6 @@ import {
 	Input,
 } from 'shineout';
 
-import ErrorBox from '../../components/ErrorBox.js';
 import GameList from './GameList.js';
 import Tip from '../../components/Tip.js';
 import VirtualUpload from '../../components/VirtualUpload.js';

@@ -5,7 +5,6 @@ import {
 	all as gameinfoFormats,
 } from '@camoto/gameinfo';
 
-import ErrorBox from '../../components/ErrorBox.js';
 import Game from './Game.js';
 import GameWarnings from './GameWarnings.js';
 import Loading from '../Loading.js';
@@ -20,43 +19,46 @@ function GameHandler(props) {
 	const [ warnings, setWarnings ] = useState([]);
 
 	// If the mod ID changes in the URL (or on first load), open that mod.
-	useEffect(async () => {
-		const idMod = parseInt(props.match.params.id, 10);
-		let mod;
-		try {
-			mod = await Storage.getMod(idMod);
-		} catch (e) {
-			console.error(e);
-			setErrorMessage("Unexpected error when trying to load this mod from the "
-				+ "browser's IndexedDB storage: " + e.message);
-			return;
-		}
-		if (!mod) {
-			console.log(`Invalid mod ID ${idMod}`);
-			setErrorMessage('This mod ID is not valid.  If it was valid in the past, '
-				+ 'your web browser may have removed it to reclaim disk space.');
-			return;
-		}
+	useEffect(() => {
+		async function loadMod() {
+			const idMod = parseInt(props.match.params.id, 10);
+			let mod;
+			try {
+				mod = await Storage.getMod(idMod);
+			} catch (e) {
+				console.error(e);
+				setErrorMessage("Unexpected error when trying to load this mod from the "
+					+ "browser's IndexedDB storage: " + e.message);
+				return;
+			}
+			if (!mod) {
+				console.log(`Invalid mod ID ${idMod}`);
+				setErrorMessage('This mod ID is not valid.  If it was valid in the past, '
+					+ 'your web browser may have removed it to reclaim disk space.');
+				return;
+			}
 
-		const idGame = mod.idGame;
-		const handler = gameinfoFormats.find(h => h.metadata().id === idGame);
-		if (!handler) {
-			setErrorMessage(`The game used by this mod ("${idGame}") is no longer `
-				+ `supported.`);
-			return;
-		}
+			const idGame = mod.idGame;
+			const handler = gameinfoFormats.find(h => h.metadata().id === idGame);
+			if (!handler) {
+				setErrorMessage(`The game used by this mod ("${idGame}") is no longer `
+					+ `supported.`);
+				return;
+			}
 
-		const filesystem = Storage.filesystemForMod(idMod);
-		let gameHandler = new handler(filesystem);
-		try {
-			const warnings = await gameHandler.open();
-			setWarnings(warnings);
-			setGame(gameHandler);
-		} catch (e) {
-			console.error('Error loading mod:', e);
-			setErrorMessage(e.message);
-			return;
+			const filesystem = Storage.filesystemForMod(idMod);
+			let gameHandler = new handler(filesystem);
+			try {
+				const warnings = await gameHandler.open();
+				setWarnings(warnings);
+				setGame(gameHandler);
+			} catch (e) {
+				console.error('Error loading mod:', e);
+				setErrorMessage(e.message);
+				return;
+			}
 		}
+		loadMod();
 	}, [
 		props.match.params.id
 	]);
