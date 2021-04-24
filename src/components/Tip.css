@@ -1,0 +1,14 @@
+.tip {
+	display: flex;
+	padding: 1.5ex;
+	padding-right: 2ex;
+	border-radius: 8px;
+	margin-top: 1ex;
+	margin-bottom: 1ex;
+}
+
+.tip .icon {
+	font-size: 12pt;
+	min-width: 1.2em;
+	margin-top: 0.5ex;
+}
