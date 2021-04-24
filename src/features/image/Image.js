@@ -58,11 +58,16 @@ function Image(props) {
 		if (!animation) {
 			// Convert any animations into fixed images.
 			let imgsFixed = defaultImages.map(img => {
-				let i2 = img.clone(0, 0);
-				i2.frames = [
-					frameFromTileset(img, fixedWidth),
-				];
-				return i2;
+				if (img.frames.length > 1) {
+					let i2 = img.clone(0, 0);
+					i2.frames = [
+						frameFromTileset(img, fixedWidth),
+					];
+					return i2;
+				} else {
+					// Nothing to do if there's only one frame.
+					return img;
+				}
 			});
 			setTilesetFixed(true);
 			setImages(imgsFixed);
