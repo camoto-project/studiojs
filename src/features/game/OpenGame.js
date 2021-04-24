@@ -3,10 +3,10 @@ import { useHistory } from 'react-router-dom';
 
 import {
 	Button,
+	Card,
 	Divider,
 	Form,
 	List,
-	Modal,
 } from 'shineout';
 import { Icon } from '@iconify/react';
 import iconEdit from '@iconify/icons-fa-solid/edit';
@@ -78,13 +78,45 @@ function OpenGame(props) {
 	);
 
 	return (
-		<Modal
-			visible={true}
-			width={600}
-			title={props.title || 'Get started'}
-			onClose={onCancel}
-			footer={(
-				<>
+		<div className="mainCard">
+			<Card>
+				<Card.Header>
+					Get started
+				</Card.Header>
+				<Card.Body>
+					<h3>
+						Resume work on a previous mod
+					</h3>
+					<div className="postH3">
+						<ModSelector
+							visible={true}
+							onModChange={onModChange}
+						/>
+					</div>
+
+					<Divider />
+
+					<h3>
+						Start a new mod
+					</h3>
+					<div className="postH3">
+						<NewMod
+							visible={true}
+							onChange={setNewMod}
+							value={newMod}
+						/>
+					</div>
+
+					{errorMessage && (
+						<ErrorBox summary={`Error`}>
+							<p>
+								{errorMessage}
+							</p>
+						</ErrorBox>
+					)}
+				</Card.Body>
+
+				<Card.Footer>
 					<a onClick={onCancel} className="cancel">
 						Cancel
 					</a>
@@ -93,44 +125,13 @@ function OpenGame(props) {
 						onClick={onOpen}
 						type="primary"
 					>
-						<Icon icon={iconEdit} style={{marginRight: 6, marginBottom: -1}} />
+						<Icon icon={iconEdit} className="icon" />
 						New
 					</Button>
-				</>
-			)}
-		>
-			<h3>
-				Resume work on a previous mod
-			</h3>
-			<div className="postH3">
-				<ModSelector
-					visible={true}
-					onModChange={onModChange}
-				/>
-			</div>
+				</Card.Footer>
 
-			<Divider />
-
-			<h3>
-				Start a new mod
-			</h3>
-			<div className="postH3">
-				<NewMod
-					visible={true}
-					onChange={setNewMod}
-					value={newMod}
-				/>
-			</div>
-
-			{errorMessage && (
-				<ErrorBox summary={`Error`}>
-					<p>
-						{errorMessage}
-					</p>
-				</ErrorBox>
-			)}
-
-		</Modal>
+			</Card>
+		</div>
 	);
 }
 

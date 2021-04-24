@@ -109,3 +109,14 @@ body, #root {
 	width: 16px;
 	height: 16px;
 }
+
+/* Central cards (like modals but shouldn't be closed) */
+.mainCard {
+	display: flex;
+	justify-content: center;
+	margin-top: 5%;
+}
+
+.mainCard .so-card {
+	width: 50em;
+}

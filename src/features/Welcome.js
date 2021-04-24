@@ -31,7 +31,7 @@ const menu = [
 
 function Welcome() {
 	return (
-		<div style={{ display: 'flex', justifyContent: 'center', marginTop: '15%' }}>
+		<div className="mainCard">
 			<Card style={{ width: 600 }}>
 				<Card.Header>
 					Camoto
