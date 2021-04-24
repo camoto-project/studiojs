@@ -48,7 +48,9 @@ function OpenGame(props) {
 
 		} catch (e) {
 			console.error(e);
-			setErrorMessage(e.message);
+			setErrorMessage("Unable to save the game's files to the browser's "
+				+ "IndexedDB storage area.  The reason given was: " + e.message);
+			return;
 		}
 	}
 
@@ -67,6 +69,10 @@ function OpenGame(props) {
 		setErrorMessage(null);
 	}
 
+	function onCancel() {
+		history.push('/');
+	}
+
 	// Disable if no files to select (i.e. no game selected yet).
 	let openEnabled = (selectedGames.length === 1) && files && files.length > 0;
 
@@ -75,10 +81,10 @@ function OpenGame(props) {
 			visible={true}
 			width={600}
 			title={props.title || 'Select a game'}
-			onClose={props.onClose}
+			onClose={onCancel}
 			footer={(
 				<>
-					<a onClick={props.onCancel} className="cancel">
+					<a onClick={onCancel} className="cancel">
 						Cancel
 					</a>
 					<Button

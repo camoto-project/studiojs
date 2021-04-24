@@ -43,11 +43,10 @@ function Welcome() {
 					</p>
 					<Menu
 						keygen="id"
-						linkKey="link"
 						data={menu}
 						renderItem={d => (
 							<RRLink to={d.link}>
-								<Icon icon={d.icon} style={{marginRight: 6, marginBottom: -1}}/>
+								<Icon icon={d.icon} className="icon" />
 								{d.title}
 							</RRLink>
 						)}

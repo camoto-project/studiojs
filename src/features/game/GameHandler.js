@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import {
 	all as gameinfoFormats,
@@ -6,12 +7,17 @@ import {
 
 import ErrorBox from '../../components/ErrorBox.js';
 import Game from './Game.js';
+import GameWarnings from './GameWarnings.js';
 import Loading from '../Loading.js';
+import MessageBox from '../../components/MessageBox.js';
 import Storage from '../../util/storage.js';
 
 function GameHandler(props) {
+	const history = useHistory();
+
 	const [ game, setGame ] = useState(null);
 	const [ errorMessage, setErrorMessage ] = useState(null);
+	const [ warnings, setWarnings ] = useState([]);
 
 	// If the mod ID changes in the URL (or on first load), open that mod.
 	useEffect(async () => {
@@ -27,7 +33,8 @@ function GameHandler(props) {
 		const idGame = mod.idGame;
 		const handler = gameinfoFormats.find(h => h.metadata().id === idGame);
 		if (!handler) {
-			setErrorMessage(`The game used by this mod ("${idGame}") is no longer supported.`);
+			setErrorMessage(`The game used by this mod ("${idGame}") is no longer `
+				+ `supported.`);
 			return;
 		}
 
@@ -35,7 +42,7 @@ function GameHandler(props) {
 		let gameHandler = new handler(filesystem);
 		try {
 			const warnings = await gameHandler.open();
-			// TODO: Display warnings and let user retry or proceed
+			setWarnings(warnings);
 			setGame(gameHandler);
 		} catch (e) {
 			console.error('Error loading mod:', e);
@@ -46,12 +53,25 @@ function GameHandler(props) {
 		props.match.params.id
 	]);
 
+	function onDismissWarnings() {
+		setWarnings([]);
+	}
+
 	if (errorMessage) {
 		// TODO: Make this look nice and give a back button to go home.
 		return (
-			<ErrorBox summary="Error loading mod">
-				{errorMessage}
-			</ErrorBox>
+			<MessageBox
+				icon="error"
+				visible={true}
+				onClose={() => history.push('/')}
+			>
+				<p>
+					The game could not be opened.  It reported the following reason:
+				</p>
+				<p>
+					{errorMessage}
+				</p>
+			</MessageBox>
 		);
 	}
 
@@ -62,10 +82,16 @@ function GameHandler(props) {
 	}
 
 	return (
-		<Game
-			key={props.match.params.id}
-			game={game}
-		/>
+		<>
+			<Game
+				key={props.match.params.id}
+				game={game}
+			/>
+			<GameWarnings
+				warnings={warnings}
+				onClose={onDismissWarnings}
+			/>
+		</>
 	);
 }
 

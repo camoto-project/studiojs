@@ -26,6 +26,22 @@ body, #root {
 	background-color: var(--surface);
 }
 
+/* Normal icons next to button text */
+.icon {
+	margin-right: 6px;
+	margin-bottom: -1px;
+}
+
+/* Large icons and the text next to it in modal popups */
+.largeIconText .icon {
+	font-size: 200%;
+	vertical-align: middle;
+	margin-right: 1ex;
+}
+.largeIconText span {
+	vertical-align: middle;
+}
+
 .so-card-header {
 	background-color: #DDDDDD;
 	font-weight: bold;
