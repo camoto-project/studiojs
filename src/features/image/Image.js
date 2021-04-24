@@ -25,6 +25,7 @@ function Image(props) {
 	const [ images, setImages ] = useState(defaultImages);
 	const [ tilesetFixed, setTilesetFixed ] = useState(false);
 	const [ fixedWidth, setFixedWidth ] = useState(defaultImages[0].fixedWidth || 8);
+	const [ maxWidth, setMaxWidth ] = useState(1);
 
 	function onZoom() {
 		switch (zoom) {
@@ -69,6 +70,18 @@ function Image(props) {
 			setTilesetFixed(false);
 			setImages(defaultImages);
 		}
+		const newMaxWidth = defaultImages.reduce((a, v) => Math.max(a, v.frames.length), 1)
+		setMaxWidth(newMaxWidth);
+		// Clip the current value to the permitted range.
+		setFixedWidth(
+			Math.max(
+				1,
+				Math.min(
+					newMaxWidth,
+					fixedWidth
+				)
+			)
+		);
 	}, [
 		animation,
 		fixedWidth,
@@ -79,12 +92,8 @@ function Image(props) {
 		setAnimation(!animation);
 	}
 
-	function maxWidth() {
-		return defaultImages.reduce((a, v) => Math.max(a, v.frames.length), 0);
-	}
-
 	function onColInc() {
-		setFixedWidth(Math.min(maxWidth(), fixedWidth + 1));
+		setFixedWidth(Math.min(maxWidth, fixedWidth + 1));
 	}
 
 	function onColDec() {
@@ -92,7 +101,7 @@ function Image(props) {
 			Math.max(
 				1,
 				Math.min(
-					maxWidth() - 1,
+					maxWidth - 1,
 					fixedWidth - 1
 				)
 			)
@@ -123,12 +132,12 @@ function Image(props) {
 					</button>
 				</Tooltip>
 				<Tooltip tip="Increase the frame list width" position="bottom">
-					<button onClick={onColInc} disabled={!tilesetFixed}>
+					<button onClick={onColInc} disabled={!tilesetFixed || (fixedWidth >= maxWidth)}>
 						<Icon icon={iconColInc} />
 					</button>
 				</Tooltip>
 				<Tooltip tip="Decrease the frame list width" position="bottom">
-					<button onClick={onColDec} disabled={!tilesetFixed}>
+					<button onClick={onColDec} disabled={!tilesetFixed || (fixedWidth <= 1)}>
 						<Icon icon={iconColDec} />
 					</button>
 				</Tooltip>
