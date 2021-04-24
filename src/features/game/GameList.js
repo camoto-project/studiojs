@@ -1,5 +1,5 @@
 import {
-	List,
+	Table,
 } from 'shineout';
 
 import {
@@ -24,17 +24,27 @@ const games = gameinfoFormats.map(f => {
 
 function GameList(props) {
 	return (
-		<List
+		<Table
+			style={{maxHeight: '25em'}}
+			fixed="y"
 			data={games}
 			keygen="id"
-			bordered
-			renderItem={d => (
-				<span className={`gameItem ${props.value && props.value.id === d.id ? 'selected' : ''}`}>
-					<img src={`/game-icons/${d.id}.png`} alt="" />
-					{d.title}
-				</span>
-			)}
-			{...props}
+			format="id"
+			columns={[
+				{
+					title: 'Name',
+					render: d => (
+						<>
+							<img src={`/game-icons/${d.id}.png`} alt="" className="icon" />
+							{d.title || '?'}
+						</>
+					),
+				},
+			]}
+			hover={false}
+			radio
+			onRowClick={d => props.onChange(d.id)}
+			value={props.value}
 		/>
 	);
 }

@@ -2,8 +2,6 @@ import React from 'react';
 
 import {
 	Button,
-	Form,
-	List,
 	Modal,
 } from 'shineout';
 import { Icon } from '@iconify/react';

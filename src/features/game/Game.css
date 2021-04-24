@@ -77,7 +77,12 @@ table input {
 .body .document .content {
 	padding: 6px;
 	margin: 1px;
-	box-shadow: inset -1px -1px #fff,inset 1px 1px grey,inset -2px -2px #dfdfdf,inset 2px 2px #0a0a0a;
+	box-shadow:
+		inset -1px -1px var(--button-highlight),
+		inset 1px 1px var(--button-shadow),
+		inset -2px -2px var(--button-face),
+		inset 2px 2px var(--window-frame)
+	;
 }
 
 .body .itemList {

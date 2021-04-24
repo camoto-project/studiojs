@@ -1,5 +1,6 @@
 :root {
 	--form-item-label-align: right;
+	--table-selected-row-bg: #c0ffb0;
 }
 
 .so-form-control {
@@ -25,4 +26,38 @@
 	display: flex;
 	justify-content: center;
 	padding-top: 15%;
+}
+
+h3 {
+	font-weight: bold;
+	font-size: 110%;
+}
+
+div.postH3 {
+	margin-left: 1em;
+}
+
+/* Make the form labels appear above instead of to the left. */
+.so-form-item {
+	flex-direction: column;
+}
+
+div.postH3 .so-form-item .so-form-label {
+	font-weight: bold;
+	font-size: 90%;
+	text-align: left;
+	width: 100%;
+}
+
+div.postH3 .so-form-item .so-form-control {
+	width: 100%;
+}
+
+.so-table tr td {
+	cursor: pointer;
+}
+
+/* Hide the column header in the mod/game list */
+.so-table-head {
+	display: none;
 }

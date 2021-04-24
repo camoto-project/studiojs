@@ -1,6 +1,9 @@
 @import '~shineout/dist/theme.default.css';
 
 :root {
+	--modal-header-bg: #eee;
+	--modal-footer-bg: #eee;
+
 	--surface: #D4D0C8;
 	--button-highlight: #ffffff;
 	--button-face: #dfdfdf;
