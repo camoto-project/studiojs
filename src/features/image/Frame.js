@@ -29,8 +29,9 @@ function Frame(props) {
 			let pxCanvas = ctx.createImageData(frameWidth, frameHeight);
 			for (let i = 0; i < frameWidth * frameHeight; i++) {
 				const px = frame.pixels[i];
+				const clr = pal[px] || [255, 0, 255, 255];
 				for (let j = 0; j < 4; j++) {
-					pxCanvas.data[i * 4 + j] = pal[px][j];
+					pxCanvas.data[i * 4 + j] = clr[j];
 				}
 			}
 			ctx.putImageData(pxCanvas, 0, 0);
