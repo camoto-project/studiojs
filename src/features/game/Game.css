@@ -12,11 +12,6 @@
 	flex-grow: 1;
 }
 
-.exit {
-	margin-top: 2px;
-	font-size: 150%;
-}
-
 table tr .hover {
 	visibility: hidden;
 }

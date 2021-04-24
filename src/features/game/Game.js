@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link as RRLink } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import {
 	Button,
@@ -26,6 +26,8 @@ import SaveFile from '../SaveFile.js';
 import './Game.css';
 
 function Game(props) {
+	const history = useHistory();
+
 	const [ gameItemsTree, setGameItemsTree ] = useState([]);
 	const [ openInstance, setOpenInstance ] = useState({});
 	const [ saveVisible, setSaveVisible ] = useState(false);
@@ -119,16 +121,27 @@ function Game(props) {
 	return (
 		<div className="root">
 			<div className="toolbar">
-				<button onClick={toggleTree} className={treeVisible ? 'hold' : '' }>
-					<Icon icon={iconMenu} />
-				</button>
-				<button type="primary" onClick={() => setSaveVisible(true)}>
-					<Icon icon={iconSave} />
-				</button>
+
+				<Tooltip tip="Show/hide the list of items" position="right">
+					<button onClick={toggleTree} className={treeVisible ? 'hold' : '' }>
+						<Icon icon={iconMenu} />
+					</button>
+				</Tooltip>
+
+				<Tooltip tip="Save/download to this device" position="bottom">
+					<button onClick={() => setSaveVisible(true)}>
+						<Icon icon={iconSave} />
+					</button>
+				</Tooltip>
+
 				<div className="separator" />
-				<RRLink to="/" className="exit">
-					<Icon icon={iconClose} style={{marginBottom: -1}} />
-				</RRLink>
+
+				<Tooltip tip="Close this mod and return to the main menu" position="left">
+					<button onClick={() => history.push('/')}>
+						<Icon icon={iconClose} />
+					</button>
+				</Tooltip>
+
 			</div>
 			<div className="body">
 				<span className="itemList" style={{display: treeVisible ? 'block' : 'none'}}>
