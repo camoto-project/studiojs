@@ -107,6 +107,37 @@ export default class Storage
 	}
 
 	/**
+	 * Permanently remove the mod and all its files.
+	 *
+	 * @param {Number} idMod
+	 *   ID number of the mod to delete.
+	 *
+	 * @return No return value.
+	 */
+	static async deleteMod(idMod) {
+		const db = await this.openDB();
+		const tx = db.transaction(['mods', 'files'], 'readwrite');
+
+		// Delete the files first in case there is an error.  Unfortunately there
+		// doesn't seem to be a way to use an unbounded range with a composite key,
+		// so we have to iterate through the items manually.
+		let cursor = await tx.objectStore('files').openCursor();
+		while (cursor) {
+			// Only process files for this mod.
+			if (cursor.key[0] == idMod) {
+				cursor.delete();
+			}
+			cursor = await cursor.continue();
+		}
+
+		// Then get rid of the mod last, so it remains in the list for future
+		// delete attempts.
+		await tx.objectStore('mods').delete(idMod);
+
+		await tx.done;
+	}
+
+	/**
 	 * @param {Number} idMod
 	 *   ID number for the mod the files are associated with, to allow different
 	 *   mods to use files with the same name.

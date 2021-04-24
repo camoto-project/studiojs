@@ -30,6 +30,15 @@ function MessageBox(props) {
 		info: 'Information',
 	}[props.icon] || 'Information';
 
+	let jsxFooterPrefix = null;
+	if (props.confirm) {
+		jsxFooterPrefix = (
+			<a onClick={props.onClose} className="cancel">
+				Cancel
+			</a>
+		);
+	}
+
 	return (
 		<Modal
 			visible={props.visible}
@@ -41,13 +50,19 @@ function MessageBox(props) {
 			)}
 			onClose={props.onClose}
 			footer={(
-				<Button
-					onClick={props.onClose}
-					type="primary"
-				>
-					<Icon icon={iconOK} className="icon" />
-					OK
-				</Button>
+				<>
+					{jsxFooterPrefix}
+					<Button
+						onClick={props.onOK || props.onClose}
+						loading={props.okBusy}
+						type={props.buttonTypeOK || "primary"}
+					>
+						{!props.okBusy && (
+							<Icon icon={props.okIcon || iconOK} className="icon" />
+						)}
+						{props.okText || 'OK'}
+					</Button>
+				</>
 			)}
 		>
 			{props.children}
