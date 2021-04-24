@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useHistory, Link as RRLink } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link as RRLink } from 'react-router-dom';
 
 import {
 	Button,
@@ -12,7 +12,6 @@ import iconB800 from '@iconify/icons-fa-solid/th';
 import iconClose from '@iconify/icons-fa-solid/times';
 import iconFile from '@iconify/icons-fa-solid/file';
 import iconFolder from '@iconify/icons-fa-solid/folder';
-import iconFolderOpen from '@iconify/icons-fa-solid/folder-open';
 import iconImage from '@iconify/icons-fa-solid/image';
 import iconInstruments from '@iconify/icons-fa-solid/drum';
 import iconMap from '@iconify/icons-fa-solid/drafting-compass';
@@ -22,19 +21,13 @@ import iconPalette from '@iconify/icons-fa-solid/palette';
 import iconSave from '@iconify/icons-fa-solid/download';
 
 import Document from '../Document.js';
-import OpenGame from './OpenGame.js';
 import SaveFile from '../SaveFile.js';
 
 import './Game.css';
 
-function Game() {
-	const history = useHistory();
-
-	const [ gameId, setGameId ] = useState(null);
-	const [ game, setGame ] = useState(null);
+function Game(props) {
 	const [ gameItemsTree, setGameItemsTree ] = useState([]);
 	const [ openInstance, setOpenInstance ] = useState({});
-	const [ openVisible, setOpenVisible ] = useState(true);
 	const [ saveVisible, setSaveVisible ] = useState(false);
 	const [ treeVisible, setTreeVisible ] = useState(true);
 	// The docOpenState increments each time the open document changes.  This
@@ -43,14 +36,17 @@ function Game() {
 	// this, the error state is never reset so once an error happens, the error
 	// message can never be closed.
 	const [ docOpenCount, setDocOpenCount ] = useState(0);
-	const [ gameOpenCount, setGameOpenCount ] = useState(0);
 
-	async function openGame(newGame, idGame) {
-		// Load the items first so any errors are thrown and caught by <OpenGame/>.
-		let items = await newGame.items();
-
-		setGameId(idGame);
-		setGame(newGame);
+	// When a 'game' is passed through in the props, update the list of items in
+	// the tree view.
+	useEffect(async () => {
+		let items;
+		try {
+			items = await props.game.items();
+		} catch (e) {
+			// TODO: handle error
+			console.log(e);
+		}
 
 		function addChildren(items) {
 			let treeItems = [];
@@ -65,23 +61,9 @@ function Game() {
 		}
 		const treeItems = addChildren(items);
 		setGameItemsTree(treeItems);
-		setOpenInstance({type: '_new'});
-		setOpenVisible(false);
-		setGameOpenCount(gameOpenCount + 1);
-	}
-
-	function cancelOpen() {
-		if (!game) {
-			// No game so no existing game to go back to.
-			history.push('/');
-		} else {
-			// Go back to open game
-			setOpenVisible(false);
-			// Make it re-render to lose its state, so any partial selections are
-			// reset on the next show.
-			setGameOpenCount(gameOpenCount + 1);
-		}
-	}
+	}, [
+		props.game,
+	]);
 
 	function openItem(d) {
 		if (d.disabled) return;
@@ -140,9 +122,6 @@ function Game() {
 				<button onClick={toggleTree} className={treeVisible ? 'hold' : '' }>
 					<Icon icon={iconMenu} />
 				</button>
-				<button type="secondary" onClick={() => setOpenVisible(true)}>
-					<Icon icon={iconFolderOpen} />
-				</button>
 				<button type="primary" onClick={() => setSaveVisible(true)}>
 					<Icon icon={iconSave} />
 				</button>
@@ -161,18 +140,11 @@ function Game() {
 				</span>
 				<Document docOpenCount={docOpenCount} {...openInstance} />
 			</div>
-			<OpenGame
-				key={gameOpenCount}
-				visible={openVisible || !game}
-				onOpen={openGame}
-				onCancel={cancelOpen}
-			/>
 			{saveVisible && (
 				<SaveFile
 					category="archive"
-					document={game}
+					document={props.game}
 					title="Save game"
-					defaultFormat={gameId}
 					onClose={() => setSaveVisible(false)}
 				/>
 			)}

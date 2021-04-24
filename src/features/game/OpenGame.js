@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import {
 	Button,
 	Form,
+	List,
 	Modal,
 } from 'shineout';
 import { Icon } from '@iconify/react';
 import iconEdit from '@iconify/icons-fa-solid/edit';
 
-import {
-	all as gameinfoFormats,
-} from '@camoto/gameinfo';
-
+import Storage from '../../util/storage.js';
 import ErrorBox from '../../components/ErrorBox.js';
 import GameList from './GameList.js';
 import VirtualUpload from '../../components/VirtualUpload.js';
@@ -19,50 +18,52 @@ import VirtualUpload from '../../components/VirtualUpload.js';
 import './OpenGame.css';
 
 function OpenGame(props) {
+	const history = useHistory();
+
 	const [ selectedGames, setSelectedGames ] = useState([]);
 	const [ files, setFiles ] = useState([]);
 	const [ errorMessage, setErrorMessage ] = useState(null);
+	const [ selectedMod, setSelectedMod ] = useState(null);
+	const [ mods, setMods ] = useState();
 
 	// User opened the file
 	async function onOpen() {
 		setErrorMessage(null);
 
-		const gameId = selectedGames[0].id;
-		const handler = gameinfoFormats.find(h => h.metadata().id === gameId);
-		if (!handler) {
-			setErrorMessage(`Somehow selected a game ("${gameId}") that doesn't exist!`);
-			return;
-		}
+		const idGame = selectedGames[0].id;
 
-		const filesystem = {
-			findFile: filename => {
-				const target = filename.toLowerCase();
-				return files.some(f => f.name.toLowerCase() === target);
-			},
-			read: filename => {
-				const target = filename.toLowerCase();
-				const file = files.find(f => f.name.toLowerCase() === target);
-				if (!file) {
-					throw new Error(`File ${filename} was requested by the game, but `
-						+ `was not included when the game was opened.  Please select this `
-						+ `file above and try again.`);
-				}
-				return file.content;
-			},
-		};
-		let gameHandler = new handler(filesystem);
+		let storedFiles = {};
+		for (const f of files) {
+			storedFiles[f.name] = f.content;
+		}
 		try {
-			const warnings = await gameHandler.open();
-			// TODO: Display warnings and let user retry or proceed
-			await props.onOpen(gameHandler, gameId);
+			const idNewMod = await Storage.addMod({
+				idGame,
+				title: 'Untitled',
+				dateCreated: new Date(),
+			}, storedFiles);
+
+			// Open the new game by moving to its URL.
+			history.push(`/game/${idNewMod}`);
+
 		} catch (e) {
+			console.error(e);
 			setErrorMessage(e.message);
 		}
 	}
 
+	useEffect(async () => {
+		setMods(await Storage.getMods());
+	}, []);
+
 	// User selected a game.
 	function onGameChange(newGames) {
 		setSelectedGames(newGames);
+		setErrorMessage(null);
+	}
+
+	function onModChange(idNewMod) {
+		setSelectedMod(idNewMod);
 		setErrorMessage(null);
 	}
 
@@ -71,7 +72,7 @@ function OpenGame(props) {
 
 	return (
 		<Modal
-			visible={props.visible}
+			visible={true}
 			width={600}
 			title={props.title || 'Select a game'}
 			onClose={props.onClose}
@@ -92,6 +93,21 @@ function OpenGame(props) {
 			)}
 		>
 			<Form>
+
+				<Form.Item label="Resume work on a previous mod">
+					<List
+						data={mods}
+						keygen="id"
+						bordered
+						onChange={onModChange}
+						renderItem={d => (
+							<span className={`gameItem ${selectedMod === d.id ? 'selected' : ''}`}>
+								<img src={`/game-icons/${d.idGame}.png`} alt="" />
+								{d.title}
+							</span>
+						)}
+					/>
+				</Form.Item>
 
 				<Form.Item label="Game">
 					<GameList

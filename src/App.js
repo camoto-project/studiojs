@@ -9,7 +9,8 @@ import './App.css';
 
 const Music = lazy(() => import('./features/music/Music.js'));
 const Archive = lazy(() => import('./features/archive/Archive.js'));
-const Game = lazy(() => import('./features/game/Game.js'));
+const OpenGame = lazy(() => import('./features/game/OpenGame.js'));
+const GameHandler = lazy(() => import('./features/game/GameHandler.js'));
 
 function App() {
 	return (
@@ -17,7 +18,8 @@ function App() {
 			<Suspense fallback={<Loading/>}>
 				<Switch>
 					<Route exact path="/" component={Welcome}/>
-					<Route path="/game" component={Game}/>
+					<Route exact path="/game" component={OpenGame}/>
+					<Route path="/game/:id" component={GameHandler}/>
 					<Route path="/music" component={Music}/>
 					<Route path="/archive" component={Archive}/>
 					<Route component={Error404}/>

@@ -30,6 +30,7 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^13.0.6",
     "file-saver": "^2.0.5",
+    "idb": "^6.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
