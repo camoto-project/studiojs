@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import {
-	Tooltip,
-} from 'shineout';
 import { Icon } from '@iconify/react';
 import iconImport from '@iconify/icons-fa-solid/file-import';
 import iconExport from '@iconify/icons-fa-solid/file-export';
@@ -14,6 +11,7 @@ import {
 	frameFromTileset,
 } from '@camoto/gamegraphics';
 
+import Tooltip from '../../components/Tooltip.js';
 import Frame from './Frame.js';
 import './Image.css';
 
@@ -116,36 +114,48 @@ function Image(props) {
 	return (
 		<>
 			<div className="toolbar">
-				<Tooltip tip="Save this image to a file" position="bottom">
-					<button>
-						<Icon icon={iconExport} />
-					</button>
-				</Tooltip>
-				<Tooltip tip="Replace this image with one loaded from a file" position="bottom">
-					<button>
-						<Icon icon={iconImport} />
-					</button>
-				</Tooltip>
-				<Tooltip tip="Adjust zoom level in the preview only" position="bottom">
-					<button onClick={onZoom}>
-						<Icon icon={iconZoom} />
-					</button>
-				</Tooltip>
-				<Tooltip tip="Toggle between animation and frame list" position="bottom">
-					<button onClick={onToggleAnimation} disabled={!animationAllowed} className={animation ? 'hold' : ''}>
-						<Icon icon={iconFilm} />
-					</button>
-				</Tooltip>
-				<Tooltip tip="Increase the frame list width" position="bottom">
-					<button onClick={onColInc} disabled={!tilesetFixed || (fixedWidth >= maxWidth)}>
-						<Icon icon={iconColInc} />
-					</button>
-				</Tooltip>
-				<Tooltip tip="Decrease the frame list width" position="bottom">
-					<button onClick={onColDec} disabled={!tilesetFixed || (fixedWidth <= 1)}>
-						<Icon icon={iconColDec} />
-					</button>
-				</Tooltip>
+				<button>
+					<Tooltip>
+						Save this image to a file
+					</Tooltip>
+					<Icon icon={iconExport} />
+				</button>
+
+				<button>
+					<Tooltip>
+						Replace this image with one loaded from a file
+					</Tooltip>
+					<Icon icon={iconImport} />
+				</button>
+
+				<button onClick={onZoom}>
+					<Tooltip>
+						Adjust zoom level in the preview only
+					</Tooltip>
+					<Icon icon={iconZoom} />
+				</button>
+
+				<button onClick={onToggleAnimation} disabled={!animationAllowed} className={animation ? 'hold' : ''}>
+					<Tooltip>
+						Toggle between animation and frame list
+					</Tooltip>
+					<Icon icon={iconFilm} />
+				</button>
+
+				<button onClick={onColInc} disabled={!tilesetFixed || (fixedWidth >= maxWidth)}>
+					<Tooltip>
+						Increase the frame list width
+					</Tooltip>
+					<Icon icon={iconColInc} />
+				</button>
+
+				<button onClick={onColDec} disabled={!tilesetFixed || (fixedWidth <= 1)}>
+					<Tooltip>
+						Decrease the frame list width
+					</Tooltip>
+					<Icon icon={iconColDec} />
+				</button>
+
 			</div>
 			<div className="content">
 				<div className="frames">

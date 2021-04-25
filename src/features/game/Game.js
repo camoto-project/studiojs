@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import {
-	Tooltip,
 	Tree,
 } from 'shineout';
 import { Icon } from '@iconify/react';
@@ -21,6 +20,7 @@ import iconSave from '@iconify/icons-fa-solid/download';
 
 import Document from '../Document.js';
 import SaveGame from './SaveGame.js';
+import Tooltip from '../../components/Tooltip.js';
 
 import './Game.css';
 
@@ -120,29 +120,49 @@ function Game(props) {
 		}
 	}
 
+	async function onUpdateMod(updatedMod) {
+		console.log('updating mod to', updatedMod);
+		try {
+			await Storage.updateMod(props.idMod, updatedMod);
+			setMod(updatedMod);
+		} catch (e) {
+			console.error(e);
+		}
+	}
+
 	return (
 		<div className="root">
 			<div className="toolbar">
 
-				<Tooltip tip="Show/hide the list of items" position="right">
-					<button onClick={toggleTree} className={treeVisible ? 'hold' : '' }>
-						<Icon icon={iconMenu} />
-					</button>
-				</Tooltip>
+				<button onClick={toggleTree} className={treeVisible ? 'hold' : '' }>
+					<Tooltip>
+						Show/hide the list of items
+					</Tooltip>
+					<Icon icon={iconMenu} />
+				</button>
 
-				<Tooltip tip="Save/download to this device" position="bottom">
-					<button onClick={() => setSaveVisible(true)}>
-						<Icon icon={iconSave} />
-					</button>
-				</Tooltip>
+				<button onClick={() => setSaveVisible(true)}>
+					<Tooltip>
+						Save/download to this device
+					</Tooltip>
+					<Icon icon={iconSave} />
+				</button>
 
-				<div className="separator" />
+				<span className="separator" />
 
-				<Tooltip tip="Close this mod and return to the main menu" position="left">
-					<button onClick={() => history.push('/')}>
-						<Icon icon={iconClose} />
-					</button>
-				</Tooltip>
+				<ToolbarItemModInfo
+					mod={mod}
+					onChange={onUpdateMod}
+				/>
+
+				<span className="flex-spacer" />
+
+				<button onClick={() => history.push('/')}>
+					<Tooltip>
+						Close this mod and return to the main menu
+					</Tooltip>
+					<Icon icon={iconClose} />
+				</button>
 
 			</div>
 			<div className="body">
