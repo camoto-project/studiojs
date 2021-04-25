@@ -64,6 +64,22 @@ function GameHandler(props) {
 		props.match.params.id
 	]);
 
+	// Save the game back to the original files and update IndexedDB.
+	async function saveMod() {
+		let output;
+		try {
+			output = await game.save();
+		} catch (e) {
+			console.error('Error saving mod:', e);
+			setErrorMessage(`Unable to save: ${e.message}`);
+			return;
+		}
+
+		const { files, warnings } = output;
+		setWarnings(warnings || []);
+		await Storage.setFiles(idMod, files);
+	}
+
 	function onDismissWarnings() {
 		setWarnings([]);
 	}
@@ -98,13 +114,14 @@ function GameHandler(props) {
 				key={idMod}
 				idMod={idMod}
 				game={game}
+				cbSaveMod={saveMod}
 			/>
 			<WarningListModal
 				warnings={warnings}
 				onClose={onDismissWarnings}
 			>
 				<p>
-					The following issues were encountered when opening this game:
+					The following issues were encountered:
 				</p>
 			</WarningListModal>
 		</>

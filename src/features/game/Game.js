@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import {
 	Input,
+	Spin,
 	Tree,
 } from 'shineout';
 import { Icon } from '@iconify/react';
@@ -35,6 +36,10 @@ function Game(props) {
 	const [ openInstance, setOpenInstance ] = useState({});
 	const [ saveVisible, setSaveVisible ] = useState(false);
 	const [ treeVisible, setTreeVisible ] = useState(true);
+
+	// Are we currently waiting for a save-to-IndexedDB operation to complete?
+	const [ saving, setSaving ] = useState(false);
+
 	// The docOpenState increments each time the open document changes.  This
 	// value is passed to the document's error boundary as a `key` prop, which
 	// will cause it to re-render every time a new document is opened.  Without
@@ -52,6 +57,7 @@ function Game(props) {
 			} catch (e) {
 				// TODO: handle error
 				console.log(e);
+				return;
 			}
 
 			function addChildren(items) {
@@ -87,6 +93,14 @@ function Game(props) {
 			setOpenInstance({
 				type: d.type,
 				document: doc,
+				cbSave: async doc => {
+					setSaving(true);
+					// Save to the game.
+					await d.fnSave(doc);
+					// Update the stored files.
+					await props.cbSaveMod();
+					setSaving(false);
+				},
 			});
 		} catch (e) {
 			console.error(e);
@@ -164,6 +178,13 @@ function Game(props) {
 					mod={mod}
 					onChange={onUpdateMod}
 				/>
+
+				{saving && (
+					<span className="toolbarItemSaving">
+						<Spin name="ring" size={16} />
+						Saving to browser cache...
+					</span>
+				)}
 
 				<span className="flex-spacer" />
 

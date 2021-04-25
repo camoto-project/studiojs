@@ -101,3 +101,15 @@ h4 {
 	font-weight: bold;
 	font-size: 100%;
 }
+
+.toolbarItemSaving {
+	margin-left: 1em;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+}
+
+.toolbarItemSaving .so-spin-ring {
+	margin-left: 4px;
+	margin-right: 6px;
+}

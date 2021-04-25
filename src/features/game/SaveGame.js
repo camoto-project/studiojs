@@ -25,7 +25,6 @@ function SaveGame(props) {
 		let output;
 		try {
 			output = await props.game.save();
-			console.log(output);
 		} catch (e) {
 			console.error(e);
 			setErrorMessage(`Unable to save: ${e.message}`);
