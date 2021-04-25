@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import {
-	Input,
 	Spin,
 	Tree,
 } from 'shineout';
@@ -85,6 +84,7 @@ function Game(props) {
 		loadItems();
 	}, [
 		props.game,
+		props.idMod,
 	]);
 
 	function openItem(d) {

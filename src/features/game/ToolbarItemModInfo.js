@@ -1,10 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 
 import {
 	Input,
 } from 'shineout';
-
-import Storage from '../../util/storage.js';
 
 import './ToolbarItemModInfo.css';
 
@@ -46,7 +44,7 @@ function ToolbarItemModInfo(props) {
 	return (
 		<div className="modInfoItem" onClick={onRenameMod}>
 			<img src={`/game-icons/${props.mod.idGame}.png`} alt="" className="icon" />
-			{renamingMod && (
+			{(renamingMod && (
 				<Input
 					autoFocus
 					defaultValue={props.mod.title}
@@ -56,7 +54,7 @@ function ToolbarItemModInfo(props) {
 					tip="Type the new mod name and press Enter to save."
 					popover="bottom"
 				/>
-			) || props.mod.title}
+			)) || props.mod.title}
 		</div>
 	);
 }

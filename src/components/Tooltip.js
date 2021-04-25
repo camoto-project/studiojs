@@ -4,7 +4,7 @@ import {
 	Popover,
 } from 'shineout';
 
-export default (props) => (
+const Tooltip = (props) => (
 	<Popover
 		style={{ color: "#fff" }}
 		background="rgba(20, 23, 55, 0.9)"
@@ -13,3 +13,5 @@ export default (props) => (
 		{...props}
 	/>
 );
+
+export default Tooltip;

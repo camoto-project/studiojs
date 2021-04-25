@@ -19,28 +19,6 @@ function SaveGame(props) {
 	const [ errorMessage, setErrorMessage ] = useState(null);
 	const [ warnings, setWarnings ] = useState([]);
 
-	async function regenerateGame() {
-		setDownloads({});
-
-		let output;
-		try {
-			output = await props.game.save();
-		} catch (e) {
-			console.error(e);
-			setErrorMessage(`Unable to save: ${e.message}`);
-			return;
-		}
-		const { files, warnings } = output;
-		setDownloads(files || {});
-		setWarnings(warnings || []);
-
-		let dlc = {};
-		for (const filename of Object.keys(files)) {
-			dlc[filename] = false;
-		}
-		setDownloadsComplete(dlc);
-	}
-
 	function onDownload(filename, content) {
 		const blobContent = new Blob([content]);
 		saveAs(blobContent, filename.toLowerCase(), { type: 'application/octet-stream' });
@@ -56,14 +34,33 @@ function SaveGame(props) {
 			setDownloads({});
 			return;
 		}
+
+		async function regenerateGame() {
+			setDownloads({});
+
+			let output;
+			try {
+				output = await props.game.save();
+			} catch (e) {
+				console.error(e);
+				setErrorMessage(`Unable to save: ${e.message}`);
+				return;
+			}
+			const { files, warnings } = output;
+			setDownloads(files || {});
+			setWarnings(warnings || []);
+
+			let dlc = {};
+			for (const filename of Object.keys(files)) {
+				dlc[filename] = false;
+			}
+			setDownloadsComplete(dlc);
+		}
 		regenerateGame();
 	}, [
+		props.game,
 		props.visible,
 	]);
-
-	function onDismissWarnings() {
-		setWarnings([]);
-	}
 
 	// The close button is primary only if all downloads are complete.
 	const closeButtonPrimary = !Object.values(downloadsComplete).includes(false);
@@ -135,7 +132,7 @@ function SaveGame(props) {
 							style={{marginBottom: '1ex'}}
 						>
 							<Icon icon={iconDownload} className="icon" />
-							{filename && filename.toLowerCase() || 'Download'}
+							{(filename && filename.toLowerCase()) || 'Download'}
 						</Button>
 					</div>
 				))}

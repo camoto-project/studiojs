@@ -24,14 +24,13 @@ import WarningListModal from '../../components/WarningListModal.js';
 import './Image.css';
 
 function Image(props) {
-	const defaultImages = props.document.length ? props.document : [props.document];
-	const [ masterImages, setMasterImages ] = useState(defaultImages);
+	const [ masterImages, setMasterImages ] = useState(props.document);
 	const [ zoom, setZoom ] = useState(2);
 	const [ animation, setAnimation ] = useState(true);
 	const [ animationAllowed, setAnimationAllowed ] = useState(true);
-	const [ images, setImages ] = useState(defaultImages);
+	const [ images, setImages ] = useState(props.document);
 	const [ tilesetFixed, setTilesetFixed ] = useState(false);
-	const [ fixedWidth, setFixedWidth ] = useState(defaultImages[0].fixedWidth || 8);
+	const [ fixedWidth, setFixedWidth ] = useState(props.document[0].fixedWidth || 8);
 	const [ maxWidth, setMaxWidth ] = useState(1);
 	const [ selectedImage, setSelectedImage ] = useState(null);
 	const [ errorPopup, setErrorPopup ] = useState(null);
@@ -49,7 +48,7 @@ function Image(props) {
 	// If props.document ever changes, copy it across to masterImages, replacing
 	// any modified image currently in masterImages.
 	useEffect(() => {
-		setMasterImages(defaultImages);
+		setMasterImages(props.document);
 	}, [
 		props.document,
 	]);
@@ -67,6 +66,7 @@ function Image(props) {
 		}
 		setAnimation(false);
 		setAnimationAllowed(false);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [
 		// Don't use masterImages here as we only want these values set on the first
 		// render, not again when the image is replaced.
@@ -92,9 +92,9 @@ function Image(props) {
 			setImages(imgsFixed);
 		} else {
 			setTilesetFixed(false);
-			setImages(defaultImages);
+			setImages(props.document);
 		}
-		const newMaxWidth = defaultImages.reduce((a, v) => Math.max(a, v.frames.length), 1)
+		const newMaxWidth = props.document.reduce((a, v) => Math.max(a, v.frames.length), 1)
 		setMaxWidth(newMaxWidth);
 		// Clip the current value to the permitted range.
 		setFixedWidth(
@@ -110,6 +110,7 @@ function Image(props) {
 		animation,
 		fixedWidth,
 		masterImages,
+		props.document,
 	]);
 
 	function onToggleAnimation() {

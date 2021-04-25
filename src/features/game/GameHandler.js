@@ -62,7 +62,7 @@ function GameHandler(props) {
 		}
 		loadMod();
 	}, [
-		props.match.params.id
+		idMod
 	]);
 
 	// Save the game back to the original files and update IndexedDB.
