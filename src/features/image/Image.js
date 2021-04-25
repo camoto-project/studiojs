@@ -204,7 +204,7 @@ function Image(props) {
 		// Keep the original palette, that has to be updated elsewhere if desired.
 		newImg.palette = origImg.palette;
 
-		let newImages = images.slice();
+		let newImages = masterImages.slice();
 		newImages[selectedImage] = newImg;
 		setMasterImages(newImages);
 	}
