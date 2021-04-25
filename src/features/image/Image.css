@@ -1,6 +1,4 @@
-.document .content canvas {
-	margin: auto;
-	image-rendering: crisp-edges;
+canvas.singleImage {
 	box-shadow:
 		0 2.8px 2.2px rgba(0, 0, 0, 0.034),
 		0 6.7px 5.3px rgba(0, 0, 0, 0.048),
@@ -15,7 +13,7 @@
  * From: https://stackoverflow.com/a/65887831/308237
  */
 :root {
-	--checker-color-1: #ddd;
+	--checker-color-1: #888;
 	--checker-color-2: #bbb;
 	--checker-size: 8px;
 	--checker-gradient: linear-gradient(45deg, var(--checker-color-1) 25%, transparent 25%, transparent 75%, var(--checker-color-1) 75%);
@@ -26,4 +24,31 @@
 	background-image: var(--checker-gradient), var(--checker-gradient);
 	background-position: 0 0, var(--checker-size) var(--checker-size);
 	background-size: calc(var(--checker-size) * 2) calc(var(--checker-size) * 2);
+}
+/* End checkerbox */
+
+.content .images {
+	flex-wrap: wrap;
+}
+
+.content .images .image {
+	display: inline-block;
+	line-height: 0.0;
+	margin: 4px;
+	box-shadow:
+		4px 4px 16px rgba(0, 0, 0, 0.3)
+	;
+}
+
+/* Selected image */
+.content .images .image.selectedImage {
+	box-shadow:
+		4px 4px 16px rgba(0, 0, 0, 0.3),
+		0px 0px 2px 2px rgba(0,0,0,0.75)
+	;
+}
+
+/* Keep images pixellated */
+.content canvas {
+	image-rendering: crisp-edges;
 }

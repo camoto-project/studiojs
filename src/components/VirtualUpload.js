@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Button, Upload } from 'shineout';
 import { Icon } from '@iconify/react';
 import iconFolderOpen from '@iconify/icons-fa-solid/folder-open';
