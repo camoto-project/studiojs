@@ -29,11 +29,9 @@ function Document(props) {
 			);
 			break;
 
-		case 'image': {
-			const imageArray = props.document.length ? props.document : [props.document];
-			element = <Image document={imageArray} cbSave={props.cbSave} />;
+		case 'image':
+			element = <Image document={props.document} cbSave={props.cbSave} />;
 			break;
-		}
 
 		case 'music':
 			element = <Music document={props.document} cbSave={props.cbSave} />;
