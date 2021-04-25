@@ -33,14 +33,14 @@ function VirtualUpload(props) {
 			request={request}
 			renderResult={d => (
 				<>
-					<Icon icon={iconFile} style={{marginRight: 6, marginBottom: -1}}/>
+					<Icon icon={iconFile} className="icon" />
 					{d.name}
 				</>
 			)}
 			{...props}
 		>
 			<Button type={props.type}>
-				<Icon icon={iconFolderOpen} style={{marginRight: 6, marginBottom: -1}}/>
+				<Icon icon={iconFolderOpen} className="icon" />
 				Browse
 			</Button>
 		</Upload>

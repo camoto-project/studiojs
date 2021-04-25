@@ -10,7 +10,7 @@ function ErrorBox(props) {
 	return (
 		<Alert type="danger" className="error">
 			<h3>
-			<Icon icon={iconError} style={{marginRight: 6, marginBottom: -1}}/>
+			<Icon icon={iconError} className="icon"/>
 				{props.summary}
 			</h3>
 			{props.children}

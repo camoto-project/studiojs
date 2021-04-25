@@ -131,7 +131,7 @@ function SaveFile(props) {
 									type={downloadsComplete[id] ? 'default' : 'primary'}
 									style={{marginBottom: '1ex'}}
 								>
-									<Icon icon={iconDownload} style={{marginRight: 6, marginBottom: -1}} />
+									<Icon icon={iconDownload} className="icon" />
 									{dl.filename || 'Download'}
 								</Button>
 							</div>

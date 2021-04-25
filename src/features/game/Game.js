@@ -105,7 +105,7 @@ function Game(props) {
 		}[d.type] || iconFile;
 		const content = (
 			<span onClick={() => openItem(d)} className={d.disabled ? 'disabled' : ''}>
-				<Icon icon={iconItemType} style={{marginRight: 6, marginBottom: -1}} />
+				<Icon icon={iconItemType} className="icon" />
 				{d.title}
 			</span>
 		);

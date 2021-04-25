@@ -304,7 +304,7 @@ function OpenFile(props) {
 						</span>
 					)}
 					<Card.Submit disabled={!openEnabled}>
-						<Icon icon={iconEdit} style={{marginRight: 6, marginBottom: -1}} />
+						<Icon icon={iconEdit} className="icon" />
 						Open
 					</Card.Submit>
 				</Card.Footer>

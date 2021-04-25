@@ -83,7 +83,7 @@ function Archive() {
 		if (d.attributes.compressed) {
 			attrC = (
 				<Tooltip tip={'Compressed; ' + humanFileSize(d.diskSize)} position="top">
-					<Icon icon={iconCompressed} style={{marginRight: 6, marginBottom: -1}} />
+					<Icon icon={iconCompressed} className="icon" />
 				</Tooltip>
 			);
 		}
@@ -92,7 +92,7 @@ function Archive() {
 		if (d.attributes.encrypted) {
 			attrE = (
 				<Tooltip tip="Encrypted" position="top">
-					<Icon icon={iconEncrypted} style={{marginRight: 6, marginBottom: -1}} />
+					<Icon icon={iconEncrypted} className="icon" />
 				</Tooltip>
 			);
 		}
@@ -167,24 +167,24 @@ function Archive() {
 		return (
 			<span className="hover actions">
 				<span className="action" onClick={() => onExtract(d, i)}>
-					<Icon icon={iconExtract} style={{marginRight: 6, marginBottom: -1}} />
+					<Icon icon={iconExtract} className="icon" />
 					Extract
 				</span>
 				<span className="action" onClick={() => onReplace(d, i)}>
-					<Icon icon={iconReplace} style={{marginRight: 6, marginBottom: -1}} />
+					<Icon icon={iconReplace} className="icon" />
 					Replace
 				</span>
 				<span className="action" onClick={() => onRename(d, i)}>
-					<Icon icon={iconRename} style={{marginRight: 6, marginBottom: -1}} />
+					<Icon icon={iconRename} className="icon" />
 					Rename
 				</span>
 				<span className="action" onClick={() => onDelete(d, i)}>
-					<Icon icon={iconDelete} style={{marginRight: 6, marginBottom: -1}} />
+					<Icon icon={iconDelete} className="icon" />
 					Delete
 				</span>
 				<Tooltip tip="Add a new file before this one">
 					<span className="action" onClick={() => onInsertBefore(d, i)}>
-						<Icon icon={iconInsertBefore} style={{marginRight: 6, marginBottom: -1}} />
+						<Icon icon={iconInsertBefore} className="icon" />
 						Insert before
 					</span>
 				</Tooltip>
@@ -196,11 +196,11 @@ function Archive() {
 		<div className="root">
 			<div className="toolbar">
 				<Button type="secondary" onClick={() => setArchive(null)}>
-					<Icon icon={iconFolderOpen} style={{marginRight: 6, marginBottom: -1}} />
+					<Icon icon={iconFolderOpen} className="icon" />
 					Open new archive
 				</Button>
 				<Button type="primary" onClick={() => setSaveVisible(true)}>
-					<Icon icon={iconSave} style={{marginRight: 6, marginBottom: -1}} />
+					<Icon icon={iconSave} className="icon" />
 					Save
 				</Button>
 				<div className="separator" />
@@ -214,7 +214,7 @@ function Archive() {
 				data={archiveFiles}
 				columns={[
 					{render: d => (
-						<Icon icon={iconFile} style={{marginRight: 6, marginBottom: -1}} />
+						<Icon icon={iconFile} className="icon" />
 					)},
 					{title: 'Filename', render: renderName},
 					{title: 'Size', render: d => humanFileSize(d.nativeSize)},
