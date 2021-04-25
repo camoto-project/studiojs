@@ -28,9 +28,15 @@ function Tip(props) {
 	}[props.icon] || iconInfo;
 
 	return (
-		<div className="tip" style={{backgroundColor: bgColour}}>
+		<div
+			className="tip"
+			style={{
+				backgroundColor: bgColour,
+				...props.style,
+			}}
+		>
 			<Icon icon={icon} className="icon" style={{color: iconColour}} />
-			<span>{props.children}</span>
+			<div>{props.children}</div>
 		</div>
 	);
 }

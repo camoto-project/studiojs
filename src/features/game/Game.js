@@ -20,7 +20,7 @@ import iconPalette from '@iconify/icons-fa-solid/palette';
 import iconSave from '@iconify/icons-fa-solid/download';
 
 import Document from '../Document.js';
-import SaveFile from '../SaveFile.js';
+import SaveGame from './SaveGame.js';
 
 import './Game.css';
 
@@ -155,14 +155,11 @@ function Game(props) {
 				</span>
 				<Document docOpenCount={docOpenCount} {...openInstance} />
 			</div>
-			{saveVisible && (
-				<SaveFile
-					category="archive"
-					document={props.game}
-					title="Save game"
-					onClose={() => setSaveVisible(false)}
-				/>
-			)}
+			<SaveGame
+				visible={saveVisible}
+				game={props.game}
+				onClose={() => setSaveVisible(false)}
+			/>
 		</div>
 	);
 }

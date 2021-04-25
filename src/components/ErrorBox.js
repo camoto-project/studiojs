@@ -8,7 +8,11 @@ import './ErrorBox.css';
 
 function ErrorBox(props) {
 	return (
-		<Alert type="danger" className="error">
+		<Alert
+			type="danger"
+			className="error"
+			style={props.style}
+		>
 			<h3>
 			<Icon icon={iconError} className="icon"/>
 				{props.summary}

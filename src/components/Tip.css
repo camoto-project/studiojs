@@ -1,5 +1,6 @@
 .tip {
 	display: flex;
+	flex-direction: row;
 	padding: 1.5ex;
 	padding-right: 2ex;
 	border-radius: 8px;
@@ -11,4 +12,9 @@
 	font-size: 12pt;
 	min-width: 1.2em;
 	margin-top: 0.5ex;
+}
+
+/* Pad out any dot points a little more */
+.tip li {
+	margin-bottom: 0.5ex;
 }
