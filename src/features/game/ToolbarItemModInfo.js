@@ -10,13 +10,9 @@ import './ToolbarItemModInfo.css';
 
 function ToolbarItemModInfo(props) {
 	const [ renamingMod, setRenamingMod ] = useState(false);
-	const refInput = useRef();
 
 	function onRenameMod() {
 		setRenamingMod(true);
-		if (refInput.current) {
-			refInput.current.focus();
-		}
 	}
 
 	function renameMod(newTitle) {
@@ -29,12 +25,19 @@ function ToolbarItemModInfo(props) {
 		}
 	}
 
-	function setInputRef(ref) {
-		refInput.current = ref;
-		if (ref) {
-			refInput.current.addEventListener('focusout', () => {
-				renameMod(refInput.current.value);
-			});
+	function onRenameKeyDown(keyCode, value) {
+		switch (keyCode) {
+			case 27: // Escape
+				setRenamingMod(false);
+				break;
+
+			case 13: // Enter
+				setRenamingMod(false);
+				renameMod(value);
+				break;
+
+			default: // ignore any other key
+				break;
 		}
 	}
 
@@ -45,10 +48,11 @@ function ToolbarItemModInfo(props) {
 			<img src={`/game-icons/${props.mod.idGame}.png`} alt="" className="icon" />
 			{renamingMod && (
 				<Input
+					autoFocus
 					defaultValue={props.mod.title}
 					onEnterPress={renameMod}
-					onBlur={() => console.log('a')}
-					forwardedRef={setInputRef}
+					onKeyDown={ev => onRenameKeyDown(ev.keyCode, ev.target.value)}
+					onBlur={ev => renameMod(ev.target.value)}
 					tip="Type the new mod name and press Enter to save."
 					popover="bottom"
 				/>

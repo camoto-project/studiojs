@@ -145,10 +145,11 @@ function Game(props) {
 	}
 
 	async function onUpdateMod(updatedMod) {
-		console.log('updating mod to', updatedMod);
 		try {
+			setSaving(true);
 			await Storage.updateMod(props.idMod, updatedMod);
 			setMod(updatedMod);
+			setSaving(false);
 		} catch (e) {
 			console.error(e);
 		}

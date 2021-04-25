@@ -153,3 +153,12 @@ button.link {
 span.flex-spacer {
 	flex-grow: 1;
 }
+
+/* Popup tip when renaming a mod */
+.so-popover-input-tip {
+	color: black;
+}
+.so-popover-input-tip .so-popover-arrow,
+.so-popover-input-tip .so-popover-content {
+	background-color: #FFFFB0;
+}
