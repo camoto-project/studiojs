@@ -16,6 +16,7 @@ function GameHandler(props) {
 
 	const [ game, setGame ] = useState(null);
 	const [ errorMessage, setErrorMessage ] = useState(null);
+	const [ overlayErrorMessage, setOverlayErrorMessage ] = useState(null);
 	const [ warnings, setWarnings ] = useState([]);
 
 	const idMod = parseInt(props.match.params.id, 10);
@@ -71,7 +72,7 @@ function GameHandler(props) {
 			output = await game.save();
 		} catch (e) {
 			console.error('Error saving mod:', e);
-			setErrorMessage(`Unable to save: ${e.message}`);
+			setOverlayErrorMessage(`Unable to save: ${e.message}`);
 			return;
 		}
 
@@ -116,6 +117,7 @@ function GameHandler(props) {
 				game={game}
 				cbSaveMod={saveMod}
 			/>
+
 			<WarningListModal
 				warnings={warnings}
 				onClose={onDismissWarnings}
@@ -124,6 +126,16 @@ function GameHandler(props) {
 					The following issues were encountered:
 				</p>
 			</WarningListModal>
+
+			<MessageBox
+				icon="error"
+				visible={overlayErrorMessage !== null}
+				onClose={() => setOverlayErrorMessage(null)}
+			>
+				<p>
+					{overlayErrorMessage}
+				</p>
+			</MessageBox>
 		</>
 	);
 }
