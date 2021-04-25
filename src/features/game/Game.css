@@ -89,3 +89,15 @@ table input {
 	height: 100%;
 	display: flex;
 }
+
+/* Dialogs */
+h3 {
+	font-weight: bold;
+	font-size: 110%;
+}
+
+h4 {
+	margin-top: 2ex;
+	font-weight: bold;
+	font-size: 100%;
+}

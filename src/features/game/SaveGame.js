@@ -122,7 +122,7 @@ function SaveGame(props) {
 				</Tip>
 			</div>
 
-			<h3>Files to download</h3>
+			<h4>Files to download</h4>
 
 			<div style={{marginLeft: '1em'}}>
 				{(downloadEntries.length === 0) && (
