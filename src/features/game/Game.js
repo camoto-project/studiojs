@@ -21,6 +21,7 @@ import iconPalette from '@iconify/icons-fa-solid/palette';
 import iconSave from '@iconify/icons-fa-solid/download';
 
 import Document from '../Document.js';
+import MessageBox from '../../components/MessageBox.js';
 import SaveGame from './SaveGame.js';
 import Storage from '../../util/storage.js';
 import ToolbarItemModInfo from './ToolbarItemModInfo.js';
@@ -36,6 +37,7 @@ function Game(props) {
 	const [ openInstance, setOpenInstance ] = useState({});
 	const [ saveVisible, setSaveVisible ] = useState(false);
 	const [ treeVisible, setTreeVisible ] = useState(true);
+	const [ errorPopup, setErrorPopup ] = useState(null);
 
 	// Are we currently waiting for a save-to-IndexedDB operation to complete?
 	const [ saving, setSaving ] = useState(false);
@@ -94,12 +96,36 @@ function Game(props) {
 				type: d.type,
 				document: doc,
 				cbSave: async doc => {
-					setSaving(true);
-					// Save to the game.
-					await d.fnSave(doc);
-					// Update the stored files.
-					await props.cbSaveMod();
-					setSaving(false);
+					try {
+						setSaving(true);
+
+						if (!d.fnSave) {
+							setErrorPopup('Sorry, the gameinfo.js handler for this game does '
+								+ 'not yet support saving this item.');
+							return;
+						}
+
+						// Save to the game.
+						try {
+							await d.fnSave(doc);
+						} catch (e) {
+							console.error(e);
+							setErrorPopup(`Error saving this item: ${e.message}`);
+							return;
+						}
+
+						// Update the stored files.
+						try {
+							await props.cbSaveMod();
+						} catch (e) {
+							console.error(e);
+							setErrorPopup(`Error saving changes to the browser's IndexedDB: ${e.message}`);
+							return;
+						}
+
+					} finally {
+						setSaving(false);
+					}
 				},
 			});
 		} catch (e) {
@@ -197,6 +223,7 @@ function Game(props) {
 				</button>
 
 			</div>
+
 			<div className="body">
 				<span className="itemList" style={{display: treeVisible ? 'block' : 'none'}}>
 					<Tree
@@ -207,11 +234,23 @@ function Game(props) {
 				</span>
 				<Document docOpenCount={docOpenCount} {...openInstance} />
 			</div>
+
 			<SaveGame
 				visible={saveVisible}
 				game={props.game}
 				onClose={() => setSaveVisible(false)}
 			/>
+
+			<MessageBox
+				icon="error"
+				visible={errorPopup !== null}
+				onClose={() => setErrorPopup(null)}
+			>
+				<p>
+					{errorPopup}
+				</p>
+			</MessageBox>
+
 		</div>
 	);
 }
