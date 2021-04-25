@@ -153,21 +153,23 @@ function Game(props) {
 			palette: iconPalette,
 			sound: iconAudio,
 		}[d.type] || iconFile;
-		const content = (
+
+		let disabledTooltip = null;
+		if (d.disabled && d.disabledReason) {
+			disabledTooltip = (
+				<Tooltip>
+					{d.disabledReason}
+				</Tooltip>
+			);
+		}
+
+		return (
 			<span onClick={() => openItem(d)} className={d.disabled ? 'disabled' : ''}>
 				<Icon icon={iconItemType} className="icon" />
 				{d.title}
+				{disabledTooltip}
 			</span>
 		);
-		if (d.disabled && d.disabledReason) {
-			return (
-				<Tooltip tip={d.disabledReason} position="top">
-					{content}
-				</Tooltip>
-			);
-		} else {
-			return content;
-		}
 	}
 
 	async function onUpdateMod(updatedMod) {
