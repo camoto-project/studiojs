@@ -8,10 +8,6 @@
 	margin: 1em;
 }
 
-.separator {
-	flex-grow: 1;
-}
-
 table tr .hover {
 	visibility: hidden;
 }
@@ -38,6 +34,7 @@ table input {
 	max-width: 100%;
 }
 
+/* Tree view */
 .body .itemList {
 	min-width: 20%;
 	width: 20%;
@@ -61,6 +58,7 @@ table input {
 	cursor: not-allowed;
 }
 
+/* Document */
 .body .document {
 	flex-grow: 1;
 	display: flex;

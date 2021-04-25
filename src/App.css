@@ -58,30 +58,31 @@ body, #root {
 
 .toolbar {
 	display: flex;
-  background: var(--surface);
+	align-items: center;
+	background: var(--surface);
 	line-height: 1;
 	padding: 2px;
-  box-shadow: var(--border-single-raised);
+	box-shadow: var(--border-single-raised);
 }
 
 .toolbar button.hold,
 .toolbar button {
-  box-sizing: border-box;
-  border: none;
-  background: var(--surface);
-  box-shadow: none;
+	box-sizing: border-box;
+	border: none;
+	background: var(--surface);
+	box-shadow: none;
 	padding: 0 4px;
 	width: 28px;
 	height: 28px;
 }
 
 .toolbar button:not(:disabled):hover {
-  box-shadow: var(--border-single-raised);
+	box-shadow: var(--border-single-raised);
 }
 
 .toolbar button:not(:disabled):active {
-  box-shadow: var(--border-single-sunken);
-  padding: 2px 0 0 2px;
+	box-shadow: var(--border-single-sunken);
+	padding: 2px 0 0 2px;
 }
 
 .toolbar button.hold {
@@ -108,6 +109,15 @@ body, #root {
 .toolbar button svg {
 	width: 16px;
 	height: 16px;
+}
+
+/* Vertical line separating toolbar button groups */
+.toolbar .separator {
+	height: 100%;
+	margin-left: 2px;
+	margin-right: 2px;
+	width: 2px;
+	box-shadow: var(--border-single-sunken);
 }
 
 /* Central cards (like modals but shouldn't be closed) */

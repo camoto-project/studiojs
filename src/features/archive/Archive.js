@@ -199,14 +199,19 @@ function Archive() {
 					<Icon icon={iconFolderOpen} className="icon" />
 					Open new archive
 				</Button>
+
 				<Button type="primary" onClick={() => setSaveVisible(true)}>
 					<Icon icon={iconSave} className="icon" />
 					Save
 				</Button>
-				<div className="separator" />
-				<RRLink to="/" className="exit">
-					<Icon icon={iconClose} style={{marginBottom: -1}} />
-				</RRLink>
+
+				<span className="flex-spacer" />
+
+				<Button onClick={() => history.push('/')}>
+					<Icon icon={iconClose} className="icon" />
+					Close
+				</Button>
+
 			</div>
 			<Table
 				className="fileList"
