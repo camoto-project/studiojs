@@ -60,13 +60,21 @@ function Document(props) {
 	}
 
 	return (
-		<Suspense fallback={<Loading/>}>
-			<ErrorBoundary key={props.docOpenCount}>
-				<div className="document">
+		<div className="document">
+			<Suspense
+				fallback={(
+					<div className="middle">
+						<div style={{width: '10em', height: '10em'}}>
+							<Loading/>
+						</div>
+					</div>
+				)}
+			>
+				<ErrorBoundary key={props.docOpenCount}>
 					{element}
-				</div>
-			</ErrorBoundary>
-		</Suspense>
+				</ErrorBoundary>
+			</Suspense>
+		</div>
 	);
 }
 

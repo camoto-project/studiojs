@@ -132,6 +132,16 @@ body, #root {
 	width: 50em;
 }
 
+/* Centre a single child element in the middle vertically and horizontally */
+.middle {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	border: '1px solid red';
+}
+
 /* Make a button look like a link */
 button.link {
 	border: none;
