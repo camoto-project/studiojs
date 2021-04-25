@@ -18,10 +18,11 @@ function GameHandler(props) {
 	const [ errorMessage, setErrorMessage ] = useState(null);
 	const [ warnings, setWarnings ] = useState([]);
 
+	const idMod = parseInt(props.match.params.id, 10);
+
 	// If the mod ID changes in the URL (or on first load), open that mod.
 	useEffect(() => {
 		async function loadMod() {
-			const idMod = parseInt(props.match.params.id, 10);
 			let mod;
 			try {
 				mod = await Storage.getMod(idMod);
@@ -94,7 +95,8 @@ function GameHandler(props) {
 	return (
 		<>
 			<Game
-				key={props.match.params.id}
+				key={idMod}
+				idMod={idMod}
 				game={game}
 			/>
 			<WarningListModal

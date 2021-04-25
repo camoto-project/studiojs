@@ -1,0 +1,10 @@
+.modInfoItem {
+	margin-left: 4px;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+}
+
+.modInfoItem input {
+	padding: 0px;
+}

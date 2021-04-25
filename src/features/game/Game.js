@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import {
+	Input,
 	Tree,
 } from 'shineout';
 import { Icon } from '@iconify/react';
@@ -20,6 +21,8 @@ import iconSave from '@iconify/icons-fa-solid/download';
 
 import Document from '../Document.js';
 import SaveGame from './SaveGame.js';
+import Storage from '../../util/storage.js';
+import ToolbarItemModInfo from './ToolbarItemModInfo.js';
 import Tooltip from '../../components/Tooltip.js';
 
 import './Game.css';
@@ -27,6 +30,7 @@ import './Game.css';
 function Game(props) {
 	const history = useHistory();
 
+	const [ mod, setMod ] = useState(null);
 	const [ gameItemsTree, setGameItemsTree ] = useState([]);
 	const [ openInstance, setOpenInstance ] = useState({});
 	const [ saveVisible, setSaveVisible ] = useState(false);
@@ -63,6 +67,12 @@ function Game(props) {
 			}
 			const treeItems = addChildren(items);
 			setGameItemsTree(treeItems);
+
+			try {
+				setMod(await Storage.getMod(props.idMod));
+			} catch (e) {
+				// Just ignore, it's only for niceties.
+			}
 		}
 		loadItems();
 	}, [
