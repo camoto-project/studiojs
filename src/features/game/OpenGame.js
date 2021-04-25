@@ -24,6 +24,11 @@ function OpenGame(props) {
 
 	// Create a new mod.
 	async function createNewMod(newMod) {
+		if (!newMod.idGame) {
+			console.error('Bad new-mod data:', newMod);
+			throw new Error('Missing game ID.');
+		}
+
 		let storedFiles = {};
 		for (const f of newMod.files) {
 			storedFiles[f.name] = f.content;
@@ -65,7 +70,7 @@ function OpenGame(props) {
 	// Only enable the 'new' (open) button if a game has been selected as well
 	// as files chosen.
 	let openEnabled = (
-		(newMod.game !== null)
+		(newMod.idGame !== undefined)
 		&& (newMod.files && (newMod.files.length > 0))
 	);
 
