@@ -6,7 +6,7 @@ import {
 } from '@camoto/gameinfo';
 
 import Game from './Game.js';
-import GameWarnings from './GameWarnings.js';
+import WarningListModal from '../../components/WarningListModal.js';
 import Loading from '../Loading.js';
 import MessageBox from '../../components/MessageBox.js';
 import Storage from '../../util/storage.js';
@@ -97,10 +97,14 @@ function GameHandler(props) {
 				key={props.match.params.id}
 				game={game}
 			/>
-			<GameWarnings
+			<WarningListModal
 				warnings={warnings}
 				onClose={onDismissWarnings}
-			/>
+			>
+				<p>
+					The following issues were encountered when opening this game:
+				</p>
+			</WarningListModal>
 		</>
 	);
 }

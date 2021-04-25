@@ -1,17 +1,15 @@
 import React from 'react';
 
-import MessageBox from '../../components/MessageBox.js';
+import MessageBox from './MessageBox.js';
 
-function GameWarnings(props) {
+function WarningList(props) {
 	return (
 		<MessageBox
 			icon="warning"
 			visible={props.warnings.length > 0}
 			onClose={props.onClose}
 		>
-			<p>
-				The following issues were encountered when opening this game:
-			</p>
+			{props.children}
 
 			<ul>
 				{props.warnings.map((warning, index) => (
@@ -25,4 +23,4 @@ function GameWarnings(props) {
 	);
 }
 
-export default GameWarnings;
+export default WarningList;
