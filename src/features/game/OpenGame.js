@@ -112,6 +112,7 @@ function OpenGame(props) {
 					<button onClick={onCancel} className="link">
 						Cancel
 					</button>
+					<span className="flex-spacer"/>
 					<Button
 						disabled={!openEnabled}
 						onClick={onOpen}

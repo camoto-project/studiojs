@@ -33,9 +33,12 @@ function MessageBox(props) {
 	let jsxFooterPrefix = null;
 	if (props.confirm) {
 		jsxFooterPrefix = (
-			<button onClick={props.onClose} className="link">
-				Cancel
-			</button>
+			<>
+				<button onClick={props.onClose} className="link">
+					Cancel
+				</button>
+				<span className="flex-spacer"/>
+			</>
 		);
 	}
 

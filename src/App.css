@@ -130,3 +130,6 @@ button.link {
 	cursor: pointer;
 	padding: 0 !important;
 }
+span.flex-spacer {
+	flex-grow: 1;
+}
