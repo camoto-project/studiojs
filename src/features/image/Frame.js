@@ -15,6 +15,10 @@ function Frame(props) {
 		}
 	}
 
+	// Make any frames with a zero dimension at least 1 or we get canvas errors.
+	extentX = Math.max(1, extentX);
+	extentY = Math.max(1, extentY);
+
 	useEffect(() => {
 		const draw = (ctx, frameIndex) => {
 			if (!props.frames) return;
@@ -24,6 +28,11 @@ function Frame(props) {
 			const frame = props.frames[frameIndex];
 			const frameWidth = (frame.width === undefined) ? props.imgWidth : frame.width;
 			const frameHeight = (frame.height === undefined) ? props.imgHeight : frame.height;
+
+			// Abort on an image with a zero dimension, which we can't create a
+			// canvas for.
+			if ((frameWidth === 0) || (frameHeight === 0)) return;
+
 			const pal = props.palette;
 
 			let pxCanvas = ctx.createImageData(frameWidth, frameHeight);
