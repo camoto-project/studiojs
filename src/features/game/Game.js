@@ -173,7 +173,7 @@ function Game(props) {
 		}
 
 		return (
-			<span onClick={() => openItem(d)} className={d.disabled ? 'disabled' : ''}>
+			<span className={d.disabled ? 'disabled' : ''}>
 				<Icon icon={iconItemType} className="icon" />
 				{d.title}
 				{disabledTooltip}
@@ -241,6 +241,8 @@ function Game(props) {
 						data={gameItemsTree}
 						keygen="id"
 						renderItem={renderGameItem}
+						defaultExpandAll
+						onClick={openItem}
 					/>
 				</span>
 				<Document docOpenCount={docOpenCount} {...openInstance} />
