@@ -24,12 +24,22 @@ import WarningListModal from '../../components/WarningListModal.js';
 import './Image.css';
 
 function Image(props) {
+	// Images supplied from the game.  If the user has imported a replacement
+	// image, this will still be the original unmodified one.
 	const defaultImages = props.document.length ? props.document : [props.document];
+
+	// Images being used.  Will be the same as defaultImages until the user
+	// imports a replacement, then it will be that replacement, possibly split up
+	// into tiles as per the original.
 	const [ masterImages, setMasterImages ] = useState(defaultImages);
+
+	// Actual image set being shown.  This will change as animations are converted
+	// to single images and back again for view/export.
+	const [ images, setImages ] = useState(defaultImages);
+
 	const [ zoom, setZoom ] = useState(2);
 	const [ animation, setAnimation ] = useState(true);
 	const [ animationAllowed, setAnimationAllowed ] = useState(true);
-	const [ images, setImages ] = useState(defaultImages);
 	const [ tilesetFixed, setTilesetFixed ] = useState(false);
 	const [ fixedWidth, setFixedWidth ] = useState(defaultImages[0].fixedWidth || 8);
 	const [ maxWidth, setMaxWidth ] = useState(1);
@@ -76,29 +86,32 @@ function Image(props) {
 	]);
 
 	useEffect(() => {
-		const defaultImages = props.document.length ? props.document : [props.document];
-		if (!animation) {
-			// Convert any animations into fixed images.
-			let imgsFixed = masterImages.map(img => {
-				if (img.frames.length > 1) {
-					let i2 = img.clone(0, 0);
-					i2.frames = [
-						frameFromTileset(img, fixedWidth),
-					];
-					return i2;
-				} else {
-					// Nothing to do if there's only one frame.
-					return img;
-				}
-			});
+		// Check whether any image is animated.
+		setTilesetFixed(false);
+		let imgsProcessed = masterImages.map(img => {
+			let shouldBeAnimated = (
+				(img.frames.length > 1)
+				&& animation
+				&& (img.animation.length > 0)
+			);
+			if (shouldBeAnimated || (img.frames.length === 1)) {
+				// Don't do any processing.
+				return img;
+			}
+
+			// Convert to an image list.
+			let i2 = img.clone(0, 0);
+			i2.frames = [
+				frameFromTileset(img, fixedWidth),
+			];
 			setTilesetFixed(true);
-			setImages(imgsFixed);
-		} else {
-			setTilesetFixed(false);
-			setImages(defaultImages);
-		}
-		const newMaxWidth = defaultImages.reduce((a, v) => Math.max(a, v.frames.length), 1)
+			return i2;
+		});
+		setImages(imgsProcessed);
+
+		const newMaxWidth = masterImages.reduce((a, v) => Math.max(a, v.frames.length), 1)
 		setMaxWidth(newMaxWidth);
+
 		// Clip the current value to the permitted range.
 		setFixedWidth(
 			Math.max(
@@ -113,7 +126,6 @@ function Image(props) {
 		animation,
 		fixedWidth,
 		masterImages,
-		props.document,
 	]);
 
 	function onToggleAnimation() {
