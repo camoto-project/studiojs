@@ -50,5 +50,6 @@ canvas.singleImage {
 
 /* Keep images pixellated */
 .content canvas {
-	image-rendering: crisp-edges;
+	image-rendering: pixelated;   /* Chrome */
+	image-rendering: crisp-edges; /* Firefox */
 }
