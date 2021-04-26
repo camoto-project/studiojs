@@ -9,7 +9,8 @@ const Music = lazy(() => import('./music/Music.js'));
 
 function Document(props) {
 	let element;
-	switch (props.type) {
+	const type = (props.item && props.item.type) || undefined;
+	switch (type) {
 		case undefined:
 			// No game loaded yet.
 			element = null;
@@ -30,11 +31,11 @@ function Document(props) {
 			break;
 
 		case 'image':
-			element = <Image document={props.document} cbSave={props.cbSave} />;
+			element = <Image {...props} />;
 			break;
 
 		case 'music':
-			element = <Music document={props.document} cbSave={props.cbSave} />;
+			element = <Music {...props} />;
 			break;
 
 		case 'error':
@@ -50,7 +51,7 @@ function Document(props) {
 
 		default:
 			element = (
-				<ErrorBox summary={`Unknown document type "${props.type}"`}>
+				<ErrorBox summary={`Unknown document type "${type}"`}>
 					<p>
 						Editing items of this type is not yet implemented.
 					</p>

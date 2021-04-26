@@ -157,7 +157,15 @@ function Image(props) {
 		setWarnings(output.warnings);
 
 		const blobContent = new Blob([output.content.main]);
-		saveAs(blobContent, `todo-${selectedImage}.png`, { type: 'application/octet-stream' });
+		const targetFilename = (
+			props.mod.idGame
+			+ '.'
+			+ props.item.id
+			+ '.img'
+			+ targetImage
+			+ '.png'
+		);
+		saveAs(blobContent, targetFilename, { type: 'application/octet-stream' });
 	}
 
 	function onImportAvailable(file) {

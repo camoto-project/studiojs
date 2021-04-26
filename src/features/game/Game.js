@@ -33,7 +33,12 @@ function Game(props) {
 
 	const [ mod, setMod ] = useState(null);
 	const [ gameItemsTree, setGameItemsTree ] = useState([]);
-	const [ openInstance, setOpenInstance ] = useState({});
+	const [ openInstance, setOpenInstance ] = useState({
+		mod: mod,
+		item: {
+			type: '_new',
+		},
+	});
 	const [ saveVisible, setSaveVisible ] = useState(false);
 	const [ treeVisible, setTreeVisible ] = useState(true);
 	const [ errorPopup, setErrorPopup ] = useState(null);
@@ -93,7 +98,8 @@ function Game(props) {
 		try {
 			let doc = d.fnOpen();
 			setOpenInstance({
-				type: d.type,
+				mod: mod,
+				item: d,
 				document: doc,
 				cbSave: async doc => {
 					try {
@@ -131,7 +137,10 @@ function Game(props) {
 		} catch (e) {
 			console.error(e);
 			setOpenInstance({
-				type: 'error',
+				mod: mod,
+				item: {
+					type: 'error',
+				},
 				document: e,
 			});
 		}
