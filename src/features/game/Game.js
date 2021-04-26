@@ -41,7 +41,7 @@ function Game(props) {
 				title: 'ModdingWiki',
 				url: `https://moddingwiki.shikadi.net/wiki/${md.title}`,
 			},
-			tipsContentURL: `https://moddingwiki.shikadi.net/w/api.php?action=parse&prop=text&format=json&formatversion=2&origin=*&errorformat=html&page=${md.title}/ModdingHelp`,
+			tipsContentURL: `https://moddingwiki.shikadi.net/w/api.php?action=parse&prop=text&format=json&formatversion=2&origin=*&errorformat=html&page=${md.title}/Modding Tips`,
 		};
 	}, [
 		props.game,

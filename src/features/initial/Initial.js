@@ -18,6 +18,10 @@ function Initial(props) {
 					},
 				});
 				const page = await req.json();
+				if (page && !page.parse) {
+					setTips('<p>There are no tips available for this game.</p>');
+					return;
+				}
 				setTips(page.parse.text);
 			} catch (e) {
 				setTips(null);
