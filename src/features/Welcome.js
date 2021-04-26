@@ -3,31 +3,14 @@ import { Link as RRLink } from 'react-router-dom';
 
 import {
 	Card,
-	Menu,
 } from 'shineout';
+
 import { Icon } from '@iconify/react';
 import iconMusic from '@iconify/icons-fa-solid/music';
 import iconEdit from '@iconify/icons-fa-solid/edit';
 import iconArchive from '@iconify/icons-fa-solid/archive';
 
-const menu = [
-	{
-		id: 'game',
-		title: 'Edit a game',
-		link: '/game',
-		icon: iconEdit,
-	}, {
-		id: 'music',
-		title: 'Convert a music file',
-		link: '/music',
-		icon: iconMusic,
-	}, {
-		id: 'archive',
-		title: 'Examine an archive file',
-		link: '/archive',
-		icon: iconArchive,
-	},
-];
+import './Welcome.css';
 
 function Welcome() {
 	return (
@@ -41,16 +24,26 @@ function Welcome() {
 					<p>
 						Select an action to get started.
 					</p>
-					<Menu
-						keygen="id"
-						data={menu}
-						renderItem={d => (
-							<RRLink to={d.link}>
-								<Icon icon={d.icon} className="icon" />
-								{d.title}
+					<ul>
+						<li>
+							<RRLink to="/game">
+								<Icon icon={iconEdit} className="icon" />
+								Edit a game
 							</RRLink>
-						)}
-					/>
+						</li>
+						<li>
+							<RRLink to="/music">
+								<Icon icon={iconMusic} className="icon" />
+								Convert a music file
+							</RRLink>
+						</li>
+						<li>
+							<RRLink to="/archive">
+								<Icon icon={iconArchive} className="icon" />
+								Examine an archive file
+							</RRLink>
+						</li>
+					</ul>
 				</Card.Body>
 			</Card>
 		</div>
