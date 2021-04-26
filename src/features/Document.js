@@ -1,8 +1,9 @@
 import React, { Suspense, lazy } from 'react';
 
-import Loading from './Loading.js';
 import ErrorBoundary from '../components/ErrorBoundary.js';
 import ErrorBox from '../components/ErrorBox.js';
+import Initial from './initial/Initial.js';
+import Loading from './Loading.js';
 
 const Image = lazy(() => import('./image/Image.js'));
 const Music = lazy(() => import('./music/Music.js'));
@@ -18,16 +19,7 @@ function Document(props) {
 
 		case '_new':
 			// Game loaded, no item selected.
-			element = (
-				<>
-					<h3>
-						Welcome to Camoto Studio Online!
-					</h3>
-					<p>
-						Please select an item to start editing.
-					</p>
-				</>
-			);
+			element = <Initial {...props} />;
 			break;
 
 		case 'image':

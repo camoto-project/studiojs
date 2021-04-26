@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -31,13 +31,27 @@ import './Game.css';
 function Game(props) {
 	const history = useHistory();
 
+	// This is the "item" passed to the <Document/> when a game is first opened.
+	const initialItem = useMemo(() => {
+		const md = props.game.constructor.metadata();
+		return {
+			type: '_new',
+			gameTitle: md.title,
+			tipsSource: {
+				title: 'ModdingWiki',
+				url: `https://moddingwiki.shikadi.net/wiki/${md.title}`,
+			},
+			tipsContentURL: `https://moddingwiki.shikadi.net/w/api.php?action=parse&prop=text&format=json&formatversion=2&origin=*&errorformat=html&page=${md.title}/ModdingHelp`,
+		};
+	}, [
+		props.game,
+	]);
+
 	const [ mod, setMod ] = useState(null);
 	const [ gameItemsTree, setGameItemsTree ] = useState([]);
 	const [ openInstance, setOpenInstance ] = useState({
 		mod: mod,
-		item: {
-			type: '_new',
-		},
+		item: initialItem,
 	});
 	const [ saveVisible, setSaveVisible ] = useState(false);
 	const [ treeVisible, setTreeVisible ] = useState(true);
