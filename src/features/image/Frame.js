@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 
 function Frame(props) {
 	if (!props.palette) {
@@ -19,19 +19,27 @@ function Frame(props) {
 	extentX = Math.max(1, extentX);
 	extentY = Math.max(1, extentY);
 
-	useEffect(() => {
-		const draw = (ctx, frameIndex) => {
-			if (!props.frames) return;
+	// Convert each frame from gamegraphics.js format into HTML canvas format.
+	// This is done in a useMemo() so that it only runs when the source image
+	// data changes, rather than running on every animation frame.
+	const pxCanvasFrames = useMemo(() => {
+		// Abort early in the render when we don't have enough data yet.
+		if (!props.frames) return [];
+		if (!refCanvas.current) return [];
 
-			// Just abort if we get a frame that's out of range.
-			if (frameIndex > props.frames.length) return;
-			const frame = props.frames[frameIndex];
+		const canvas = refCanvas.current;
+		const ctx = canvas.getContext('2d');
+
+		let pxCanvasFrames = []
+		for (let f = 0; f < props.frames.length; f++) {
+			const frame = props.frames[f];
 			const frameWidth = (frame.width === undefined) ? props.imgWidth : frame.width;
 			const frameHeight = (frame.height === undefined) ? props.imgHeight : frame.height;
 
-			// Abort on an image with a zero dimension, which we can't create a
-			// canvas for.
-			if ((frameWidth === 0) || (frameHeight === 0)) return;
+			// If the image is 0x0 just create a dummy 1x1 to avoid an exception.
+			if ((frameWidth === 0) || (frameHeight === 0)) {
+				return ctx.createImageData(1, 1);
+			}
 
 			const pal = props.palette;
 
@@ -43,7 +51,23 @@ function Frame(props) {
 					pxCanvas.data[i * 4 + j] = clr[j];
 				}
 			}
-			ctx.putImageData(pxCanvas, 0, 0);
+			pxCanvasFrames.push(pxCanvas);
+		}
+
+		return pxCanvasFrames;
+	}, [
+		props.frames,
+		props.imgHeight,
+		props.imgWidth,
+		props.palette,
+		refCanvas.current,
+	]);
+
+	useEffect(() => {
+		const draw = (ctx, frameIndex) => {
+			// Just abort if we get a frame that's out of range.
+			if (frameIndex >= pxCanvasFrames.length) return;
+			ctx.putImageData(pxCanvasFrames[frameIndex], 0, 0);
 		}
 
 		const canvas = refCanvas.current;
@@ -79,6 +103,7 @@ function Frame(props) {
 		props.imgHeight,
 		props.imgWidth,
 		props.palette,
+		pxCanvasFrames,
 	])
 
 	return (
