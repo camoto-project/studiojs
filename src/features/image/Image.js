@@ -137,9 +137,15 @@ function Image(props) {
 	}
 
 	function onExport() {
-		const img = images[selectedImage];
+		let targetImage = selectedImage;
+		if ((targetImage === null) && (images.length === 1)) {
+			// No image selected, but only one available, so just use that.
+			targetImage = 0;
+		}
+
+		const img = images[targetImage];
 		if (!img) {
-			setErrorPopup(`Tried to export invalid image index ${selectedImage}.`);
+			setErrorPopup(`Tried to export invalid image index ${targetImage}.`);
 			return;
 		}
 		if (img.animation && animation) {
@@ -157,8 +163,14 @@ function Image(props) {
 	function onImportAvailable(file) {
 		setImportVisible(false);
 
-		if (!images[selectedImage]) {
-			setErrorPopup(`Tried to import invalid image index ${selectedImage}.`);
+		let targetImage = selectedImage;
+		if ((targetImage === null) && (images.length === 1)) {
+			// No image selected, but only one available, so just use that.
+			targetImage = 0;
+		}
+
+		if (!images[targetImage]) {
+			setErrorPopup(`Tried to import invalid image index ${targetImage}.`);
 			return;
 		}
 
@@ -180,7 +192,7 @@ function Image(props) {
 		// Use the original master image, before we did any conversion of the tiles
 		// into a single image.  We want the individual tiles so we know how to
 		// split up a single .png back into individual tiles.
-		const origImg = masterImages[selectedImage];
+		const origImg = masterImages[targetImage];
 
 		// Now we have the image, we have to figure out how to overwrite the
 		// existing one(s), which could be a single image or tiles.
@@ -209,7 +221,7 @@ function Image(props) {
 		newImg.palette = origImg.palette;
 
 		let newImages = masterImages.slice();
-		newImages[selectedImage] = newImg;
+		newImages[targetImage] = newImg;
 		setMasterImages(newImages);
 	}
 
@@ -235,9 +247,13 @@ function Image(props) {
 		ev.stopPropagation();
 	}
 
-	// Can't import or export unless an image is selected.
-	const exportDisabled = (selectedImage === null) || (selectedImage === undefined);
-	const importDisabled = (selectedImage === null) || (selectedImage === undefined);
+	// Can't import or export unless an image is selected, or there is only one
+	// image.
+	const exportDisabled = (
+		((selectedImage === null) || (selectedImage === undefined))
+		&& (images.length !== 1)
+	);
+	const importDisabled = exportDisabled;
 
 	return (
 		<>
@@ -253,7 +269,10 @@ function Image(props) {
 
 				<button onClick={onExport} disabled={exportDisabled}>
 					<Tooltip>
-						Save the selected image to a file
+						{ // Have to do it this way to ensure we get a single string child.
+							'Save the selected image to a file'
+							+ (exportDisabled ? ' (click on an image to select it first)' : '')
+						}
 					</Tooltip>
 					<Icon icon={iconExport} />
 				</button>
@@ -264,7 +283,10 @@ function Image(props) {
 				>
 					<button disabled={importDisabled}>
 						<Tooltip>
-							Replace the selected image with one loaded from a file
+							{ // Have to do it this way to ensure we get a single string child.
+								'Replace the selected image with one loaded from a file'
+								+ (importDisabled ? ' (click on an image to select it first)' : '')
+							}
 						</Tooltip>
 						<Icon icon={iconImport} />
 					</button>
