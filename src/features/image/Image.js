@@ -43,10 +43,15 @@ function Image(props) {
 	const [ tilesetFixed, setTilesetFixed ] = useState(false);
 	const [ fixedWidth, setFixedWidth ] = useState(defaultImages[0].fixedWidth || 8);
 	const [ maxWidth, setMaxWidth ] = useState(1);
+
+	// Index of the selected image (last one clicked on), or null for no selection.
 	const [ selectedImage, setSelectedImage ] = useState(null);
+
 	const [ errorPopup, setErrorPopup ] = useState(null);
 	const [ warnings, setWarnings ] = useState([]);
-	const [ importVisible, setImportVisible ] = useState(false); // browse dialog
+
+	// True if the browse dialog is visible for image importing.
+	const [ importVisible, setImportVisible ] = useState(false);
 
 	function onZoom() {
 		switch (zoom) {
@@ -237,8 +242,11 @@ function Image(props) {
 
 		} // else single image, nothing to do
 
-		// Keep the original palette, that has to be updated elsewhere if desired.
-		newImg.palette = origImg.palette;
+		if (!props.item.limits || !props.item.limits.writePalette) {
+			// The palette is not writable, so restore the original one to ensure the
+			// displayed image still uses the old palette.
+			newImg.palette = origImg.palette;
+		}
 
 		let newImages = masterImages.slice();
 		newImages[targetImage] = newImg;
