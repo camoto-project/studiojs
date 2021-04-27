@@ -263,6 +263,7 @@ function Image(props) {
 				// We were given a single image.
 				props.cbSave(masterImages[0]);
 			}
+			props.setUnsavedChanges(false);
 		} catch (e) {
 			console.error(e);
 			setErrorPopup('Unable to put the image(s) back into the game.  The '

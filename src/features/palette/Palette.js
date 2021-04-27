@@ -72,6 +72,7 @@ function Palette(props) {
 	function onSave() {
 		try {
 			props.cbSave(palette);
+			props.setUnsavedChanges(false);
 		} catch (e) {
 			console.error(e);
 			setErrorPopup('Unable to put the palette back into the game.  The '
