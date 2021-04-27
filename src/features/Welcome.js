@@ -14,7 +14,7 @@ import './Welcome.css';
 
 function Welcome() {
 	return (
-		<div className="mainCard">
+		<div className="mainCard welcome">
 			<Card style={{ width: 600 }}>
 				<Card.Header>
 					Camoto

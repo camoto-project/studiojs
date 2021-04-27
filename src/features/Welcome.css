@@ -1,13 +1,13 @@
-ul {
+.welcome ul {
   list-style: none;
   padding-left: 1.5em;
 }
 
-ul li {
+.welcome ul li {
   padding-left: 0;
   margin-bottom: 1em;
 }
 
-ul li a {
+.welcome ul li a {
   color: black;
 }
