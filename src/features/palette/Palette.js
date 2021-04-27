@@ -62,6 +62,9 @@ function Palette(props) {
 			return;
 		}
 
+		// Truncate the palette if the new one is longer than the existing one.
+		newImg.palette = newImg.palette.slice(0, palette.length);
+
 		props.setUnsavedChanges(true);
 		setPalette(newImg.palette);
 	}
