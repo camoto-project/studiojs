@@ -129,6 +129,15 @@ function SaveGame(props) {
 
 			<h4>Files to download</h4>
 
+			{props.unsavedChanges && (
+				<Tip icon="warning">
+					<p>
+						You have unsaved changes in the item currently open.  These changes
+						won't be included in the files below!
+					</p>
+				</Tip>
+			)}
+
 			<div style={{marginLeft: '1em'}}>
 				{(downloadEntries.length === 0) && (
 					<Spin name="four-dots" />

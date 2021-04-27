@@ -293,6 +293,7 @@ function Game(props) {
 				visible={saveVisible}
 				game={props.game}
 				onClose={() => setSaveVisible(false)}
+				unsavedChanges={unsavedChanges}
 			/>
 
 			<MessageBox
