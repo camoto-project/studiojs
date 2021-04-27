@@ -7,6 +7,7 @@ import Loading from './Loading.js';
 
 const Image = lazy(() => import('./image/Image.js'));
 const Music = lazy(() => import('./music/Music.js'));
+const Palette = lazy(() => import('./palette/Palette.js'));
 
 function Document(props) {
 	let element;
@@ -28,6 +29,10 @@ function Document(props) {
 
 		case 'music':
 			element = <Music {...props} />;
+			break;
+
+		case 'palette':
+			element = <Palette {...props} />;
 			break;
 
 		case 'error':
