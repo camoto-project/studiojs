@@ -9,6 +9,7 @@ import { Icon } from '@iconify/react';
 import iconAudio from '@iconify/icons-fa-solid/volume-down';
 import iconB800 from '@iconify/icons-fa-solid/th';
 import iconClose from '@iconify/icons-fa-solid/times';
+import iconDelete from '@iconify/icons-fa-solid/trash-alt';
 import iconFile from '@iconify/icons-fa-solid/file';
 import iconFolder from '@iconify/icons-fa-solid/folder';
 import iconImage from '@iconify/icons-fa-solid/image';
@@ -59,6 +60,14 @@ function Game(props) {
 
 	// Are we currently waiting for a save-to-IndexedDB operation to complete?
 	const [ saving, setSaving ] = useState(false);
+
+	// Document children set to true when they are first modified, so we know to
+	// prompt before loading a different item.
+	const [ unsavedChanges, setUnsavedChanges ] = useState(false);
+
+	// Set when we have an item to load if the user opts to discard changes in the
+	// current document.  This also shows the confirmation box.
+	const [ pendingItem, setPendingItem ] = useState(null);
 
 	// The docOpenState increments each time the open document changes.  This
 	// value is passed to the document's error boundary as a `key` prop, which
@@ -161,6 +170,20 @@ function Game(props) {
 		setDocOpenCount(docOpenCount + 1);
 	}
 
+	function onItemClick(d) {
+		if (unsavedChanges) {
+			setPendingItem(d);
+		} else {
+			openItem(d);
+		}
+	}
+
+	function discardChanges() {
+		setUnsavedChanges(false);
+		openItem(pendingItem);
+		setPendingItem(null);
+	}
+
 	function toggleTree() {
 		setTreeVisible(!treeVisible);
 	}
@@ -256,10 +279,14 @@ function Game(props) {
 						keygen="id"
 						renderItem={renderGameItem}
 						defaultExpandAll
-						onClick={openItem}
+						onClick={onItemClick}
 					/>
 				</span>
-				<Document docOpenCount={docOpenCount} {...openInstance} />
+				<Document
+					docOpenCount={docOpenCount}
+					setUnsavedChanges={setUnsavedChanges}
+					{...openInstance}
+				/>
 			</div>
 
 			<SaveGame
@@ -275,6 +302,22 @@ function Game(props) {
 			>
 				<p>
 					{errorPopup}
+				</p>
+			</MessageBox>
+
+			<MessageBox
+				visible={!!pendingItem}
+				icon="warning"
+				onClose={() => setPendingItem(null)}
+				onOK={discardChanges}
+				confirm
+				okIcon={iconDelete}
+				okText="Discard"
+				buttonTypeOK="danger"
+			>
+				<p>
+					The open item has unsaved changes.  Do you want to discard the
+					changes you have made to this item?
 				</p>
 			</MessageBox>
 

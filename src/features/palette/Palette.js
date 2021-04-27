@@ -62,6 +62,7 @@ function Palette(props) {
 			return;
 		}
 
+		props.setUnsavedChanges(true);
 		setPalette(newImg.palette);
 	}
 
@@ -83,6 +84,7 @@ function Palette(props) {
 		const cleanValue = Math.max(0, Math.min(255, parseInt(value)));
 		newPal[selectedColour][componentIndex] = cleanValue;
 
+		props.setUnsavedChanges(true);
 		setPalette(newPal);
 	}
 
@@ -107,6 +109,8 @@ function Palette(props) {
 		let newPal = palette.clone();
 		newPal[selectedColour] = newEntry;
 		setPalette(newPal);
+
+		props.setUnsavedChanges(true);
 	}
 
 	const selectedComponents = (
@@ -118,7 +122,7 @@ function Palette(props) {
 			<div className="toolbar">
 				<button onClick={onSave}>
 					<Tooltip>
-						Save all image(s) back to the game.
+						Save palette back to the game.
 					</Tooltip>
 					<Icon icon={iconSave} />
 				</button>

@@ -251,6 +251,7 @@ function Image(props) {
 		let newImages = masterImages.slice();
 		newImages[targetImage] = newImg;
 		setMasterImages(newImages);
+		props.setUnsavedChanges(true);
 	}
 
 	function onSave() {

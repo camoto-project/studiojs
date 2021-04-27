@@ -17,11 +17,6 @@
 	align-items: center;
 }
 
-.cancel {
-	text-align: left;
-	flex-grow: 1;
-}
-
 .openDialog {
 	display: flex;
 	justify-content: center;
