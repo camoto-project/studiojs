@@ -62,6 +62,15 @@ function SaveGame(props) {
 		props.visible,
 	]);
 
+	function onClose() {
+		// Erase the downloads first, otherwise they are still visible (instead of
+		// the 'loading' animation) when the dialog appears a second time.
+		setDownloads({});
+		setDownloadsComplete({});
+
+		props.onClose();
+	}
+
 	// The close button is primary only if all downloads are complete.
 	const closeButtonPrimary = !Object.values(downloadsComplete).includes(false);
 
@@ -75,7 +84,7 @@ function SaveGame(props) {
 			onClose={props.onClose}
 			footer={(
 				<Button
-					onClick={props.onClose}
+					onClick={onClose}
 					type={closeButtonPrimary ? 'primary' : 'default'}
 				>
 					Done
