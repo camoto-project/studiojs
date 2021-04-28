@@ -5,6 +5,11 @@
 	cursor: pointer;
 }
 
+.modInfoItem .so-input {
+	/* More closely line up with the text it's replacing */
+	margin-left: -3px;
+}
+
 .modInfoItem input {
 	padding: 0px;
 }

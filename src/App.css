@@ -111,6 +111,14 @@ body, #root {
 	height: 16px;
 }
 
+/* Text boxes in toolbars */
+.toolbar .so-input {
+	margin-left: 3px;
+}
+.toolbar .so-input input {
+	padding: 2px;
+}
+
 /* Vertical line separating toolbar button groups */
 .toolbar .separator {
 	height: 100%;

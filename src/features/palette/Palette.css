@@ -34,5 +34,9 @@
 }
 
 .toolbarPalComponent .so-input-number {
-  width: 5em;
+  width: 4.5em;
+}
+
+.toolbarPalComponent .so-input.html {
+  width: 7em;
 }

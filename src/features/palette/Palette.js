@@ -163,7 +163,6 @@ function Palette(props) {
 							disabled={selectedColour === null}
 							value={selectedComponents[i]}
 							onChange={value => onChangeEntry(i, value)}
-							size="small"
 						/>
 					</span>
 				))}
@@ -171,6 +170,7 @@ function Palette(props) {
 				<span className="toolbarPalComponent">
 					HTML:
 					<Input
+						className="html"
 						disabled={selectedColour === null}
 						value={(
 							(selectedColour !== null)
@@ -179,7 +179,6 @@ function Palette(props) {
 							)
 						) || null}
 						onKeyDown={ev => onChangeEntryHTML(ev.target.value)}
-						size="small"
 					/>
 				</span>
 
