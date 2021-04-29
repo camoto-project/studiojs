@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import {
 	HashRouter as Router,
 	Route,
@@ -73,6 +73,9 @@ function Game(props) {
 	// this, the error state is never reset so once an error happens, the error
 	// message can never be closed.
 	const [ docOpenCount, setDocOpenCount ] = useState(0);
+
+	// The user's preferences for this mod.
+	const [ prefs, setPrefs ] = useState({});
 
 	// When a 'game' is passed through in the props, update the list of items in
 	// the tree view.
@@ -185,6 +188,28 @@ function Game(props) {
 		}
 	}
 
+	const saveDocumentPrefs = useCallback(async (type, key, value) => {
+		// Update the state, which will pass the prefs down to the document through
+		// the 'mod' prop.
+		const newMod = {
+			...mod,
+			prefs: {
+				...mod.prefs,
+				[type]: {
+					...(mod.prefs || {})[type],
+					[key]: value,
+				},
+			},
+		};
+		setMod(newMod);
+
+		// Save the prefs to IndexedDB.
+		await Storage.updateMod(props.idMod, newMod);
+	}, [
+		mod,
+		props.idMod,
+	]);
+
 	const match = useRouteMatch();
 
 	return (
@@ -251,6 +276,7 @@ function Game(props) {
 								cbSaveMod={props.cbSaveMod}
 								setUnsavedChanges={setUnsavedChanges}
 								setSaving={setSaving}
+								savePrefs={saveDocumentPrefs}
 							/>
 						</Route>
 					</Switch>

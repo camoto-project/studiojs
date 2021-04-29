@@ -38,7 +38,7 @@ function Image(props) {
 	const [ images, setImages ] = useState(defaultImages);
 
 	const [ zoom, setZoom ] = useState(2);
-	const [ animation, setAnimation ] = useState(true);
+
 	const [ animationAllowed, setAnimationAllowed ] = useState(true);
 	const [ tilesetFixed, setTilesetFixed ] = useState(false);
 	const [ fixedWidth, setFixedWidth ] = useState(defaultImages[0].fixedWidth || 8);
@@ -52,6 +52,9 @@ function Image(props) {
 
 	// True if the browse dialog is visible for image importing.
 	const [ importVisible, setImportVisible ] = useState(false);
+
+	// Is the image currently animating?
+	const animation = (props.prefs.animation === undefined) ? true : !!props.prefs.animation;
 
 	function onZoom() {
 		switch (zoom) {
@@ -76,13 +79,13 @@ function Image(props) {
 	useEffect(() => {
 		for (const img of masterImages) {
 			if (img.animation.length > 0) {
-				setAnimation(true);
 				setAnimationAllowed(true);
 				return;
 			}
 		}
-		setAnimation(false);
+		// Disable animations as there's nothing to animate.
 		setAnimationAllowed(false);
+
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [
 		// Don't use masterImages here as we only want these values set on the first
@@ -97,6 +100,7 @@ function Image(props) {
 			let shouldBeAnimated = (
 				(img.frames.length > 1)
 				&& animation
+				&& animationAllowed
 				&& (img.animation.length > 0)
 			);
 			if (shouldBeAnimated || (img.frames.length === 1)) {
@@ -134,7 +138,8 @@ function Image(props) {
 	]);
 
 	function onToggleAnimation() {
-		setAnimation(!animation);
+		// This causes an update in props.mod.prefs.animation.
+		props.savePrefs('animation', !animation);
 	}
 
 	function onColInc() {
@@ -332,12 +337,16 @@ function Image(props) {
 
 				<button onClick={onZoom}>
 					<Tooltip>
-						Adjust zoom level in the preview only
+						Cycle through zoom levels in the preview only (100%, 200%, 400%)
 					</Tooltip>
 					<Icon icon={iconZoom} />
 				</button>
 
-				<button onClick={onToggleAnimation} disabled={!animationAllowed} className={animation ? 'hold' : ''}>
+				<button
+					onClick={onToggleAnimation}
+					disabled={!animationAllowed}
+					className={(animation && animationAllowed) ? 'hold' : ''}
+				>
 					<Tooltip>
 						Toggle between animation and frame list
 					</Tooltip>

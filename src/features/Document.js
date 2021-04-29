@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState, useMemo } from 'react';
+import React, { Suspense, lazy, useCallback, useState, useMemo } from 'react';
 import {
 	withRouter,
 } from 'react-router-dom';
@@ -114,14 +114,26 @@ function Document(props) {
 		props.gameItems,
 	]);
 
+	const type = (openInstance.item && openInstance.item.type) || undefined;
+
+	// Save the user's preferences for the current editor to IndexedDB.
+	const savePrefs = useCallback((key, value) => {
+		// This will update props.mod.
+		props.savePrefs(type, key, value);
+	}, [
+		props.savePrefs,
+		type,
+	]);
+
 	const childProps = {
 		mod: props.mod,
 		setUnsavedChanges: props.setUnsavedChanges,
+		savePrefs,
+		prefs: (props.mod && props.mod.prefs && props.mod.prefs[type]) || {},
 		...openInstance,
 	};
 
 	let element;
-	const type = (openInstance.item && openInstance.item.type) || undefined;
 	switch (type) {
 		case undefined:
 			// No game loaded yet.
