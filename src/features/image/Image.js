@@ -242,6 +242,12 @@ function Image(props) {
 
 		} // else single image, nothing to do
 
+		// Preserve some things from the original, unless the new one supplies them.
+		newImg.animation = newImg.animation.length ? newImg.animation : origImg.animation;
+		newImg.hotspotX = newImg.hotspotX || origImg.hotspotX;
+		newImg.hotspotY = newImg.hotspotY || origImg.hotspotY;
+		newImg.tags = Object.keys(newImg.tags).length ? newImg.tags : origImg.tags;
+
 		if (!props.item.limits || !props.item.limits.writePalette) {
 			// The palette is not writable, so restore the original one to ensure the
 			// displayed image still uses the old palette.
