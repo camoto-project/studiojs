@@ -210,9 +210,9 @@ function Image(props) {
 			return;
 		}
 
-		let newImg;
+		let imgNew;
 		try {
-			newImg = img_png.read({
+			imgNew = img_png.read({
 				main: file.content,
 			});
 		} catch (e) {
@@ -223,45 +223,97 @@ function Image(props) {
 		// Use the original master image, before we did any conversion of the tiles
 		// into a single image.  We want the individual tiles so we know how to
 		// split up a single .png back into individual tiles.
-		const origImg = masterImages[targetImage];
+		const imgOld = masterImages[targetImage];
+
+		// If the palette can't be updated, map the pixels of the incoming image as
+		// closely as possible to the existing palette.
+		if (
+			(!props.item.limits || !props.item.limits.writePalette)
+			&& imgNew.palette
+			&& imgOld.palette
+		) {
+			function palEqual(a, b) {
+				return (
+					(a[0] === b[0])
+					&& (a[1] === b[1])
+					&& (a[2] === b[2])
+					&& (a[3] === b[3])
+				);
+			}
+			function palDiff(a, b) {
+				return Math.abs(
+					Math.abs(a[0] - b[0])
+					+ Math.abs(a[1] - b[1]) * 2 // higher weight for green
+					+ Math.abs(a[2] - b[2])
+					+ Math.abs(a[3] - b[3]) * 10 // highest weight for alpha
+				);
+			}
+
+			let paletteMap = [];
+			const lenNewPal = imgNew.palette.length;
+			const lenOldPal = imgOld.palette.length;
+			for (let i = 0; i < lenNewPal; i++) {
+				paletteMap[i] = i;
+				let lastDiff = 255 * 8; // worst case
+				for (let o = 0; o < lenOldPal; o++) {
+					// Start at the current palette index and wrap around if we get to the
+					// end, so that we only go through this loop once if the two palettes
+					// are the same.
+					const targetO = (o + i) % lenOldPal;
+					const diff = palDiff(imgNew.palette[i], imgOld.palette[targetO]);
+					if (diff < lastDiff) {
+						paletteMap[i] = targetO;
+						lastDiff = diff;
+					}
+					if (diff === 0) break; // perfect match
+				}
+			}
+
+			// Now we have a palette map, update all the new pixels.
+			for (let frame of imgNew.frames) {
+				for (let p = 0; p < frame.pixels.length; p++) {
+					frame.pixels[p] = paletteMap[frame.pixels[p]];
+				}
+			}
+		}
 
 		// Now we have the image, we have to figure out how to overwrite the
 		// existing one(s), which could be a single image or tiles.
-		if (origImg.frames.length > 1) {
+		if (imgOld.frames.length > 1) {
 			// Tileset
 			const newFrames = tilesetFromFrame({
-				frame: newImg.frames[0],
-				frameWidth: newImg.frames[0].width || newImg.width,
-				tileDims: origImg.frames.map(frame => ({
+				frame: imgNew.frames[0],
+				frameWidth: imgNew.frames[0].width || imgNew.width,
+				tileDims: imgOld.frames.map(frame => ({
 					width: frame.width,
 					height: frame.height,
 				})),
 				bg: 0,
 			});
-			newImg.frames = newFrames;
+			imgNew.frames = newFrames;
 
 			// Set the new image dimensions to be undefined, so that we don't use
 			// them when converting back into a composite image (which leaves empty
 			// transparent pixels around the edge).
-			newImg.width = undefined;
-			newImg.height = undefined;
+			imgNew.width = undefined;
+			imgNew.height = undefined;
 
 		} // else single image, nothing to do
 
 		// Preserve some things from the original, unless the new one supplies them.
-		newImg.animation = newImg.animation.length ? newImg.animation : origImg.animation;
-		newImg.hotspotX = newImg.hotspotX || origImg.hotspotX;
-		newImg.hotspotY = newImg.hotspotY || origImg.hotspotY;
-		newImg.tags = Object.keys(newImg.tags).length ? newImg.tags : origImg.tags;
+		imgNew.animation = imgNew.animation.length ? imgNew.animation : imgOld.animation;
+		imgNew.hotspotX = imgNew.hotspotX || imgOld.hotspotX;
+		imgNew.hotspotY = imgNew.hotspotY || imgOld.hotspotY;
+		imgNew.tags = Object.keys(imgNew.tags).length ? imgNew.tags : imgOld.tags;
 
 		if (!props.item.limits || !props.item.limits.writePalette) {
 			// The palette is not writable, so restore the original one to ensure the
 			// displayed image still uses the old palette.
-			newImg.palette = origImg.palette;
+			imgNew.palette = imgOld.palette;
 		}
 
 		let newImages = masterImages.slice();
-		newImages[targetImage] = newImg;
+		newImages[targetImage] = imgNew;
 		setMasterImages(newImages);
 		props.setUnsavedChanges(true);
 	}
