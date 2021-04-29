@@ -130,6 +130,9 @@ function Game(props) {
 	]);
 
 	function onItemClick(d) {
+		// Do nothing if folders are clicked.
+		if (d.type === 'folder') return;
+
 		if (unsavedChanges) {
 			setPendingItem(d);
 		} else {

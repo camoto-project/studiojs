@@ -61,6 +61,16 @@ function Document(props) {
 			},
 		};
 
+		// Folders can't be opened.
+		if (d.type === 'folder') {
+			return {
+				item: {
+					type: 'folder',
+				},
+				document: null,
+			};
+		}
+
 		try {
 			let doc = d.fnOpen();
 			return {
