@@ -1,5 +1,11 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
+import {
+	HashRouter as Router,
+	Route,
+	Switch,
+	useHistory,
+	useRouteMatch,
+} from 'react-router-dom';
 
 import {
 	Spin,
@@ -32,37 +38,29 @@ import './Game.css';
 function Game(props) {
 	const history = useHistory();
 
-	// This is the "item" passed to the <Document/> when a game is first opened.
-	const initialItem = useMemo(() => {
-		const md = props.game.constructor.metadata();
-		return {
-			type: '_new',
-			gameTitle: md.title,
-			tipsSource: {
-				title: 'ModdingWiki',
-				url: `https://moddingwiki.shikadi.net/wiki/${md.title}`,
-			},
-			tipsContentURL: `https://moddingwiki.shikadi.net/w/api.php?action=parse&prop=text&format=json&formatversion=2&origin=*&errorformat=html&page=${md.title}/Modding Tips`,
-		};
-	}, [
-		props.game,
-	]);
-
 	const [ mod, setMod ] = useState(null);
+
+	// The list of game items to pass to <Document/>.  Must be null initially,
+	// otherwise <Document/> will briefly render an error saying the document ID
+	// in the URL doesn't exist in the game, before replacing it with the document
+	// one the game items have loaded.
+	const [ gameItems, setGameItems ] = useState(null);
+
+	// A tree-view compatible version of the game items.  This defaults to [] so
+	// the tree view just renders an empty tree.
 	const [ gameItemsTree, setGameItemsTree ] = useState([]);
-	const [ openInstance, setOpenInstance ] = useState({
-		mod: mod,
-		item: initialItem,
-	});
+
+	// Is the save-game dialog/download box visible?
 	const [ saveVisible, setSaveVisible ] = useState(false);
+
+	// Is the tree view showing game items visible?
 	const [ treeVisible, setTreeVisible ] = useState(true);
-	const [ errorPopup, setErrorPopup ] = useState(null);
 
 	// Are we currently waiting for a save-to-IndexedDB operation to complete?
 	const [ saving, setSaving ] = useState(false);
 
-	// Document children set to true when they are first modified, so we know to
-	// prompt before loading a different item.
+	// Document children components set this to true when they are first modified,
+	// so we know to prompt before loading a different item.
 	const [ unsavedChanges, setUnsavedChanges ] = useState(false);
 
 	// Set when we have an item to load if the user opts to discard changes in the
@@ -86,12 +84,17 @@ function Game(props) {
 			} catch (e) {
 				// TODO: handle error
 				console.log(e);
+				setGameItems({});
 				return;
 			}
 
+			const flatItems = {};
 			function addChildren(items) {
 				let treeItems = [];
 				for (const [id, desc] of Object.entries(items)) {
+					flatItems[id] = desc;
+					flatItems[id].id = id; // keep the ID so documents can access it
+
 					treeItems.push({
 						id,
 						...desc,
@@ -102,12 +105,7 @@ function Game(props) {
 			}
 			const treeItems = addChildren(items);
 			setGameItemsTree(treeItems);
-
-			try {
-				setMod(await Storage.getMod(props.idMod));
-			} catch (e) {
-				// Just ignore, it's only for niceties.
-			}
+			setGameItems(flatItems);
 		}
 		loadItems();
 	}, [
@@ -115,72 +113,30 @@ function Game(props) {
 		props.idMod,
 	]);
 
-	function openItem(d) {
-		if (d.disabled) return;
-		if (!d.fnOpen) return; // folders
-		try {
-			let doc = d.fnOpen();
-			setOpenInstance({
-				mod: mod,
-				item: d,
-				document: doc,
-				cbSave: async doc => {
-					try {
-						setSaving(true);
-
-						if (!d.fnSave) {
-							setErrorPopup('Sorry, the gameinfo.js handler for this game does '
-								+ 'not yet support saving this item.');
-							return;
-						}
-
-						// Save to the game.
-						try {
-							await d.fnSave(doc);
-						} catch (e) {
-							console.error(e);
-							setErrorPopup(`Error saving this item: ${e.message}`);
-							return;
-						}
-
-						// Update the stored files.
-						try {
-							await props.cbSaveMod();
-						} catch (e) {
-							console.error(e);
-							setErrorPopup(`Error saving changes to the browser's IndexedDB: ${e.message}`);
-							return;
-						}
-
-					} finally {
-						setSaving(false);
-					}
-				},
-			});
-		} catch (e) {
-			console.error(e);
-			setOpenInstance({
-				mod: mod,
-				item: {
-					type: 'error',
-				},
-				document: e,
-			});
+	useEffect(() => {
+		async function loadMod() {
+			try {
+				setMod(await Storage.getMod(props.idMod));
+			} catch (e) {
+				// Just ignore, it's only for niceties.
+			}
 		}
-		setDocOpenCount(docOpenCount + 1);
-	}
+		loadMod();
+	}, [
+		props.idMod,
+	]);
 
 	function onItemClick(d) {
 		if (unsavedChanges) {
 			setPendingItem(d);
 		} else {
-			openItem(d);
+			history.push(`${match.url}/${d.id}`);
 		}
 	}
 
 	function discardChanges() {
 		setUnsavedChanges(false);
-		openItem(pendingItem);
+		history.push(`${match.url}/${pendingItem.id}`);
 		setPendingItem(null);
 	}
 
@@ -228,6 +184,8 @@ function Game(props) {
 			console.error(e);
 		}
 	}
+
+	const match = useRouteMatch();
 
 	return (
 		<div className="root">
@@ -282,11 +240,21 @@ function Game(props) {
 						onClick={onItemClick}
 					/>
 				</span>
-				<Document
-					docOpenCount={docOpenCount}
-					setUnsavedChanges={setUnsavedChanges}
-					{...openInstance}
-				/>
+
+				<Router>
+					<Switch>
+						<Route path={`${match.url}/:idDocument?`}>
+							<Document
+								game={props.game}
+								gameItems={gameItems}
+								mod={mod}
+								cbSaveMod={props.cbSaveMod}
+								setUnsavedChanges={setUnsavedChanges}
+								setSaving={setSaving}
+							/>
+						</Route>
+					</Switch>
+				</Router>
 			</div>
 
 			<SaveGame
@@ -295,16 +263,6 @@ function Game(props) {
 				onClose={() => setSaveVisible(false)}
 				unsavedChanges={unsavedChanges}
 			/>
-
-			<MessageBox
-				icon="error"
-				visible={errorPopup !== null}
-				onClose={() => setErrorPopup(null)}
-			>
-				<p>
-					{errorPopup}
-				</p>
-			</MessageBox>
 
 			<MessageBox
 				visible={!!pendingItem}

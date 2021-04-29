@@ -24,17 +24,23 @@ function GameHandler(props) {
 	// If the mod ID changes in the URL (or on first load), open that mod.
 	useEffect(() => {
 		async function loadMod() {
+			if (isNaN(idMod)) {
+				console.log(`Invalid mod ID ${idMod}`);
+				setErrorMessage('This mod ID is not valid.');
+				return;
+			}
+
 			let mod;
 			try {
 				mod = await Storage.getMod(idMod);
 			} catch (e) {
-				console.error(e);
+				console.error(`Error loading mod ${idMod}:`, e);
 				setErrorMessage("Unexpected error when trying to load this mod from the "
 					+ "browser's IndexedDB storage: " + e.message);
 				return;
 			}
 			if (!mod) {
-				console.log(`Invalid mod ID ${idMod}`);
+				console.log(`Loading mod ID ${idMod} returned blank`);
 				setErrorMessage('This mod ID is not valid.  If it was valid in the past, '
 					+ 'your web browser may have removed it to reclaim disk space.');
 				return;

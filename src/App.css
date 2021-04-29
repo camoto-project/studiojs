@@ -161,6 +161,10 @@ button.link {
 span.flex-spacer {
 	flex-grow: 1;
 }
+.so-modal-footer {
+	/* To ensure 'cancel' links in MessageBox and other modals is left-aligned */
+	display: flex;
+}
 
 /* Popup tip when renaming a mod */
 .so-popover-input-tip {
