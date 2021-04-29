@@ -7,6 +7,7 @@ import iconFilm from '@iconify/icons-fa-solid/film';
 import iconImport from '@iconify/icons-fa-solid/file-import';
 import iconSave from '@iconify/icons-fa-solid/save';
 import iconZoom from '@iconify/icons-fa-solid/search-plus';
+import iconExclamation from '@iconify/icons-fa-solid/exclamation-triangle';
 
 import {
 	frameFromTileset,
@@ -310,10 +311,15 @@ function Image(props) {
 
 				<button onClick={onExport} disabled={exportDisabled}>
 					<Tooltip>
-						{ // Have to do it this way to ensure we get a single string child.
-							'Save the selected image to a file'
-							+ (exportDisabled ? ' (click on an image to select it first)' : '')
-						}
+						<span className="so-popover-text">
+							{exportDisabled && (
+								<b>
+									<Icon icon={iconExclamation} className="icon" />
+									Click on an image to select it first<br />
+								</b>
+							)}
+							Save the selected image to a file
+						</span>
 					</Tooltip>
 					<Icon icon={iconExport} />
 				</button>
@@ -324,10 +330,15 @@ function Image(props) {
 				>
 					<button disabled={importDisabled}>
 						<Tooltip>
-							{ // Have to do it this way to ensure we get a single string child.
-								'Replace the selected image with one loaded from a file'
-								+ (importDisabled ? ' (click on an image to select it first)' : '')
-							}
+							<span className="so-popover-text">
+								{exportDisabled && (
+									<b>
+										<Icon icon={iconExclamation} className="icon" />
+										Click on an image to select it first<br />
+									</b>
+								)}
+								Replace the selected image with one loaded from a file
+							</span>
 						</Tooltip>
 						<Icon icon={iconImport} />
 					</button>

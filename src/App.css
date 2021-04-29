@@ -174,3 +174,8 @@ span.flex-spacer {
 .so-popover-input-tip .so-popover-content {
 	background-color: #FFFFB0;
 }
+/* Use <b> in a popover for important text (e.g. in Image when import/export is
+ * disabled). */
+.so-popover-text b {
+	color: orange;
+}
