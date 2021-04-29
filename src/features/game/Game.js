@@ -133,6 +133,9 @@ function Game(props) {
 		// Do nothing if folders are clicked.
 		if (d.type === 'folder') return;
 
+		// Can't open disabled items.
+		if (d.disabled) return;
+
 		if (unsavedChanges) {
 			setPendingItem(d);
 		} else {
