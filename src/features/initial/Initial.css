@@ -18,15 +18,18 @@ h2 {
   margin-top: 1ex;
 }
 
-iframe {
-  border: none;
-  background-color: white;
-  flex-grow: 1;
+.initial .tips {
+  margin-top: 1ex;
 }
 
 /* MediaWiki formatting tweaks for tips content */
 
 /* Hide edit links next to headings */
 .mw-editsection {
+  display: none;
+}
+
+/* Hide TOC as the #links conflict with react-router */
+#toc {
   display: none;
 }

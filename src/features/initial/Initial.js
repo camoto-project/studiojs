@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
+import {
+	Spin,
+} from 'shineout';
+
 import ErrorBox from '../../components/ErrorBox.js';
 
 import './Initial.css';
@@ -10,12 +14,14 @@ function Initial(props) {
 
 	// Download the tips content.
 	useEffect(() => {
+		const ac = new AbortController();
 		async function run() {
 			try {
 				const req = await fetch(props.item.tipsContentURL, {
 					headers: {
 						'Accept': 'application/json',
 					},
+					signal: ac.signal,
 				});
 				const page = await req.json();
 				if (page && !page.parse) {
@@ -29,6 +35,10 @@ function Initial(props) {
 			}
 		}
 		run();
+
+		return function cleanup() {
+			ac.abort();
+		};
 	}, [
 		props.item,
 	]);
@@ -57,7 +67,11 @@ function Initial(props) {
 						{errorMessage}
 					</p>
 				</ErrorBox>
-				<div dangerouslySetInnerHTML={{ __html: tips}} />
+				{(tips && (
+					<div className="tips" dangerouslySetInnerHTML={{ __html: tips}} />
+				)) || (
+					<Spin name="ring"/>
+				)}
 			</div>
 		</div>
 	);
