@@ -37,7 +37,6 @@ function MessageBox(props) {
 				<button onClick={props.onClose} className="link">
 					Cancel
 				</button>
-				<span className="flex-spacer"/>
 			</>
 		);
 	}
@@ -55,6 +54,7 @@ function MessageBox(props) {
 			footer={(
 				<>
 					{jsxFooterPrefix}
+					<span className="flex-spacer"/>
 					<Button
 						onClick={props.onOK || props.onClose}
 						loading={props.okBusy}

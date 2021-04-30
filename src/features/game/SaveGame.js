@@ -83,12 +83,15 @@ function SaveGame(props) {
 			title={props.title || 'Save game'}
 			onClose={props.onClose}
 			footer={(
-				<Button
-					onClick={onClose}
-					type={closeButtonPrimary ? 'primary' : 'default'}
-				>
-					Done
-				</Button>
+				<>
+					<span className="flex-spacer"/>
+					<Button
+						onClick={onClose}
+						type={closeButtonPrimary ? 'primary' : 'default'}
+					>
+						Done
+					</Button>
+				</>
 			)}
 		>
 			<p>
