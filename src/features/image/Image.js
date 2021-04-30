@@ -134,6 +134,7 @@ function Image(props) {
 		);
 	}, [
 		animation,
+		animationAllowed,
 		fixedWidth,
 		masterImages,
 	]);
@@ -232,16 +233,10 @@ function Image(props) {
 			&& imgNew.palette
 			&& imgOld.palette
 		) {
-			function palEqual(a, b) {
-				return (
-					(a[0] === b[0])
-					&& (a[1] === b[1])
-					&& (a[2] === b[2])
-					&& (a[3] === b[3])
-				);
-			}
+			// Compare two palette entries and return a positive number, the larger
+			// the more dissimilar the colours, 0 for identical colours.
 			function palDiff(a, b) {
-				return Math.abs(
+				return (
 					Math.abs(a[0] - b[0])
 					+ Math.abs(a[1] - b[1]) * 2 // higher weight for green
 					+ Math.abs(a[2] - b[2])

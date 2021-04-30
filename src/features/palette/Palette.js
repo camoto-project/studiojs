@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Icon } from '@iconify/react';
 import iconExport from '@iconify/icons-fa-solid/file-export';
 import iconImport from '@iconify/icons-fa-solid/file-import';
@@ -29,7 +29,6 @@ function Palette(props) {
 
 	const [ errorPopup, setErrorPopup ] = useState(null);
 	const [ warnings, setWarnings ] = useState([]);
-	const [ importVisible, setImportVisible ] = useState(false); // browse dialog
 
 	function onColourClick(i, ev) {
 		setSelectedColour(i);
@@ -96,7 +95,7 @@ function Palette(props) {
 		if (selectedColour === null) return;
 
 		if (value.length !== 9) return;
-		if (value[0] != '#') return;
+		if (value[0] !== '#') return;
 
 		const newEntry = [
 			parseInt(value.substr(1, 2), 16),
@@ -141,7 +140,6 @@ function Palette(props) {
 				</button>
 
 				<HiddenUpload
-					visible={importVisible}
 					onChange={onImportAvailable}
 				>
 					<button>

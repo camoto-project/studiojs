@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
 	HashRouter as Router,
 	Route,
@@ -66,16 +66,6 @@ function Game(props) {
 	// Set when we have an item to load if the user opts to discard changes in the
 	// current document.  This also shows the confirmation box.
 	const [ pendingItem, setPendingItem ] = useState(null);
-
-	// The docOpenState increments each time the open document changes.  This
-	// value is passed to the document's error boundary as a `key` prop, which
-	// will cause it to re-render every time a new document is opened.  Without
-	// this, the error state is never reset so once an error happens, the error
-	// message can never be closed.
-	const [ docOpenCount, setDocOpenCount ] = useState(0);
-
-	// The user's preferences for this mod.
-	const [ prefs, setPrefs ] = useState({});
 
 	// When a 'game' is passed through in the props, update the list of items in
 	// the tree view.

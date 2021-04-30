@@ -38,6 +38,14 @@ function Document(props) {
 		props.game,
 	]);
 
+	// Keep useMemo() and useCallback() happy.
+	const {
+		cbSaveMod: props_cbSaveMod,
+		gameItems: props_gameItems,
+		savePrefs: props_savePrefs,
+		setSaving: props_setSaving,
+	} = props;
+
 	const openInstance = useMemo(() => {
 		// Only render <Initial/> if we don't have a document ID.  Otherwise we'll
 		// be rendering the document shortly, so no point firing off a fetch() for
@@ -46,12 +54,12 @@ function Document(props) {
 			item: initialItem,
 		};
 
-		if (!props.gameItems) {
+		if (!props_gameItems) {
 			// Game hasn't loaded yet, don't render anything.
 			return {};
 		}
 
-		const d = props.gameItems[idDocument];
+		const d = props_gameItems[idDocument];
 		if (!d) return {
 			item: {
 				type: 'error',
@@ -78,7 +86,7 @@ function Document(props) {
 				document: doc,
 				cbSave: async doc => {
 					try {
-						props.setSaving(true);
+						props_setSaving(true);
 
 						if (!d.fnSave) {
 							setErrorPopup('Sorry, the gameinfo.js handler for this game does '
@@ -97,7 +105,7 @@ function Document(props) {
 
 						// Update the stored files.
 						try {
-							await props.cbSaveMod();
+							await props_cbSaveMod();
 						} catch (e) {
 							console.error(e);
 							setErrorPopup(`Error saving changes to the browser's IndexedDB: ${e.message}`);
@@ -105,7 +113,7 @@ function Document(props) {
 						}
 
 					} finally {
-						props.setSaving(false);
+						props_setSaving(false);
 					}
 				},
 			};
@@ -121,7 +129,9 @@ function Document(props) {
 	}, [
 		idDocument,
 		initialItem,
-		props.gameItems,
+		props_cbSaveMod,
+		props_gameItems,
+		props_setSaving,
 	]);
 
 	const type = (openInstance.item && openInstance.item.type) || undefined;
@@ -129,9 +139,9 @@ function Document(props) {
 	// Save the user's preferences for the current editor to IndexedDB.
 	const savePrefs = useCallback((key, value) => {
 		// This will update props.mod.
-		props.savePrefs(type, key, value);
+		props_savePrefs(type, key, value);
 	}, [
-		props.savePrefs,
+		props_savePrefs,
 		type,
 	]);
 
