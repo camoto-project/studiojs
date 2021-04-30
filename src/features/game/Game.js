@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
 	HashRouter as Router,
+	Prompt,
 	Route,
 	Switch,
 	useHistory,
@@ -32,6 +33,7 @@ import SaveGame from './SaveGame.js';
 import Storage from '../../util/storage.js';
 import ToolbarItemModInfo from './ToolbarItemModInfo.js';
 import Tooltip from '../../components/Tooltip.js';
+import useUnload from '../../util/useUnload.js';
 
 import './Game.css';
 
@@ -66,6 +68,15 @@ function Game(props) {
 	// Set when we have an item to load if the user opts to discard changes in the
 	// current document.  This also shows the confirmation box.
 	const [ pendingItem, setPendingItem ] = useState(null);
+
+	// Prompt if the page changes while there are unsaved changes.
+	useUnload(e => {
+		if (unsavedChanges) {
+			e.preventDefault();
+			e.returnvalue = 'The current item has not yet been saved!';
+			return e.returnValue;
+		}
+	});
 
 	// When a 'game' is passed through in the props, update the list of items in
 	// the tree view.
@@ -206,6 +217,20 @@ function Game(props) {
 		props.idMod,
 	]);
 
+	// Callback when browser back/forward buttons are pressed.  Due to a many
+	// year old bug in React Router, returning false to cancel the navigation
+	// still results in the browser URL updating and no longer matching the
+	// displayed content.  Hopefully the bug will be fixed one day.
+	function onNavigatePrompt(location, action) {
+		const proceed = window.confirm('Discard unsaved changes to open item?');
+		if (proceed) {
+			// Don't want to keep prompting for unsaved changes on the
+			// next document.
+			setUnsavedChanges(false);
+		}
+		return proceed;
+	}
+
 	const match = useRouteMatch();
 
 	return (
@@ -265,6 +290,10 @@ function Game(props) {
 				<Router>
 					<Switch>
 						<Route path={`${match.url}/:idDocument?`}>
+							<Prompt
+								when={unsavedChanges}
+								message={onNavigatePrompt}
+							/>
 							<Document
 								game={props.game}
 								gameItems={gameItems}
