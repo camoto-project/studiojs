@@ -190,7 +190,7 @@ function Palette(props) {
 						value={(
 							(selectedColour !== null)
 							&& (
-								'#' + selectedComponents.map(rgb => rgb.toString(16).toUpperCase().padStart(2, '0')).join('')
+								'#' + selectedComponents.map(rgb => (rgb || '??').toString(16).toUpperCase().padStart(2, '0')).join('')
 							)
 						) || null}
 						onKeyDown={ev => onChangeEntryHTML(ev.target.value)}
