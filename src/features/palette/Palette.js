@@ -149,7 +149,8 @@ function Palette(props) {
 
 				<button onClick={onExport}>
 					<Tooltip>
-						Save the whole palette to a file
+						Save the whole palette to a file in 8-bit VGA *.pal format.  To
+						export as .png, open and export an image instead.
 					</Tooltip>
 					<Icon icon={iconExport} />
 				</button>
@@ -160,6 +161,7 @@ function Palette(props) {
 					<button>
 						<Tooltip>
 							Replace the whole palette with one loaded from a file
+							(only PNG and 8-bit VGA *.PAL supported)
 						</Tooltip>
 						<Icon icon={iconImport} />
 					</button>
