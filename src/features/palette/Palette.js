@@ -10,6 +10,7 @@ import {
 
 import {
 	Image,
+	img_png,
 	pal_vga_8bit,
 } from '@camoto/gamegraphics';
 import { saveAs } from 'file-saver';
@@ -52,12 +53,26 @@ function Palette(props) {
 
 	function onImportAvailable(file) {
 		let newImg;
+		// Try .png first
 		try {
-			newImg = pal_vga_8bit.read({
+			newImg = img_png.read({
 				main: file.content,
 			});
 		} catch (e) {
-			setErrorPopup('Error decoding .pal file: ' + e.message);
+			console.log('Reading as .png failed, trying .pal');
+			try {
+				newImg = pal_vga_8bit.read({
+					main: file.content,
+				});
+			} catch (e) {
+				setErrorPopup('Error decoding .pal file: ' + e.message);
+				return;
+			}
+		}
+
+		if (!newImg.palette || newImg.palette.length === 0) {
+			setErrorPopup('This file was read successfully but it does not have a '
+				+ 'palette to import!');
 			return;
 		}
 
