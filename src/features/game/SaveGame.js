@@ -38,8 +38,9 @@ function SaveGame(props) {
 		async function regenerateGame() {
 			setDownloads({});
 
-			let output;
+			let output, preflight;
 			try {
+				preflight = await props.game.preflight();
 				output = await props.game.save();
 			} catch (e) {
 				console.error(e);
@@ -48,7 +49,10 @@ function SaveGame(props) {
 			}
 			const { files, warnings } = output;
 			setDownloads(files || {});
-			setWarnings(warnings || []);
+			setWarnings([
+				...preflight.map(pf => pf.detail) || [],
+				...warnings || [],
+			]);
 
 			let dlc = {};
 			for (const filename of Object.keys(files)) {
@@ -125,7 +129,7 @@ function SaveGame(props) {
 					</ul>
 					<p>
 						You can save anyway but you may get incomplete or incorrect data
-						saved if the message is warning you of this.
+						saved if one of the above messages is warning you of this.
 					</p>
 				</Tip>
 			</div>
