@@ -142,7 +142,7 @@ function SaveGame(props) {
 			)}
 
 			<div style={{marginLeft: '1em'}}>
-				{(downloadEntries.length === 0) && (
+				{(downloadEntries.length === 0) && (errorMessage === null) && (
 					<Spin name="four-dots" />
 				)}
 				{downloadEntries.map(([filename, content]) => (
