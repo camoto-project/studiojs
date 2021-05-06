@@ -14,6 +14,7 @@ import {
 } from 'shineout';
 import { Icon } from '@iconify/react';
 import iconAudio from '@iconify/icons-fa-solid/volume-down';
+import iconAttributes from '@iconify/icons-fa-solid/list-alt';
 import iconB800 from '@iconify/icons-fa-solid/th';
 import iconClose from '@iconify/icons-fa-solid/times';
 import iconDelete from '@iconify/icons-fa-solid/trash-alt';
@@ -156,6 +157,7 @@ function Game(props) {
 
 	function renderGameItem(d) {
 		const iconItemType = {
+			attributes: iconAttributes,
 			b800: iconB800,
 			folder: iconFolder,
 			image: iconImage,

@@ -1,0 +1,64 @@
+.attributes input {
+	font-family: 'Courier New', fixed;
+	padding: 2px;
+	margin: 0;
+	height: 90%;
+	box-shadow:
+		inset -1px -1px var(--button-highlight),
+		inset 1px 1px var(--button-shadow),
+		inset -2px -2px var(--button-face),
+		inset 2px 2px var(--window-frame)
+	;
+}
+
+div.so-table.attributes table {
+	background-color: var(--surface);
+	color: black;
+}
+div.so-table.attributes {
+	margin: 0;
+}
+
+/*.content div.so-table.attributes table tbody tr td {*/
+.content .attributes td {
+	background-color: inherit;
+	color: inherit;
+	padding: 0 2px;
+	border-top: 1px solid var(--button-highlight);
+	border-bottom: 1px solid var(--button-shadow);
+	vertical-align: middle;
+}
+
+.content div.so-table.attributes thead th {
+	padding: 2px 5px;
+	background-color: var(--surface);
+	color: black;
+	box-shadow: var(--border-raised-outer), var(--border-raised-inner);
+}
+
+.content .attributes th.colID,
+.content .attributes td.colID {
+	min-width: 10em;
+}
+
+.content .attributes th.colValue,
+.content .attributes td.colValue {
+	width: 40%;
+}
+
+.content .attributes th.colType,
+.content .attributes td.colType {
+	min-width: 5em;
+}
+.content .attributes td.colValue {
+	margin: 0;
+}
+
+.content .attributes td.colDesc {
+	word-break: normal;
+	overflow-x: hidden;
+}
+
+.content div.so-table.attributes .so-table-head table {
+	border: none;
+}

@@ -9,6 +9,7 @@ import Initial from './initial/Initial.js';
 import Loading from './Loading.js';
 import MessageBox from '../components/MessageBox.js';
 
+const Attributes = lazy(() => import('./attributes/Attributes.js'));
 const Image = lazy(() => import('./image/Image.js'));
 const Music = lazy(() => import('./music/Music.js'));
 const Palette = lazy(() => import('./palette/Palette.js'));
@@ -167,6 +168,10 @@ function Document(props) {
 
 		case 'image':
 			element = <Image {...childProps} />;
+			break;
+
+		case 'attributes':
+			element = <Attributes {...childProps} />;
 			break;
 
 		case 'music':
