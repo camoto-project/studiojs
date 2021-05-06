@@ -11,6 +11,7 @@ import MessageBox from '../components/MessageBox.js';
 
 const Attributes = lazy(() => import('./attributes/Attributes.js'));
 const Image = lazy(() => import('./image/Image.js'));
+const Map = lazy(() => import('./map/Map.js'));
 const Music = lazy(() => import('./music/Music.js'));
 const Palette = lazy(() => import('./palette/Palette.js'));
 
@@ -172,6 +173,10 @@ function Document(props) {
 
 		case 'attributes':
 			element = <Attributes {...childProps} />;
+			break;
+
+		case 'map':
+			element = <Map {...childProps} />;
 			break;
 
 		case 'music':
