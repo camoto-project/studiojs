@@ -1,42 +1,42 @@
 .palette {
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+	height: 100%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
 }
 
 .palette .colour {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  xalign-items: stretch;
-  width: calc(100% / 16);
-  height: calc(100% / 16);
-  cursor: crosshair;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	xalign-items: stretch;
+	width: calc(100% / 16);
+	height: calc(100% / 16);
+	cursor: crosshair;
 }
 
 .palette .colour .label {
-  font-size: 75%;
-  color: white;
-  mix-blend-mode: difference;
+	font-size: 75%;
+	color: white;
+	mix-blend-mode: difference;
 }
 
 .selectedColour {
-  box-shadow: inset 0px 0px 0px 2px #000000;
+	box-shadow: inset 0px 0px 0px 2px #000000;
 }
 
 /* Toolbar */
 .toolbarPalComponent {
-  margin-left: 1ex;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+	margin-left: 1ex;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 }
 
 .toolbarPalComponent .so-input-number {
-  width: 4.5em;
+	width: 4.5em;
 }
 
 .toolbarPalComponent .so-input.html {
-  width: 7em;
+	width: 7em;
 }
