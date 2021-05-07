@@ -1,3 +1,10 @@
+/* Make the main document pane take up all available space */
+.document .attributes {
+	flex-grow: 1;
+	height: 100%; /* Limit to screen height so we get scroll bars */
+	display: flex;
+}
+
 .attributes input {
 	font-family: 'Courier New', fixed;
 	padding: 2px;

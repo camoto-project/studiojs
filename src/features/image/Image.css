@@ -1,3 +1,10 @@
+/* Make the main document pane take up all available space */
+.document .image {
+	flex-grow: 1;
+	height: 100%; /* Limit to screen height so we get scroll bars */
+	display: flex;
+}
+
 canvas.singleImage {
 	box-shadow:
 		0 2.8px 2.2px rgba(0, 0, 0, 0.034),

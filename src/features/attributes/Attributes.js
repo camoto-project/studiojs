@@ -60,51 +60,53 @@ function Attributes(props) {
 				</button>
 			</div>
 
-			<div className="content">
-				<Table
-					className="attributes"
-					keygen="id"
-					columns={[
-						{
-							title: 'ID',
-							render: 'id',
-							className: 'colID',
-						}, {
-							title: 'Value',
-							className: 'colValue',
-							render: d => {
-								if (typeof d.value === 'number') {
+			<div className="attributes border-sunken">
+				<div className="content">
+					<Table
+						className="attributes"
+						keygen="id"
+						columns={[
+							{
+								title: 'ID',
+								render: 'id',
+								className: 'colID',
+							}, {
+								title: 'Value',
+								className: 'colValue',
+								render: d => {
+									if (typeof d.value === 'number') {
+										return (
+											<Input.Number
+												min={d.min}
+												max={d.max}
+												defaultValue={d.value}
+												onEnterPress={v => setValue(d.id, v)}
+												onBlur={ev => setValue(d.id, ev.target.value)}
+											/>
+										);
+									}
 									return (
-										<Input.Number
-											min={d.min}
-											max={d.max}
+										<Input
 											defaultValue={d.value}
 											onEnterPress={v => setValue(d.id, v)}
 											onBlur={ev => setValue(d.id, ev.target.value)}
+											maxLength={d.type.lenAvailable}
 										/>
 									);
-								}
-								return (
-									<Input
-										defaultValue={d.value}
-										onEnterPress={v => setValue(d.id, v)}
-										onBlur={ev => setValue(d.id, ev.target.value)}
-										maxLength={d.type.lenAvailable}
-									/>
-								);
-							},
-						}, {
-							title: 'Type',
-							render: 'valueType',
-							className: 'colType',
-						}, {
-							title: 'Description',
-							render: 'desc',
-							className: 'colDesc',
-						}
-					]}
-					data={attributeList}
-				/>
+								},
+							}, {
+								title: 'Type',
+								render: 'valueType',
+								className: 'colType',
+							}, {
+								title: 'Description',
+								render: 'desc',
+								className: 'colDesc',
+							}
+						]}
+						data={attributeList}
+					/>
+				</div>
 			</div>
 			<MessageBox
 				icon="error"

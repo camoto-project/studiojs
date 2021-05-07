@@ -198,26 +198,28 @@ function Palette(props) {
 				</span>
 
 			</div>
-			<div
-				className="content"
-				onClick={ev => onColourClick(null, ev)}
-			>
-				<div className="palette">
-					{palette.map((c, i) => {
-						const hexColourRGBA = '#' + c.map(rgb => rgb.toString(16).toUpperCase().padStart(2, '0')).join('');
-						const hexColourRGB = hexColourRGBA.substring(0, 7);
-						return (
-							<div
-								key={i}
-								className={'colour' + ((selectedColour === i) ? ' selectedColour' : '')}
-								onClick={ev => onColourClick(i, ev)}
-								style={{backgroundColor: hexColourRGB}}
-							>
-								<span className="label top">{i}</span>
-								<span className="label bottom">{hexColourRGBA}</span>
-							</div>
-						);
-					})}
+			<div className="palette border-sunken">
+				<div
+					className="content"
+					onClick={ev => onColourClick(null, ev)}
+				>
+					<div className="palette">
+						{palette.map((c, i) => {
+							const hexColourRGBA = '#' + c.map(rgb => rgb.toString(16).toUpperCase().padStart(2, '0')).join('');
+							const hexColourRGB = hexColourRGBA.substring(0, 7);
+							return (
+								<div
+									key={i}
+									className={'colour' + ((selectedColour === i) ? ' selectedColour' : '')}
+									onClick={ev => onColourClick(i, ev)}
+									style={{backgroundColor: hexColourRGB}}
+								>
+									<span className="label top">{i}</span>
+									<span className="label bottom">{hexColourRGBA}</span>
+								</div>
+							);
+						})}
+					</div>
 				</div>
 			</div>
 			<MessageBox

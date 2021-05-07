@@ -34,10 +34,25 @@ table input {
 	max-width: 100%;
 }
 
+.border-sunken {
+	/* Only give enough padding so the content doesn't overwrite the sunken border */
+	padding: 2px;
+	margin: 1px;
+	box-shadow:
+		inset -1px -1px var(--button-highlight),
+		inset 1px 1px var(--button-shadow),
+		inset -2px -2px var(--button-face),
+		inset 2px 2px var(--window-frame)
+	;
+}
+
 /* Tree view */
 .body .itemList {
 	min-width: 20%;
 	width: 20%;
+}
+.body .itemList .content {
+	height: 100%;
 	overflow-y: auto;
 
 	padding: 6px;
@@ -64,19 +79,6 @@ table input {
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
-}
-
-.body .itemList,
-.body .document .content {
-	/* Only give enough padding so the content doesn't overwrite the sunken border */
-	padding: 2px;
-	margin: 1px;
-	box-shadow:
-		inset -1px -1px var(--button-highlight),
-		inset 1px 1px var(--button-shadow),
-		inset -2px -2px var(--button-face),
-		inset 2px 2px var(--window-frame)
-	;
 }
 
 .body .itemList {

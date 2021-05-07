@@ -426,27 +426,29 @@ function Image(props) {
 				</button>
 
 			</div>
-			<div
-				className="content"
-				onClick={ev => onImageClick(null, ev)}
-			>
-				<div className="images">
-					{images.map((img, i) => (
-						<div
-							key={i}
-							className={'image' + ((selectedImage === i) ? ' selectedImage' : '')}
-							onClick={ev => onImageClick(i, ev)}
-						>
-							<Frame
-								frames={img.frames}
-								animation={img.animation}
-								palette={img.palette}
-								imgWidth={img.width}
-								imgHeight={img.height}
-								zoom={zoom}
-							/>
-						</div>
-					))}
+			<div className="image border-sunken">
+				<div
+					className="content"
+					onClick={ev => onImageClick(null, ev)}
+				>
+					<div className="images">
+						{images.map((img, i) => (
+							<div
+								key={i}
+								className={'image' + ((selectedImage === i) ? ' selectedImage' : '')}
+								onClick={ev => onImageClick(i, ev)}
+							>
+								<Frame
+									frames={img.frames}
+									animation={img.animation}
+									palette={img.palette}
+									imgWidth={img.width}
+									imgHeight={img.height}
+									zoom={zoom}
+								/>
+							</div>
+						))}
+					</div>
 				</div>
 			</div>
 			<MessageBox

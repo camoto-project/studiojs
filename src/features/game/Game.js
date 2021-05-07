@@ -279,15 +279,17 @@ function Game(props) {
 			</div>
 
 			<div className="body">
-				<span className="itemList" style={{display: treeVisible ? 'block' : 'none'}}>
-					<Tree
-						data={gameItemsTree}
-						keygen="id"
-						renderItem={renderGameItem}
-						defaultExpandAll
-						onClick={onItemClick}
-					/>
-				</span>
+				<div className="itemList border-sunken" style={{display: treeVisible ? 'block' : 'none'}}>
+					<div className="content">
+						<Tree
+							data={gameItemsTree}
+							keygen="id"
+							renderItem={renderGameItem}
+							defaultExpandAll
+							onClick={onItemClick}
+						/>
+					</div>
+				</div>
 
 				<Router>
 					<Switch>
