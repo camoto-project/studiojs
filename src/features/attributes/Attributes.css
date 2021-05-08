@@ -18,31 +18,6 @@
 	;
 }
 
-div.so-table.attributes table {
-	background-color: var(--surface);
-	color: black;
-}
-div.so-table.attributes {
-	margin: 0;
-}
-
-/*.content div.so-table.attributes table tbody tr td {*/
-.content .attributes td {
-	background-color: inherit;
-	color: inherit;
-	padding: 0 2px;
-	border-top: 1px solid var(--button-highlight);
-	border-bottom: 1px solid var(--button-shadow);
-	vertical-align: middle;
-}
-
-.content div.so-table.attributes thead th {
-	padding: 2px 5px;
-	background-color: var(--surface);
-	color: black;
-	box-shadow: var(--border-raised-outer), var(--border-raised-inner);
-}
-
 .content .attributes th.colID,
 .content .attributes td.colID {
 	min-width: 10em;
@@ -64,8 +39,4 @@ div.so-table.attributes {
 .content .attributes td.colDesc {
 	word-break: normal;
 	overflow-x: hidden;
-}
-
-.content div.so-table.attributes .so-table-head table {
-	border: none;
 }

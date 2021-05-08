@@ -179,3 +179,33 @@ span.flex-spacer {
 .so-popover-text b {
 	color: orange;
 }
+
+/* Tables */
+div.so-table.camoto table {
+	background-color: var(--surface);
+	color: black;
+}
+div.so-table.camoto {
+	margin: 0;
+}
+
+/*.content div.so-table.attributes table tbody tr td {*/
+div.so-table.camoto td {
+	background-color: inherit;
+	color: inherit;
+	padding: 0 2px;
+	border-top: 1px solid var(--button-highlight);
+	border-bottom: 1px solid var(--button-shadow);
+	vertical-align: middle;
+}
+
+div.so-table.camoto thead th {
+	padding: 2px 5px;
+	background-color: var(--surface);
+	color: black;
+	box-shadow: var(--border-raised-outer), var(--border-raised-inner);
+}
+
+div.so-table.camoto .so-table-head table {
+	border: none;
+}

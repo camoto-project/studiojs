@@ -63,7 +63,7 @@ function Attributes(props) {
 			<div className="attributes content-container">
 				<div className="content">
 					<Table
-						className="attributes"
+						className="attributes camoto"
 						keygen="id"
 						columns={[
 							{
