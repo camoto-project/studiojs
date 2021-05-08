@@ -55,7 +55,29 @@ gameinfo.js, at which point it will be available for editing in Camoto Studio.
 
 ### Running locally
 
-Use `npm start` to run the site locally at http://localhost:3000.
+  1. `npm install` to download dependencies
+  2. `npm start` to run the web server locally
+  3. Open http://localhost:3000 in a browser.
+
+If you will be doing development on the underlying libraries as well (adding new
+file formats) you may wish to have the local Camoto Studio access local
+development versions of the other Camoto libraries as well to assist with
+development.  Assuming all the git repos are cloned into subfolders in the
+same parent directory, you can do this:
+
+  1. `cd studiojs`
+  2. `npm uninstall @camoto/gamearchive`
+  3. `npm install ../gamearchivejs/`
+  4. Repeat for whichever libraries are available locally.
+
+If you do this, remember not to include the `package*.json` files in any PRs as
+they will now refer to your local installs.
+
+You can easily undo the above changes by performing it in reverse, to switch
+from local versions to the lastest published version:
+
+  1. `npm uninstall @camoto/gamearchive` (yes even for the local version)
+  2. `npm install @camoto/gamearchive`
 
 ### Debugging
 
