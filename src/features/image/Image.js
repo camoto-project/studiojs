@@ -172,7 +172,7 @@ function Image(props) {
 			setErrorPopup(`Tried to export invalid image index ${targetImage}.`);
 			return;
 		}
-		if (img.animation && animation) {
+		if (animationAllowed && img.animation && animation) {
 			setErrorPopup('Sorry, exporting animated images is not implemented yet!  '
 				+ 'Use the toolbar button to turn the animations off before exporting.');
 			return;
