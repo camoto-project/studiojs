@@ -276,16 +276,22 @@ function Image(props) {
 		// existing one(s), which could be a single image or tiles.
 		if (imgOld.frames.length > 1) {
 			// Tileset
-			const newFrames = tilesetFromFrame({
-				frame: imgNew.frames[0],
-				frameWidth: imgNew.frames[0].width || imgNew.width,
-				tileDims: imgOld.frames.map(frame => ({
-					width: frame.width,
-					height: frame.height,
-				})),
-				bg: 0,
-			});
-			imgNew.frames = newFrames;
+			try {
+				imgNew.frames = tilesetFromFrame({
+					frame: imgNew.frames[0],
+					frameWidth: imgNew.frames[0].width || imgNew.width,
+					tileDims: imgOld.frames.map(frame => ({
+						width: frame.width || imgOld.width,
+						height: frame.height || imgOld.height,
+					})),
+					bg: 0,
+				});
+			} catch (e) {
+				setErrorPopup('Import failed when chopping the image up into '
+					+ 'individual tiles.  The reason given by tilesetFromFrame() is: '
+					+ e.message);
+				return;
+			}
 
 			// Set the new image dimensions to be undefined, so that we don't use
 			// them when converting back into a composite image (which leaves empty
