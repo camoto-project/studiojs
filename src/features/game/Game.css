@@ -25,7 +25,8 @@ table input {
 	height: 90%;
 }
 
-.root > .body {
+.game,
+.game .document {
 	flex-grow: 1;
 	overflow: hidden;
 	display: flex;
@@ -34,7 +35,50 @@ table input {
 	max-width: 100%;
 }
 
-.border-sunken {
+/* Tree view */
+.game .itemList {
+	min-width: 20%;
+	width: 20%;
+	background-color: white;
+}
+.game .itemList .content {
+	height: 100%;
+	overflow-y: auto;
+
+	padding: 6px;
+	background-color: white;
+}
+
+.game .itemList .so-tree-content {
+	text-indent: -3ex;
+	padding-left: 3ex;
+	cursor: pointer;
+}
+.game .itemList .so-tree-content:hover {
+	color: #4040FF;
+}
+
+.game .itemList .so-tree-content .disabled {
+	color: #ccc;
+	cursor: not-allowed;
+}
+
+/* Document */
+.game .document {
+	flex-direction: column;
+	display: flex;
+xmax-height: 90%;
+	overflow: hidden;
+}
+
+/* Necessary to ensure the sunken border remains on screen and doesn't get
+   cropped or scrolled. */
+.content-container {
+	overflow: hidden;
+}
+
+/* Give it a sunken border */
+.content-container {
 	/* Only give enough padding so the content doesn't overwrite the sunken border */
 	padding: 2px;
 	margin: 1px;
@@ -44,45 +88,6 @@ table input {
 		inset -2px -2px var(--button-face),
 		inset 2px 2px var(--window-frame)
 	;
-}
-
-/* Tree view */
-.body .itemList {
-	min-width: 20%;
-	width: 20%;
-}
-.body .itemList .content {
-	height: 100%;
-	overflow-y: auto;
-
-	padding: 6px;
-	background-color: white;
-}
-
-.body .itemList .so-tree-content {
-	text-indent: -3ex;
-	padding-left: 3ex;
-	cursor: pointer;
-}
-.body .itemList .so-tree-content:hover {
-	color: #4040FF;
-}
-
-.body .itemList .so-tree-content .disabled {
-	color: #ccc;
-	cursor: not-allowed;
-}
-
-/* Document */
-.body .document {
-	flex-grow: 1;
-	display: flex;
-	flex-direction: column;
-	overflow: hidden;
-}
-
-.body .itemList {
-	background-color: white;
 }
 
 .document .content {

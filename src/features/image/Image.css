@@ -34,11 +34,7 @@ canvas.singleImage {
 }
 /* End checkerbox */
 
-.content .images {
-	flex-wrap: wrap;
-}
-
-.content .images .image {
+.content .images .imageContainer {
 	display: inline-block;
 	line-height: 0.0;
 	margin: 4px;
@@ -48,7 +44,7 @@ canvas.singleImage {
 }
 
 /* Selected image */
-.content .images .image.selectedImage {
+.content .images .imageContainer.selectedImage {
 	box-shadow:
 		4px 4px 16px rgba(0, 0, 0, 0.3),
 		0px 0px 2px 2px rgba(0, 0, 0, 0.75)

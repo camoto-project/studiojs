@@ -426,7 +426,7 @@ function Image(props) {
 				</button>
 
 			</div>
-			<div className="image border-sunken">
+			<div className="image content-container">
 				<div
 					className="content"
 					onClick={ev => onImageClick(null, ev)}
@@ -435,7 +435,7 @@ function Image(props) {
 						{images.map((img, i) => (
 							<div
 								key={i}
-								className={'image' + ((selectedImage === i) ? ' selectedImage' : '')}
+								className={'imageContainer' + ((selectedImage === i) ? ' selectedImage' : '')}
 								onClick={ev => onImageClick(i, ev)}
 							>
 								<Frame

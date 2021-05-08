@@ -60,7 +60,7 @@ function Attributes(props) {
 				</button>
 			</div>
 
-			<div className="attributes border-sunken">
+			<div className="attributes content-container">
 				<div className="content">
 					<Table
 						className="attributes"

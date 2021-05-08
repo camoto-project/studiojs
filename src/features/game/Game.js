@@ -278,8 +278,8 @@ function Game(props) {
 
 			</div>
 
-			<div className="body">
-				<div className="itemList border-sunken" style={{display: treeVisible ? 'block' : 'none'}}>
+			<div className="game">
+				<div className="itemList content-container" style={{display: treeVisible ? 'block' : 'none'}}>
 					<div className="content">
 						<Tree
 							data={gameItemsTree}

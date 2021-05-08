@@ -198,7 +198,7 @@ function Palette(props) {
 				</span>
 
 			</div>
-			<div className="palette border-sunken">
+			<div className="palette content-container">
 				<div
 					className="content"
 					onClick={ev => onColourClick(null, ev)}
