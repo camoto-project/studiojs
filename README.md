@@ -16,37 +16,43 @@ If you want to add support for more games or improve the editors in some way,
 great!  Depending on what you want to do, the code might belong in another
 repository (perhaps more than one):
 
- - gamearchive.js handles reading and writing of any archive files, including
-   extracting large data chunks out of .exe files.
+ - [gamearchive.js](https://github.com/camoto-project/gamearchivejs)
+   handles reading and writing of any archive files, including extracting large
+   data chunks out of .exe files.
 
- - gamecomp.js handles applying and removing any compression or encryption.  It
-   is mostly used by gamearchive.js to decompress files inside archives, but
-   the algorithms are available for use by all libraries.  gamecode.js for
-   example, uses them to decompress .exe files.
+ - [gamecomp.js](https://github.com/camoto-project/gamecompjs) handles applying
+   and removing any compression or encryption.  It is mostly used by
+   gamearchive.js to decompress files inside archives, but the algorithms are
+   available for use by all libraries.  gamecode.js for example, uses them to
+   decompress .exe files.
 
- - gamegraphics.js handles decoding and encoding images, palettes, tilesets and
-   animations.
+ - [gamegraphics.js](https://github.com/camoto-project/gamegraphicsjs)
+   handles decoding and encoding images, palettes, tilesets and animations.
 
- - gamemaps.js handles the levels themselves, including how to map tiles back
-   to the images and tilesets provided by gamegraphics.js.
+ - [gamemaps.js](https://github.com/camoto-project/gamegraphicsjs)
+   handles the levels themselves, including how to map tiles back to the images
+   and tilesets provided by gamegraphics.js.
 
- - gamecode.js handles extracting small amounts of information from game .exe
-   files.  Things like text strings for the game's user interface, and filenames
-   the game uses to load data are made available for modification through this
+ - [gamecode.js](https://github.com/camoto-project/gamecodejs)
+   handles extracting small amounts of information from game .exe files.
+   Things like text strings for the game's user interface, and filenames the
+   game uses to load data are made available for modification through this
    library.
 
- - gameinfo.js ties everything together, providing a list of items that can be
-   edited in each game.  It handles things like loading the right tilesets for
-   a level editor to use, knowing which palettes to use for which images,
-   splitting or combining tilesets into a more logical arrangement, and so on.
-   It relies on all the other libraries for reading information from games and
-   for actually loading and saving them as class instances.
+ - [gameinfo.js](https://github.com/camoto-project/gameinfojs)
+   ties everything together, providing a list of items that can be edited in
+   each game.  It handles things like loading the right tilesets for a level
+   editor to use, knowing which palettes to use for which images, splitting or
+   combining tilesets into a more logical arrangement, and so on.  It relies on
+   all the other libraries for reading information from games and for actually
+   loading and saving them as class instances.
 
- - studio.js is this project, which uses gameinfo.js to load and save game
-   items.  It also provides a set of editors, such as a level editor that can
-   modify the `Map` class instances returned by gameinfo.js.  It does not have
-   any knowledge of any specific games - at this point it's all generic, with
-   the differences between games abstracted away by gameinfo.js.
+ - [studio.js](https://github.com/camoto-project/studiojs)
+   is this project, which uses gameinfo.js to load and save game items.  It
+   also provides a set of editors, such as a level editor that can modify the
+   `Map` class instances returned by gameinfo.js.  It does not have any
+   knowledge of any specific games - at this point it's all generic, with the
+   differences between games abstracted away by gameinfo.js.
 
 In order to add support for a new game, first all the file formats must be
 implemented in the various libraries - any archives in gamearchive.js, the
