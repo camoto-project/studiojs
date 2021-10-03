@@ -8,6 +8,11 @@ import ErrorBox from '../../components/ErrorBox.js';
 
 import './Initial.css';
 
+// Translate all relative links to absolute and make them open in a new tab.
+function fixLinks(html) {
+	return html.replace(/a href="\/w/g, 'a target="_blank" href="https://moddingwiki.shikadi.net/w');
+}
+
 function Initial(props) {
 	const [ tips, setTips ] = useState(null);
 	const [ errorMessage, setErrorMessage ] = useState(null);
@@ -28,7 +33,7 @@ function Initial(props) {
 					setTips('<p>There are no tips available for this game.</p>');
 					return;
 				}
-				setTips(page.parse.text);
+				setTips(fixLinks(page.parse.text));
 			} catch (e) {
 				setTips(null);
 				setErrorMessage('Error loading tips: ' + e.message);
