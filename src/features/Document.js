@@ -7,6 +7,7 @@ import ErrorBox from '../components/ErrorBox.js';
 import Initial from './initial/Initial.js';
 import Loading from './Loading.js';
 
+const Archive = lazy(() => import('./archive/Archive.js'));
 const Attributes = lazy(() => import('./attributes/Attributes.js'));
 const Image = lazy(() => import('./image/Image.js'));
 const Map = lazy(() => import('./map/Map.js'));
@@ -54,12 +55,16 @@ function Document(props) {
 			element = <Initial {...childProps} />;
 			break;
 
-		case 'image':
-			element = <Image {...childProps} />;
+		case 'archive':
+			element = <Archive {...childProps} />;
 			break;
 
 		case 'attributes':
 			element = <Attributes {...childProps} />;
+			break;
+
+		case 'image':
+			element = <Image {...childProps} />;
 			break;
 
 		case 'map':
