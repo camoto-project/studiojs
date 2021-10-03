@@ -9,7 +9,7 @@ export default class Storage
 	static async openDB() {
 		return await openDB('main', 1, {
 			upgrade(db) {
-				console.log('updating db');
+				console.log('Upgrading DB');
 				if (!db.objectStoreNames.contains('mods')) {
 					db.createObjectStore('mods', {
 						keyPath: 'id',
