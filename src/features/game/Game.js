@@ -70,6 +70,10 @@ function Game(props) {
 	// current document.  This also shows the confirmation box.
 	const [ pendingItem, setPendingItem ] = useState(null);
 
+	// Show an error if the game couldn't be loaded, and redirect back to the main
+	// page when closed.
+	const [ gameLoadError, setGameLoadError ] = useState(null);
+
 	// Prompt if the page changes while there are unsaved changes.
 	useUnload(e => {
 		if (unsavedChanges) {
@@ -87,9 +91,10 @@ function Game(props) {
 			try {
 				items = await props.game.items();
 			} catch (e) {
-				// TODO: handle error
-				console.log(e);
-				setGameItems({});
+				console.log('Error opening game:');
+				console.error(e);
+				setGameItems(null);
+				setGameLoadError(e.message);
 				return;
 			}
 
@@ -234,6 +239,29 @@ function Game(props) {
 	}
 
 	const match = useRouteMatch();
+
+	if (gameLoadError) {
+		return (
+			<div className="root">
+				<MessageBox
+					visible={true}
+					icon="error"
+					onClose={() => history.push('/')}
+					onOK={() => history.push('/')}
+			xxokIcon={iconDelete}
+			xxokText="Discard"
+			xxbuttonTypeOK="danger"
+				>
+					<p>
+						This game could not be opened due to an unrecoverable error:
+					</p>
+					<p>
+						<b>{gameLoadError}</b>
+					</p>
+				</MessageBox>
+			</div>
+		);
+	}
 
 	return (
 		<div className="root">
