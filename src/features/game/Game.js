@@ -50,7 +50,7 @@ import iconMusic from '@iconify/icons-fa-solid/music';
 import iconPalette from '@iconify/icons-fa-solid/palette';
 import iconSave from '@iconify/icons-fa-solid/download';
 
-import Document from '../Document.js';
+import GameItem from './GameItem.js';
 import MessageBox from '../../components/MessageBox.js';
 import SaveGame from './SaveGame.js';
 import Storage from '../../util/storage.js';
@@ -137,6 +137,21 @@ function Game(props) {
 			}
 			const treeItems = addChildren(items);
 			setGameItemsTree(treeItems);
+
+			// Add our default item.  We do this after generating the tree items so
+			// it doesn't get added to the tree.
+			const md = props.game.constructor.metadata();
+			flatItems['_new'] = {
+				id: '_new',
+				type: '_new',
+				gameTitle: md.title,
+				tipsSource: {
+					title: 'ModdingWiki',
+					url: `https://moddingwiki.shikadi.net/wiki/${md.title}`,
+				},
+				tipsContentURL: `https://moddingwiki.shikadi.net/w/api.php?action=parse&prop=text&format=json&formatversion=2&origin=*&errorformat=html&page=${md.title}/Modding Tips`,
+			};
+
 			setGameItems(flatItems);
 		}
 		loadItems();
@@ -348,8 +363,7 @@ function Game(props) {
 								when={unsavedChanges}
 								message={onNavigatePrompt}
 							/>
-							<Document
-								game={props.game}
+							<GameItem
 								gameItems={gameItems}
 								mod={mod}
 								cbSaveMod={props.cbSaveMod}
