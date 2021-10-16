@@ -33,7 +33,13 @@ export default class Storage
 	 */
 	static async getMods() {
 		let mods = [];
-		const db = await this.openDB();
+		let db;
+		try {
+			db = await this.openDB();
+		} catch (e) {
+			console.error('storage.openDB() failed:', e);
+			throw e;
+		}
 		if (!db.objectStoreNames.contains('mods')) return [];
 		let cursor = await db.transaction('mods').store.openCursor();
 		while (cursor) {
