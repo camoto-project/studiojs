@@ -92,3 +92,8 @@ In the browser console, run:
     localStorage.debug = 'game*';
 
 This enables all the `debug()` calls which will appear in the browser console.
+
+## Credits
+
+[Joystick favicon](https://commons.wikimedia.org/wiki/File:Twemoji2_1f579.svg)
+by [Twitter twemoji](https://github.com/twitter/twemoji).
