@@ -23,31 +23,6 @@ div.postH3 .so-form-item .so-form-control {
 	width: 100%;
 }
 
-.so-table tr td {
+.openGame .so-table tr td {
 	cursor: pointer;
-}
-
-/* Hide the column header in the mod/game list */
-.so-table-head {
-	display: none;
-}
-
-.modItem {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-
-.modItem .modActions {
-	visibility: hidden;
-	flex: 1;
-	text-align: right;
-}
-
-.modItem:hover .modActions {
-	visibility: visible;
-}
-
-.modActions .deleteAction:hover {
-	color: red;
 }

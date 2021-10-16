@@ -35,7 +35,7 @@ import Storage from '../../util/storage.js';
 import ErrorBox from '../../components/ErrorBox.js';
 import MessageBox from '../../components/MessageBox.js';
 
-import './OpenGame.css';
+import './ModSelector.css';
 
 function ModSelector(props) {
 	const [ errorMessage, setErrorMessage ] = useState(null);
@@ -98,6 +98,7 @@ function ModSelector(props) {
 		if (mods.length) {
 			jsxMods = (
 				<Table
+					className="modSelector"
 					style={{maxHeight: '25em'}}
 					fixed="y"
 					data={props.limit ? mods.slice(0, props.limit) : mods}

@@ -1,0 +1,28 @@
+.modSelector .modItem {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.modSelector .modItem .modActions {
+	visibility: hidden;
+	flex: 1;
+	text-align: right;
+}
+
+.modSelector .modItem:hover .modActions {
+	visibility: visible;
+}
+
+.modSelector .modActions .deleteAction:hover {
+	color: red;
+}
+
+/* Hide the column header in the mod/game list */
+.modSelector .so-table-head {
+	display: none;
+}
+
+.so-table.modSelector tr td {
+	cursor: pointer;
+}
