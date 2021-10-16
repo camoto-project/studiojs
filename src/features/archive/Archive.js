@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Link as RRLink } from 'react-router-dom';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import {
 	Button,
 	Table,
-	Tooltip,
 } from 'shineout';
+import Tooltip from '../../components/Tooltip.js';
 import { Icon } from '@iconify/react';
 import iconCompressed from '@iconify/icons-fa-solid/file-archive';
 import iconEncrypted from '@iconify/icons-fa-solid/key';
@@ -22,10 +22,15 @@ import iconInsertBefore from '@iconify/icons-fa-solid/level-up-alt';
 import { saveAs } from 'file-saver';
 import { File } from '@camoto/gamearchive';
 
-import OpenFile from '../OpenFile.js';
+import HiddenUpload from '../../components/HiddenUpload.js';
 import SaveFile from '../SaveFile.js';
 
 import './Archive.css';
+
+const COL_ATTR_ICON = {
+	width: 24,
+	align: 'center',
+};
 
 // https://stackoverflow.com/a/20732091/308237
 function humanFileSize(size) {
@@ -35,14 +40,58 @@ function humanFileSize(size) {
 	return (size / Math.pow(1024, i)).toFixed(1) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
 }
 
-function Archive() {
-	const [ archiveFormat, setArchiveFormat ] = useState(null);
-	const [ archive, setArchive ] = useState(null);
+// Generate a table column for each attribute.
+const attributeColumns = [0, 1].map(i => (
+	{
+		title: (
+			<>
+				<Tooltip>
+					{[
+						'Compressed?',
+						'Encrypted?',
+					][i]}
+				</Tooltip>
+				{[
+					'C',
+					'E',
+				][i]}
+			</>
+		),
+		render: d => (
+			<span style={{
+				visibility: d.attributes[[
+					'compressed',
+					'encrypted',
+				][i]] ? 'visible' : 'hidden',
+			}}>
+				<Icon icon={[iconCompressed, iconEncrypted][i]} className="icon alone"/>
+				<Tooltip>
+					{[
+						`Compressed; ${humanFileSize(d.diskSize)}`,
+						`Encrypted`,
+					][i]}
+				</Tooltip>
+			</span>
+		),
+		...COL_ATTR_ICON,
+	}
+));
+
+function Archive(props) {
+	const history = useHistory();
+
+	const [ archive, setArchive ] = useState(props.document);
+	const [ errorPopup, setErrorPopup ] = useState(null);
+	const [ warnings, setWarnings ] = useState([]);
+
 	const [ archiveFiles, setArchiveFiles ] = useState([]);
-	const [ originalFilenames, setOriginalFilenames ] = useState({});
 	const [ idxRename, setIdxRename ] = useState(null);
 	const [ renameNewName, setRenameNewName ] = useState(null);
 	const [ saveVisible, setSaveVisible ] = useState(false);
+
+	// True if the browse dialog is visible for file replacement.
+	const [ importVisible, setImportVisible ] = useState(false);
+
 	const elRename = useRef(null);
 
 	// Focus the text box on rename.
@@ -54,66 +103,33 @@ function Archive() {
 		setArchiveFiles(arch.files.map((f, i) => ({index: i, ...f})));
 	}
 
-	function openArchive(newArchive, idFormat, filenames) {
-		setArchiveFormat(idFormat);
-		setArchive(newArchive);
-		setOriginalFilenames(filenames);
-		updateFiles(newArchive);
-	}
-
-	// If no archive has been opened, prompt for one.
-	if (!archive) {
-		return (
-			<OpenFile
-				category="archive"
-				title="Select an archive file"
-				onOpen={openArchive}
-				renderCancel={(
-					<RRLink to="/">
-						Cancel
-					</RRLink>
-				)}
-			/>
-		);
-	}
-
-	// Render the value for the 'Attributes' column.
-	function renderAttributes(d) {
-		let attrC = null;
-		if (d.attributes.compressed) {
-			attrC = (
-				<Tooltip tip={'Compressed; ' + humanFileSize(d.diskSize)} position="top">
-					<Icon icon={iconCompressed} className="icon" />
-				</Tooltip>
-			);
-		}
-
-		let attrE = null;
-		if (d.attributes.encrypted) {
-			attrE = (
-				<Tooltip tip="Encrypted" position="top">
-					<Icon icon={iconEncrypted} className="icon" />
-				</Tooltip>
-			);
-		}
-
-		return (
-			<>
-				{attrC}
-				{attrE}
-			</>
-		);
-	}
+	useEffect(() => {
+		updateFiles(archive);
+	}, [
+		archive,
+	]);
 
 	function onExtract(d, i) {
 		const blobContent = new Blob([d.getContent()]);
 		saveAs(blobContent, d.name, { type: d.type || 'application/octet-stream' });
 	}
 
-	function onReplace(d, i) {
+	function onReplaceAvailable(index, newFile) {
+		setImportVisible(false);
+		if (newFile.error) {
+			setErrorPopup(`Error reading file: ${newFile.error}`);
+			return;
+		}
+
+		let f = archive.files[index];
+		f.getContent = () => newFile.content;
+		f.diskSize = f.nativeSize = newFile.content.length;
+
 		updateFiles(archive);
+		props.setUnsavedChanges(true);
 	}
 
+	// Make the rename text box visible.
 	function onRename(d, i) {
 		setIdxRename(i);
 		setRenameNewName(d.name);
@@ -122,15 +138,24 @@ function Archive() {
 	function onDelete(d, i) {
 		archive.files.splice(i, 1);
 		updateFiles(archive);
+		props.setUnsavedChanges(true);
 	}
 
-	function onInsertBefore(d, i) {
+	function onInsertBeforeAvailable(index, newFile) {
+		setImportVisible(false);
+
+		if (newFile.error) {
+			setErrorPopup(`Error reading file: ${newFile.error}`);
+			return;
+		}
+
 		let f = new File();
-		f.name = 'todo';
-		f.diskSize = f.nativeSize = 0;
-		f.getContent = () => null;
-		archive.files.splice(i, 0, f);
+		f.name = newFile.name;
+		f.diskSize = f.nativeSize = newFile.content.length;
+		f.getContent = () => newFile.content;
+		archive.files.splice(index, 0, f);
 		updateFiles(archive);
+		props.setUnsavedChanges(true);
 	}
 
 	function renderName(d, i) {
@@ -143,8 +168,11 @@ function Archive() {
 					onChange={ev => setRenameNewName(ev.target.value)}
 					size="small"
 					onBlur={ev => {
-						archive.files[i].name = ev.target.value;
-						updateFiles(archive);
+						if (archive.files[i].name !== ev.target.value) {
+							archive.files[i].name = ev.target.value;
+							updateFiles(archive);
+							props.setUnsavedChanges(true);
+						}
 						setIdxRename(null);
 					}}
 					onKeyDown={ev => {
@@ -157,87 +185,101 @@ function Archive() {
 			);
 		}
 		return (
-			<span onClick={() => onRename(d, i)}>
+			<div className="filename" onClick={() => onRename(d, i)}>
 				{d.name}
-			</span>
+			</div>
 		);
+	}
+
+	function onSave() {
+		try {
+			props.cbSave(archive);
+			props.setUnsavedChanges(false);
+		} catch (e) {
+			console.error(e);
+			setErrorPopup('Unable to generate the archive file.  The reason given '
+				+ 'for the failure is: ' + e.message);
+			return;
+		}
 	}
 
 	function renderActions(d, i) {
 		return (
-			<span className="hover actions">
-				<span className="action" onClick={() => onExtract(d, i)}>
+			<span className="hover toolbar">
+
+				<button className="text" onClick={() => onExtract(d, i)}>
 					<Icon icon={iconExtract} className="icon" />
 					Extract
-				</span>
-				<span className="action" onClick={() => onReplace(d, i)}>
-					<Icon icon={iconReplace} className="icon" />
-					Replace
-				</span>
-				<span className="action" onClick={() => onRename(d, i)}>
+				</button>
+
+				<HiddenUpload
+					visible={importVisible}
+					onChange={newFile => onReplaceAvailable(i, newFile)}
+				>
+					<button className="text">
+						<Icon icon={iconReplace} className="icon" />
+						Replace
+					</button>
+				</HiddenUpload>
+
+				<button className="text" onClick={() => onRename(d, i)}>
 					<Icon icon={iconRename} className="icon" />
 					Rename
-				</span>
-				<span className="action" onClick={() => onDelete(d, i)}>
+				</button>
+
+				<button className="text" onClick={() => onDelete(d, i)}>
 					<Icon icon={iconDelete} className="icon" />
 					Delete
-				</span>
-				<Tooltip tip="Add a new file before this one">
-					<span className="action" onClick={() => onInsertBefore(d, i)}>
+				</button>
+
+				<HiddenUpload
+					visible={importVisible}
+					onChange={newFile => onInsertBeforeAvailable(i, newFile)}
+				>
+					<button className="text">
 						<Icon icon={iconInsertBefore} className="icon" />
-						Insert before
-					</span>
-				</Tooltip>
+						Insert
+						<Tooltip>
+							Add a new file before this one
+						</Tooltip>
+					</button>
+				</HiddenUpload>
 			</span>
 		);
 	}
 
 	return (
-		<div className="root">
+		<>
 			<div className="toolbar">
-				<Button type="secondary" onClick={() => setArchive(null)}>
-					<Icon icon={iconFolderOpen} className="icon" />
-					Open new archive
-				</Button>
-
-				<Button type="primary" onClick={() => setSaveVisible(true)}>
-					<Icon icon={iconSave} className="icon" />
-					Save
-				</Button>
-
-				<span className="flex-spacer" />
-
-				<Button onClick={() => history.push('/')}>
-					<Icon icon={iconClose} className="icon" />
-					Close
-				</Button>
-
+				<button onClick={onSave}>
+					<Tooltip>
+						Download archive with any modifications.
+					</Tooltip>
+					<Icon icon={iconSave} />
+				</button>
 			</div>
-			<Table
-				className="fileList"
-				keygen={d => `${d.index}.${d.name}`}
-				data={archiveFiles}
-				columns={[
-					{render: d => (
-						<Icon icon={iconFile} className="icon" />
-					)},
-					{title: 'Filename', render: renderName},
-					{title: 'Size', render: d => humanFileSize(d.nativeSize)},
-					{title: 'Attributes', render: renderAttributes},
-					{title: 'Actions', render: renderActions},
-				]}
-			/>
-			{saveVisible && (
-				<SaveFile
-					category="archive"
-					document={archive}
-					title="Save archive"
-					defaultFormat={archiveFormat}
-					originalFilenames={originalFilenames}
-					onClose={() => setSaveVisible(false)}
-				/>
-			)}
-		</div>
+			<div className="archive content-container">
+				<div className="content">
+					<Table
+						className="camoto"
+						keygen={d => `${d.index}.${d.name}`}
+						data={archiveFiles}
+						columns={[
+							{
+								render: d => (
+									<Icon icon={iconFile} className="icon alone" />
+								),
+								...COL_ATTR_ICON,
+							},
+							{title: 'Filename', render: renderName},
+							{title: 'Size', render: d => humanFileSize(d.nativeSize)},
+							...attributeColumns,
+							{title: 'Actions', render: renderActions},
+						]}
+					/>
+				</div>
+			</div>
+		</>
 	);
 }
 

@@ -1,38 +1,57 @@
-.toolbar {
-  padding: 1em;
-  background-color: #eee;
+/* Make the main document pane take up all available space */
+.document .archive {
+	flex-grow: 1;
+	height: 100%; /* Limit to screen height so we get scroll bars */
+	display: flex;
 }
 
-.fileList {
-  margin: 1em;
-}
-
-.toolbar {
-  display: flex;
-}
-
-.separator {
-  flex-grow: 1;
-}
-
-.exit {
-  margin-top: 2px;
-  font-size: 150%;
+.document .archive .content table,
+.document .archive .content {
+	background-color: white;
 }
 
 table tr .hover {
-  visibility: hidden;
+	visibility: hidden;
 }
 
 table tr:hover .hover {
-  visibility: visible;
+	visibility: visible;
 }
 
-.action {
-  margin-left: 2em;
-  cursor: pointer;
+/* Normal filename */
+.document .archive .filename {
+	margin: 2px;
 }
 
-table input {
-  height: 90%;
+/* Renaming filename */
+.document .archive input {
+	padding: 2px;
+	margin: 0;
+	height: 90%;
+	border: none;
+	box-shadow:
+		inset -1px -1px var(--button-highlight),
+		inset 1px 1px var(--button-shadow),
+		inset -2px -2px var(--button-face),
+		inset 2px 2px var(--window-frame)
+	;
+}
+.document .archive input:focus {
+	/* Disable blue focused outline */
+	outline: none;
+	border: none;
+}
+
+/* Disable the lines on each table row */
+.document .archive table td {
+	border: none;
+}
+
+/* Override the toolbar */
+.document .archive table .toolbar {
+	background-color: inherit;
+	box-shadow: none;
+}
+.document .archive table .toolbar button {
+	background-color: inherit;
 }

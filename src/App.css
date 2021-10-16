@@ -34,6 +34,10 @@ body, #root {
 	margin-right: 6px;
 	margin-bottom: -1px;
 }
+/* Icons without text next to them, that should be centred */
+.icon.alone {
+	margin-right: 0;
+}
 
 /* Large icons and the text next to it in modal popups */
 .largeIconText .icon {
@@ -74,6 +78,11 @@ body, #root {
 	padding: 0 4px;
 	width: 28px;
 	height: 28px;
+	cursor: pointer;
+}
+
+.toolbar button.text {
+	width: auto;
 }
 
 .toolbar button:not(:disabled):hover {
@@ -83,6 +92,7 @@ body, #root {
 .toolbar button:not(:disabled):active {
 	box-shadow: var(--border-single-sunken);
 	padding: 2px 0 0 2px;
+	margin-right: 6px;
 }
 
 .toolbar button.hold {
@@ -204,6 +214,7 @@ div.so-table.camoto thead th {
 	background-color: var(--surface);
 	color: black;
 	box-shadow: var(--border-raised-outer), var(--border-raised-inner);
+	cursor: default;
 }
 
 div.so-table.camoto .so-table-head table {
