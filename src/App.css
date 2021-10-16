@@ -84,6 +84,9 @@ body, #root {
 .toolbar button.text {
 	width: auto;
 }
+.toolbar button.text:not(:disabled):active {
+	margin-right: 6px;
+}
 
 .toolbar button:not(:disabled):hover {
 	box-shadow: var(--border-single-raised);
@@ -92,7 +95,6 @@ body, #root {
 .toolbar button:not(:disabled):active {
 	box-shadow: var(--border-single-sunken);
 	padding: 2px 0 0 2px;
-	margin-right: 6px;
 }
 
 .toolbar button.hold {
