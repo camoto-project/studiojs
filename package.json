@@ -20,8 +20,8 @@
   },
   "homepage": "https://github.com/camoto-project/studiojs#readme",
   "dependencies": {
-    "@camoto/gamearchive": "^4.4.0",
-    "@camoto/gamecomp": "^4.2.0",
+    "@camoto/gamearchive": "^4.5.0",
+    "@camoto/gamecomp": "^4.5.1",
     "@camoto/gamegraphics": "^2.4.0",
     "@camoto/gameinfo": "^0.2.0",
     "@camoto/gamemusic": "^2.0.3",
