@@ -105,7 +105,8 @@ function Archive(props) {
 	const [ errorPopup, setErrorPopup ] = useState(null);
 	const [ warnings, setWarnings ] = useState([]);
 
-	const [ archiveFiles, setArchiveFiles ] = useState([]);
+	const [ archiveFiles, setArchiveFiles ] = useState(null);
+
 	const [ idxRename, setIdxRename ] = useState(null);
 	const [ renameNewName, setRenameNewName ] = useState(null);
 	const [ saveVisible, setSaveVisible ] = useState(false);
@@ -269,6 +270,8 @@ function Archive(props) {
 		);
 	}
 
+	const loading = (archiveFiles === null) || (archiveFiles === undefined);
+
 	return (
 		<>
 			<div className="toolbar">
@@ -284,7 +287,8 @@ function Archive(props) {
 					<Table
 						className="camoto"
 						keygen={d => `${d.index}.${d.name}`}
-						data={archiveFiles}
+						loading={loading}
+						data={archiveFiles || []}
 						columns={[
 							{
 								render: d => (
