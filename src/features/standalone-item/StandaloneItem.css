@@ -3,3 +3,7 @@
 	flex-direction: column;
 	height: 100%;
 }
+
+.filename .icon {
+	margin-left: 0.75ex;
+}

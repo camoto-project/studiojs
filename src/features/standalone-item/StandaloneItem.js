@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
 	HashRouter as Router,
 	Prompt,
@@ -9,10 +9,26 @@ import {
 	useRouteMatch,
 } from 'react-router-dom';
 
+import {
+	Icon,
+	iconArchive,
+	iconAttributes,
+	iconAudio,
+	iconB800,
+	iconClose,
+	iconImage,
+	iconInstruments,
+	iconMap,
+	iconMenu,
+	iconMusic,
+	iconPalette,
+} from '../../util/icons.js';
+
 import Document from '../Document.js';
 import ErrorBox from '../../components/ErrorBox.js';
 import MessageBox from '../../components/MessageBox.js';
 import Storage from '../../util/storage.js';
+import Tooltip from '../../components/Tooltip.js';
 import setPageTitle from '../../util/setPageTitle.js';
 import useUnload from '../../util/useUnload.js';
 
@@ -145,6 +161,15 @@ function StandaloneItem(props) {
 		docFilename,
 	]);
 
+	// Work out which icon to show in the top left.
+	const itemIcon = useMemo(() => (
+		{
+			'archive': iconArchive,
+			'music': iconMusic,
+		}[openInstance.item.type]
+	), [
+		openInstance,
+	]);
 	/*
 	const saveDocumentPrefs = useCallback(async (type, key, value) => {
 		// Update the state, which will pass the prefs down to the document through
@@ -192,6 +217,24 @@ function StandaloneItem(props) {
 
 	return (
 		<div className="root">
+			<div className="toolbar">
+
+				<span className="filename">
+					<Icon icon={itemIcon} className="icon" />
+					{docFilename}
+				</span>
+
+				<span className="flex-spacer" />
+
+				<button onClick={() => history.push('/')}>
+					<Tooltip>
+						Close this item and return to the main menu
+					</Tooltip>
+					<Icon icon={iconClose} />
+				</button>
+
+			</div>
+
 			<Prompt
 				when={unsavedChanges}
 				message={onNavigatePrompt}
