@@ -38,6 +38,7 @@ import {
 import MessageBox from '../../components/MessageBox.js';
 import OpenFile from '../OpenFile.js';
 import Storage from '../../util/storage.js';
+import setPageTitle from '../../util/setPageTitle.js';
 
 function OpenItem(props) {
 	const history = useHistory();
@@ -85,6 +86,7 @@ function OpenItem(props) {
 		}
 	}
 
+	setPageTitle();
 	return (
 		<>
 			<OpenFile

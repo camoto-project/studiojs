@@ -13,6 +13,7 @@ import ErrorBox from '../../components/ErrorBox.js';
 import ModSelector from './ModSelector.js';
 import NewMod from './NewMod.js';
 import Storage from '../../util/storage.js';
+import setPageTitle from '../../util/setPageTitle.js';
 
 import './OpenGame.css';
 
@@ -74,6 +75,7 @@ function OpenGame(props) {
 		&& (newMod.files && (newMod.files.length > 0))
 	);
 
+	setPageTitle();
 	return (
 		<div className="mainCard">
 			<Card>

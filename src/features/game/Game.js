@@ -56,6 +56,7 @@ import SaveGame from './SaveGame.js';
 import Storage from '../../util/storage.js';
 import ToolbarItemModInfo from './ToolbarItemModInfo.js';
 import Tooltip from '../../components/Tooltip.js';
+import setPageTitle from '../../util/setPageTitle.js';
 import useUnload from '../../util/useUnload.js';
 
 import './Game.css';
@@ -64,6 +65,9 @@ function Game(props) {
 	const history = useHistory();
 
 	const [ mod, setMod ] = useState(null);
+
+	// Browser window/tab title.
+	const [ docTitle, setDocTitle ] = useState(null);
 
 	// The list of game items to pass to <Document/>.  Must be null initially,
 	// otherwise <Document/> will briefly render an error saying the document ID
@@ -171,6 +175,17 @@ function Game(props) {
 		loadMod();
 	}, [
 		props.idMod,
+	]);
+
+	// Sync the browser window/tab title with the open mod and document.
+	useEffect(() => {
+		setPageTitle({
+			docTitle: docTitle,
+			modTitle: mod && mod.title,
+		});
+	}, [
+		mod,
+		docTitle,
 	]);
 
 	function onItemClick(d) {
@@ -370,6 +385,7 @@ function Game(props) {
 								setUnsavedChanges={setUnsavedChanges}
 								setSaving={setSaving}
 								savePrefs={saveDocumentPrefs}
+								setDocTitle={setDocTitle}
 							/>
 						</Route>
 					</Switch>

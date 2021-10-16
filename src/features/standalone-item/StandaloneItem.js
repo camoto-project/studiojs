@@ -13,6 +13,7 @@ import Document from '../Document.js';
 import ErrorBox from '../../components/ErrorBox.js';
 import MessageBox from '../../components/MessageBox.js';
 import Storage from '../../util/storage.js';
+import setPageTitle from '../../util/setPageTitle.js';
 import useUnload from '../../util/useUnload.js';
 
 import './StandaloneItem.css';
@@ -84,6 +85,9 @@ function StandaloneItem(props) {
 	// so we know to prompt before loading a different item.
 	const [ unsavedChanges, setUnsavedChanges ] = useState(false);
 
+	// Filename of open document, for display in the heading.
+	const [ docFilename, setDocFilename ] = useState('');
+
 	const [ openInstance, setOpenInstance ] = useState({
 		item: {
 			type: undefined,
@@ -108,6 +112,7 @@ function StandaloneItem(props) {
 					return;
 				}
 				const mod = await Storage.getMod(idItemKey);
+				setDocFilename(mod.mainFilename);
 				const fs = Storage.filesystemForMod(idItemKey);
 				if (!mod) {
 					setErrorMessage(`Unable to open item: ID "${idItemKey}" does not exist in this browser's local storage area.`);
@@ -129,6 +134,15 @@ function StandaloneItem(props) {
 		loadMod();
 	}, [
 		idItemKey,
+	]);
+
+	// Update the browser page/tab title to include this document name.
+	useEffect(() => {
+		setPageTitle({
+			docTitle: docFilename,
+		});
+	}, [
+		docFilename,
 	]);
 
 	/*

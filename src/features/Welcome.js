@@ -10,9 +10,11 @@ import iconMusic from '@iconify/icons-fa-solid/music';
 import iconEdit from '@iconify/icons-fa-solid/edit';
 import iconArchive from '@iconify/icons-fa-solid/archive';
 
+import setPageTitle from '../util/setPageTitle.js';
 import './Welcome.css';
 
 function Welcome() {
+	setPageTitle();
 	return (
 		<div className="mainCard welcome">
 			<Card style={{ width: 600 }}>
