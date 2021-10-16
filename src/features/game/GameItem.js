@@ -22,7 +22,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Suspense, lazy, useCallback, useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
 	useParams,
 } from 'react-router-dom';
@@ -40,7 +40,7 @@ function GameItem(props) {
 	const {
 		cbSaveMod: props_cbSaveMod,
 		gameItems: props_gameItems,
-		savePrefs: props_savePrefs,
+		setDocTitle: props_setDocTitle,
 		setSaving: props_setSaving,
 	} = props;
 
@@ -147,9 +147,10 @@ function GameItem(props) {
 	// Update the browser page/tab title to include this document name.
 	useEffect(() => {
 		const item = props_gameItems && props_gameItems[idDocument];
-		props.setDocTitle(item && item.title);
+		props_setDocTitle(item && item.title);
 	}, [
 		props_gameItems,
+		props_setDocTitle,
 		idDocument,
 	]);
 

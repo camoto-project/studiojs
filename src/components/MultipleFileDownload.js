@@ -20,6 +20,7 @@ function SaveGame(props) {
 
 	const {
 		downloads: props_downloads,
+		onClose: props_onClose,
 	} = props;
 
 	const onDownload = useCallback((filename, content) => {
@@ -29,13 +30,17 @@ function SaveGame(props) {
 			...downloadsComplete,
 			[filename]: true,
 		});
-	});
+	}, [
+		downloadsComplete,
+	]);
 
 	const onClose = useCallback(() => {
 		setDownloadsComplete({});
 
-		props.onClose();
-	});
+		props_onClose();
+	}, [
+		props_onClose,
+	]);
 
 	useMemo(() => {
 		let dlc = {};

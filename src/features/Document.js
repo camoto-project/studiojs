@@ -1,7 +1,25 @@
-import React, { Suspense, lazy, useCallback, useState, useMemo } from 'react';
-import {
-	useParams,
-} from 'react-router-dom';
+/*
+ * Camoto Studio Online - Document
+ *
+ * UI wrapper around each editor.
+ *
+ * Copyright (C) 2010-2021 Adam Nielsen <malvineous@shikadi.net>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import React, { Suspense, lazy, useCallback } from 'react';
 
 import ErrorBox from '../components/ErrorBox.js';
 import Initial from './initial/Initial.js';
@@ -17,36 +35,31 @@ const Music = lazy(() => import('./music/Music.js'));
 const Palette = lazy(() => import('./palette/Palette.js'));
 
 function Document(props) {
-	const { idDocument } = useParams();
-
 	// Keep useMemo() and useCallback() happy.
 	const {
-		cbSaveMod: props_cbSaveMod,
-		gameItems: props_gameItems,
 		savePrefs: props_savePrefs,
-		setSaving: props_setSaving,
 	} = props;
-	const type = props.item.type;
+	const props_item_type = props.item.type;
 
 	// Save the user's preferences for the current editor to IndexedDB.
 	const savePrefs = useCallback((key, value) => {
 		// This will update props.mod.
-		props_savePrefs(type, key, value);
+		props_savePrefs(props_item_type, key, value);
 	}, [
 		props_savePrefs,
-		type,
+		props_item_type,
 	]);
 
 	const childProps = {
 		mod: props.mod,
 		setUnsavedChanges: props.setUnsavedChanges,
 		savePrefs,
-		prefs: (props.mod && props.mod.prefs && props.mod.prefs[type]) || {},
+		prefs: (props.mod && props.mod.prefs && props.mod.prefs[props_item_type]) || {},
 		...props,
 	};
 
 	let element;
-	switch (type) {
+	switch (props_item_type) {
 		case undefined:
 			// No game loaded yet.
 			element = null;
@@ -94,7 +107,7 @@ function Document(props) {
 
 		default:
 			element = (
-				<ErrorBox summary={`Unknown document type "${type}"`}>
+				<ErrorBox summary={`Unknown document type "${props_item_type}"`}>
 					<p>
 						Editing items of this type is not yet implemented.
 					</p>

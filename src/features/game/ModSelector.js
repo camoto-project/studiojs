@@ -78,7 +78,7 @@ function ModSelector(props) {
 		event.stopPropagation(); // prevent mod from being opened
 		setDeleteInProgress(false);
 		setModToDelete(mod); // confirm with user
-	});
+	}, []);
 
 	const performDelete = useCallback(async () => {
 		try {
@@ -91,7 +91,10 @@ function ModSelector(props) {
 		} catch (e) {
 			setErrorMessage('Delete failed: ' + e.message);
 		}
-	});
+	}, [
+		mods,
+		modToDelete,
+	]);
 
 	let jsxMods;
 	if (mods) {
@@ -109,12 +112,12 @@ function ModSelector(props) {
 							title: 'Name',
 							render: d => (
 								<div className="modItem">
-									{d.idEditor && (
+									{(d.idEditor && (
 										<>
 											<Icon icon={getIconFromEditorId(d.idEditor)} className="icon" />
 											{d.mainFilename || '(no filename)'}
 										</>
-									) || (
+									)) || (
 										<>
 											<img src={`/game-icons/${d.idGame}.png`} alt="" className="icon" />
 											{d.title || 'Untitled'}
@@ -170,7 +173,7 @@ function ModSelector(props) {
 				okText="Delete"
 				buttonTypeOK="danger"
 			>
-				{modToDelete && modToDelete.standalone && (
+				{(modToDelete && modToDelete.standalone && (
 					<>
 						<p>
 							Are you sure you want to delete
@@ -182,7 +185,7 @@ function ModSelector(props) {
 							file before deleting it.
 						</p>
 					</>
-				) || (
+				)) || (
 					<>
 						<p>
 							Are you sure you want to delete the mod
@@ -197,13 +200,13 @@ function ModSelector(props) {
 			</MessageBox>
 
 			<div className="postH3">
-				{errorMessage && (
+				{(errorMessage && (
 					<ErrorBox summary={`Error`}>
 						<p>
 							{errorMessage}
 						</p>
 					</ErrorBox>
-				) || jsxMods}
+				)) || jsxMods}
 			</div>
 
 		</div>

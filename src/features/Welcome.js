@@ -46,7 +46,9 @@ function Welcome() {
 		} else {
 			history.push(`/game/${mod.id}`);
 		}
-	});
+	}, [
+		history,
+	]);
 
 	setPageTitle();
 

@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-import {
-	Button,
-	Modal,
-	Spin,
-} from 'shineout';
-import { Icon } from '@iconify/react';
-import iconDownload from '@iconify/icons-fa-solid/download';
-
-import { saveAs } from 'file-saver';
-
 import MultipleFileDownload from '../../components/MultipleFileDownload.js';
 
 function SaveGame(props) {

@@ -25,13 +25,11 @@ import { useHistory } from 'react-router-dom';
 import {
 	Button,
 	Card,
-	Divider,
 } from 'shineout';
 import { Icon } from '@iconify/react';
 import iconEdit from '@iconify/icons-fa-solid/edit';
 
 import ErrorBox from '../../components/ErrorBox.js';
-import ModSelector from './ModSelector.js';
 import NewMod from './NewMod.js';
 import Storage from '../../util/storage.js';
 import setPageTitle from '../../util/setPageTitle.js';
@@ -63,20 +61,13 @@ function OpenGame(props) {
 		}, storedFiles);
 
 		return idNewMod;
-	});
-
-	const onModChange = useCallback(mod => {
-		// Open the mod as soon as it's selected.
-		if (mod.standalone) {
-			history.push(`/item/${mod.id}`);
-		} else {
-			history.push(`/game/${mod.id}`);
-		}
-	});
+	}, []);
 
 	const onCancel = useCallback(() => {
 		history.push('/');
-	});
+	}, [
+		history,
+	]);
 
 	const onOpen = useCallback(async () => {
 		setErrorMessage(null);
@@ -91,7 +82,11 @@ function OpenGame(props) {
 				+ "IndexedDB storage area.  The reason given was: " + e.message);
 			return;
 		}
-	});
+	}, [
+		createNewMod,
+		history,
+		newMod,
+	]);
 
 	// Only enable the 'new' (open) button if a game has been selected as well
 	// as files chosen.

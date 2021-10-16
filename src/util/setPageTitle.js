@@ -22,8 +22,8 @@
 function setPageTitle(info)
 {
 	document.title =
-		(info && info.docTitle || '') + (info && info.docTitle ? ' - ' : '')
-		+ (info && info.modTitle || '') + (info && info.modTitle ? ' - ' : '')
+		((info && info.docTitle) || '') + ((info && info.docTitle) ? ' - ' : '')
+		+ ((info && info.modTitle) || '') + ((info && info.modTitle) ? ' - ' : '')
 		+ 'Camoto'
 	;
 }

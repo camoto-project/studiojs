@@ -22,18 +22,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
 	useHistory,
 	useParams,
-	useRouteMatch,
 } from 'react-router-dom';
-
-import {
-	Button,
-	Table,
-	Tooltip,
-} from 'shineout';
 
 import MessageBox from '../../components/MessageBox.js';
 import OpenFile from '../OpenFile.js';
@@ -42,11 +35,9 @@ import setPageTitle from '../../util/setPageTitle.js';
 
 function OpenItem(props) {
 	const history = useHistory();
-	const match = useRouteMatch();
 	const { idEditor } = useParams();
 
 	const [ errorPopup, setErrorPopup ] = useState(null);
-	const [ newMod, setNewMod ] = useState({});
 
 	// Create a new "mod" for this item.
 	async function createNewMod(newMod) {

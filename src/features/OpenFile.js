@@ -75,7 +75,7 @@ function OpenFile(props) {
 			const { name, content } = file[0];
 			files[name] = content;
 		}
-		for (const [idSupp, s] of Object.entries(supps)) {
+		for (const s of Object.values(supps)) {
 			const { name, content } = s.virtualUpload[0];
 			files[name] = content;
 		}

@@ -23,34 +23,19 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-	HashRouter as Router,
 	Prompt,
-	Route,
-	Switch,
 	useHistory,
 	useParams,
-	useRouteMatch,
 } from 'react-router-dom';
 
 import {
 	Icon,
-	iconArchive,
-	iconAttributes,
-	iconAudio,
-	iconB800,
 	iconClose,
-	iconImage,
-	iconInstruments,
-	iconMap,
-	iconMenu,
-	iconMusic,
-	iconPalette,
 	getIconFromEditorId,
 } from '../../util/icons.js';
 
 import Document from '../Document.js';
 import ErrorBox from '../../components/ErrorBox.js';
-import MessageBox from '../../components/MessageBox.js';
 import MultipleFileDownload from '../../components/MultipleFileDownload.js';
 import Storage from '../../util/storage.js';
 import Tooltip from '../../components/Tooltip.js';
@@ -61,12 +46,10 @@ import './StandaloneItem.css';
 
 import {
 	all as gamemusicFormats,
-	findHandler as gamemusicFindHandler,
 } from '@camoto/gamemusic';
 
 import {
 	all as gamearchiveFormats,
-	findHandler as gamearchiveFindHandler,
 } from '@camoto/gamearchive';
 
 const allFormats = {
@@ -149,7 +132,6 @@ async function openItem({ idEditor, idFormat, mainFilename }, fs) {
 
 function StandaloneItem(props) {
 	const history = useHistory();
-	const match = useRouteMatch();
 	const { idItem } = useParams();
 	const idItemKey = +idItem; // must be integer for IndexedDB key
 
@@ -159,9 +141,6 @@ function StandaloneItem(props) {
 	const [ downloads, setDownloads ] = useState();
 	const [ saveErrorMessage, setSaveErrorMessage ] = useState(null);
 	const [ warnings, setWarnings ] = useState([]);
-
-	// Are we currently waiting for a save-to-IndexedDB operation to complete?
-	const [ saving, setSaving ] = useState(false);
 
 	// Document children components set this to true when they are first modified,
 	// so we know to prompt before loading a different item.
@@ -290,7 +269,7 @@ function StandaloneItem(props) {
 	const onSaveClose = useCallback(() => {
 		setDownloads(null);
 		setSaveErrorMessage(null);
-	});
+	}, []);
 
 	// TODO: useCallback?
 	function saveDocumentPrefs() {
@@ -321,7 +300,7 @@ function StandaloneItem(props) {
 				message={onNavigatePrompt}
 			/>
 
-			{errorMessage && (
+			{(errorMessage && (
 				<ErrorBox
 					summary={`Error`}
 				>
@@ -329,11 +308,11 @@ function StandaloneItem(props) {
 						{errorMessage}
 					</p>
 				</ErrorBox>
-			) || /* Only display the document when there's no error message */ (
+			)) || /* Only display the document when there's no error message */ (
 				<Document
 					cbSave={onSave}
 					setUnsavedChanges={setUnsavedChanges}
-					setSaving={setSaving}
+					setSaving={() => {}}
 					savePrefs={saveDocumentPrefs}
 					setErrorMessage={setErrorMessage}
 					{...openInstance}

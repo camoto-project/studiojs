@@ -19,32 +19,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
-	Button,
 	Table,
 } from 'shineout';
+
 import Tooltip from '../../components/Tooltip.js';
-import { Icon } from '@iconify/react';
-import iconCompressed from '@iconify/icons-fa-solid/file-archive';
-import iconEncrypted from '@iconify/icons-fa-solid/key';
-import iconFile from '@iconify/icons-fa-solid/file';
-import iconFolderOpen from '@iconify/icons-fa-solid/folder-open';
-import iconSave from '@iconify/icons-fa-solid/download';
-import iconClose from '@iconify/icons-fa-solid/times';
-import iconExtract from '@iconify/icons-fa-solid/file-export';
-import iconReplace from '@iconify/icons-fa-solid/file-import';
-import iconRename from '@iconify/icons-fa-solid/edit';
-import iconDelete from '@iconify/icons-fa-solid/trash-alt';
-import iconInsertBefore from '@iconify/icons-fa-solid/level-up-alt';
+import {
+	Icon,
+	iconCompressed,
+	iconDelete,
+	iconEncrypted,
+	iconExtract,
+	iconFile,
+	iconInsertBefore,
+	iconRename,
+	iconReplace,
+	iconSave,
+} from '../../util/icons.js';
 
 import { saveAs } from 'file-saver';
 import { File } from '@camoto/gamearchive';
 
 import HiddenUpload from '../../components/HiddenUpload.js';
-import SaveFile from '../SaveFile.js';
+import MessageBox from '../../components/MessageBox.js';
 
 import './Archive.css';
 
@@ -98,18 +97,23 @@ const attributeColumns = [0, 1].map(i => (
 	}
 ));
 
-function Archive(props) {
-	const history = useHistory();
+function onExtract(d, i) {
+	const blobContent = new Blob([d.getContent()]);
+	saveAs(blobContent, d.name, { type: d.type || 'application/octet-stream' });
+}
 
-	const [ archive, setArchive ] = useState(props.document);
+function Archive(props) {
+	const {
+		setUnsavedChanges: props_setUnsavedChanges,
+	} = props;
+
+	const [ archive ] = useState(props.document);
 	const [ errorPopup, setErrorPopup ] = useState(null);
-	const [ warnings, setWarnings ] = useState([]);
 
 	const [ archiveFiles, setArchiveFiles ] = useState(null);
 
 	const [ idxRename, setIdxRename ] = useState(null);
 	const [ renameNewName, setRenameNewName ] = useState(null);
-	const [ saveVisible, setSaveVisible ] = useState(false);
 
 	// True if the browse dialog is visible for file replacement.
 	const [ importVisible, setImportVisible ] = useState(false);
@@ -123,20 +127,16 @@ function Archive(props) {
 
 	const updateFiles = useCallback(arch => {
 		setArchiveFiles(arch.files.map((f, i) => ({index: i, ...f})));
-	});
+	}, []);
 
 	useEffect(() => {
 		updateFiles(archive);
 	}, [
 		archive,
+		updateFiles,
 	]);
 
-	function onExtract(d, i) {
-		const blobContent = new Blob([d.getContent()]);
-		saveAs(blobContent, d.name, { type: d.type || 'application/octet-stream' });
-	}
-
-	function onReplaceAvailable(index, newFile) {
+	const onReplaceAvailable = useCallback((index, newFile) => {
 		setImportVisible(false);
 		if (newFile.error) {
 			setErrorPopup(`Error reading file: ${newFile.error}`);
@@ -148,22 +148,30 @@ function Archive(props) {
 		f.diskSize = f.nativeSize = newFile.content.length;
 
 		updateFiles(archive);
-		props.setUnsavedChanges(true);
-	}
+		props_setUnsavedChanges(true);
+	}, [
+		archive,
+		updateFiles,
+		props_setUnsavedChanges,
+	]);
 
 	// Make the rename text box visible.
-	function onRename(d, i) {
+	const onRename = useCallback((d, i) => {
 		setIdxRename(i);
 		setRenameNewName(d.name);
-	}
+	}, []);
 
-	function onDelete(d, i) {
+	const onDelete = useCallback((d, i) => {
 		archive.files.splice(i, 1);
 		updateFiles(archive);
-		props.setUnsavedChanges(true);
-	}
+		props_setUnsavedChanges(true);
+	}, [
+		archive,
+		updateFiles,
+		props_setUnsavedChanges,
+	]);
 
-	function onInsertBeforeAvailable(index, newFile) {
+	const onInsertBeforeAvailable = useCallback((index, newFile) => {
 		setImportVisible(false);
 
 		if (newFile.error) {
@@ -177,10 +185,14 @@ function Archive(props) {
 		f.getContent = () => newFile.content;
 		archive.files.splice(index, 0, f);
 		updateFiles(archive);
-		props.setUnsavedChanges(true);
-	}
+		props_setUnsavedChanges(true);
+	}, [
+		archive,
+		updateFiles,
+		props_setUnsavedChanges,
+	]);
 
-	function renderName(d, i) {
+	const renderName = useCallback((d, i) => {
 		if (idxRename === i) {
 			return (
 				<input
@@ -193,7 +205,7 @@ function Archive(props) {
 						if (archive.files[i].name !== ev.target.value) {
 							archive.files[i].name = ev.target.value;
 							updateFiles(archive);
-							props.setUnsavedChanges(true);
+							props_setUnsavedChanges(true);
 						}
 						setIdxRename(null);
 					}}
@@ -211,7 +223,14 @@ function Archive(props) {
 				{d.name}
 			</div>
 		);
-	}
+	}, [
+		elRename,
+		idxRename,
+		renameNewName,
+		archive,
+		updateFiles,
+		props_setUnsavedChanges,
+	]);
 
 	function onSave() {
 		try {
@@ -304,6 +323,18 @@ function Archive(props) {
 					/>
 				</div>
 			</div>
+			<MessageBox
+				icon="error"
+				visible={errorPopup !== null}
+				onClose={() => setErrorPopup(null)}
+			>
+				<p>
+					{errorPopup}
+				</p>
+				<small>
+					A stack trace may be available in the browser console.
+				</small>
+			</MessageBox>
 		</>
 	);
 }
