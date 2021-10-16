@@ -4,11 +4,12 @@ import { Link as RRLink } from 'react-router-dom';
 import {
 	Card,
 } from 'shineout';
-
-import { Icon } from '@iconify/react';
-import iconMusic from '@iconify/icons-fa-solid/music';
-import iconEdit from '@iconify/icons-fa-solid/edit';
-import iconArchive from '@iconify/icons-fa-solid/archive';
+import {
+	Icon,
+	iconArchive,
+	iconEdit,
+	iconMusic,
+} from '../util/icons.js';
 
 import setPageTitle from '../util/setPageTitle.js';
 import './Welcome.css';

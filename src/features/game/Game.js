@@ -34,21 +34,23 @@ import {
 	Spin,
 	Tree,
 } from 'shineout';
-import { Icon } from '@iconify/react';
-import iconAudio from '@iconify/icons-fa-solid/volume-down';
-import iconAttributes from '@iconify/icons-fa-solid/list-alt';
-import iconB800 from '@iconify/icons-fa-solid/th';
-import iconClose from '@iconify/icons-fa-solid/times';
-import iconDelete from '@iconify/icons-fa-solid/trash-alt';
-import iconFile from '@iconify/icons-fa-solid/file';
-import iconFolder from '@iconify/icons-fa-solid/folder';
-import iconImage from '@iconify/icons-fa-solid/image';
-import iconInstruments from '@iconify/icons-fa-solid/drum';
-import iconMap from '@iconify/icons-fa-solid/drafting-compass';
-import iconMenu from '@iconify/icons-fa-solid/bars';
-import iconMusic from '@iconify/icons-fa-solid/music';
-import iconPalette from '@iconify/icons-fa-solid/palette';
-import iconSave from '@iconify/icons-fa-solid/download';
+import {
+	Icon,
+	iconAttributes,
+	iconAudio,
+	iconB800,
+	iconClose,
+	iconDelete,
+	iconFile,
+	iconFolder,
+	iconImage,
+	iconInstruments,
+	iconMap,
+	iconMenu,
+	iconMusic,
+	iconPalette,
+	iconSave,
+} from '../../util/icons.js';
 
 import GameItem from './GameItem.js';
 import MessageBox from '../../components/MessageBox.js';
