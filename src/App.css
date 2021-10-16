@@ -54,8 +54,28 @@ body, #root {
 	font-weight: bold;
 }
 
+.so-card-footer {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
 .so-form p {
 	margin-bottom: 1.5em;
+}
+
+.so-form-control {
+	width: 20em;
+}
+
+.so-upload-view-value {
+	padding-left: 0;
+}
+
+.openDialog {
+	display: flex;
+	justify-content: center;
+	padding-top: 15%;
 }
 
 /* Toolbars */

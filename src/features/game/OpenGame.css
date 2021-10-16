@@ -3,26 +3,6 @@
 	--table-selected-row-bg: #c0ffb0;
 }
 
-.so-form-control {
-	width: 20em;
-}
-
-.so-upload-view-value {
-	padding-left: 0;
-}
-
-.so-card-footer {
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-}
-
-.openDialog {
-	display: flex;
-	justify-content: center;
-	padding-top: 15%;
-}
-
 div.postH3 {
 	margin-left: 1em;
 }
