@@ -185,7 +185,7 @@ function Archive(props) {
 			);
 		}
 		return (
-			<div className="filename" onClick={() => onRename(d, i)}>
+			<div className="filename" onClick={() => onExtract(d, i)}>
 				{d.name}
 			</div>
 		);

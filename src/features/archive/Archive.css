@@ -21,6 +21,7 @@ table tr:hover .hover {
 /* Normal filename */
 .document .archive .filename {
 	margin: 2px;
+	cursor: pointer;
 }
 
 /* Renaming filename */
