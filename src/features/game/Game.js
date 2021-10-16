@@ -302,9 +302,6 @@ function Game(props) {
 					icon="error"
 					onClose={() => history.push('/')}
 					onOK={() => history.push('/')}
-			xxokIcon={iconDelete}
-			xxokText="Discard"
-			xxbuttonTypeOK="danger"
 				>
 					<p>
 						This game could not be opened due to an unrecoverable error:

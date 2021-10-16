@@ -2,8 +2,8 @@
  * Camoto Studio Online - OpenFile
  *
  * Allow the user to select a file from disk supported by one of the game*.js
- * libraries, request any supplementary files, then open it and obtain an
- * instance to the supported object, such as `Archive` or `Music`.
+ * libraries, request any supplementary files, then pass the file content and
+ * details to a callback function, like in ./standalone-item/OpenItem.js.
  *
  * Copyright (C) 2010-2021 Adam Nielsen <malvineous@shikadi.net>
  *
