@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
 	HashRouter as Router,
 	Prompt,
@@ -27,6 +27,7 @@ import {
 import Document from '../Document.js';
 import ErrorBox from '../../components/ErrorBox.js';
 import MessageBox from '../../components/MessageBox.js';
+import MultipleFileDownload from '../../components/MultipleFileDownload.js';
 import Storage from '../../util/storage.js';
 import Tooltip from '../../components/Tooltip.js';
 import setPageTitle from '../../util/setPageTitle.js';
@@ -48,6 +49,23 @@ const allFormats = {
 	music: gamemusicFormats,
 	archive: gamearchiveFormats,
 };
+
+// Take the return value from a game*.js generation function, and use the
+// supp() call to figure out what the filename is for each file.
+function contentToFiles(content, handler, mainFilename) {
+	let result = {};
+	const supps = handler.supps(mainFilename);
+	for (const [id, data] of Object.entries(content)) {
+		let filename;
+		if (id === 'main') {
+			filename = mainFilename;
+		} else {
+			filename = (supps && supps[id]) || id;
+		}
+		result[filename] = data;
+	}
+	return result;
+}
 
 async function openItem({ idEditor, idFormat, mainFilename }, fs) {
 	const catFormats = allFormats[idEditor];
@@ -73,11 +91,31 @@ async function openItem({ idEditor, idFormat, mainFilename }, fs) {
 
 	switch (idEditor) {
 		case 'archive': {
-			return handler.parse(content, mainFilename);
+			const cbGenerateFiles = archive => {
+				const content = handler.generate(archive);
+				return {
+					files: contentToFiles(content, handler, mainFilename),
+					warnings: [],
+				};
+			};
+			return {
+				instance: handler.parse(content, mainFilename),
+				cbGenerateFiles,
+			};
 		}
 
 		case 'music': {
-			return handler.parse(content, mainFilename);
+			const cbGenerateFiles = music => {
+				const output = handler.generate(music);
+				return {
+					files: contentToFiles(output.content, handler, mainFilename),
+					warnings: output.warnings,
+				};
+			};
+			return {
+				instance: handler.parse(content, mainFilename),
+				cbGenerateFiles,
+			};
 		}
 
 		default:
@@ -91,8 +129,12 @@ function StandaloneItem(props) {
 	const { idItem } = useParams();
 	const idItemKey = +idItem; // must be integer for IndexedDB key
 
-	//const [ item, setItem ] = useState(null);
+	// Error message to display instead of content area.
 	const [ errorMessage, setErrorMessage ] = useState(null);
+
+	const [ downloads, setDownloads ] = useState();
+	const [ saveErrorMessage, setSaveErrorMessage ] = useState(null);
+	const [ warnings, setWarnings ] = useState([]);
 
 	// Are we currently waiting for a save-to-IndexedDB operation to complete?
 	const [ saving, setSaving ] = useState(false);
@@ -135,12 +177,12 @@ function StandaloneItem(props) {
 					return;
 				}
 				const item = await openItem(mod, fs);
-				console.log('opened item', item);
 				setOpenInstance({
 					item: {
 						type: mod.idEditor,
 					},
-					document: item,
+					document: item.instance,
+					cbGenerateFiles: item.cbGenerateFiles,
 				});
 			} catch (e) {
 				console.error(e);
@@ -208,9 +250,27 @@ function StandaloneItem(props) {
 		return proceed;
 	}
 
-	// TODO: useCallback?
-	function onSave() {
-	}
+	const onSave = useCallback(async updatedDocument => {
+		const output = openInstance.cbGenerateFiles(updatedDocument);
+		if (!output.files) {
+			setSaveErrorMessage('Something went wrong - no files were generated!  This should not happen!');
+		} else {
+			setDownloads(output.files || {});
+			setWarnings(output.warnings);
+			// Also save back to browser storage so changes won't be lost if the page
+			// gets reloaded.
+			await Storage.setFiles(idItemKey, output.files);
+		}
+	}, [
+		idItemKey,
+		openInstance,
+	]);
+
+	const onSaveClose = useCallback(() => {
+		setDownloads(null);
+		setSaveErrorMessage(null);
+	});
+
 	// TODO: useCallback?
 	function saveDocumentPrefs() {
 	}
@@ -239,20 +299,39 @@ function StandaloneItem(props) {
 				when={unsavedChanges}
 				message={onNavigatePrompt}
 			/>
+
 			{errorMessage && (
-				<ErrorBox summary={`Error`}>
+				<ErrorBox
+					summary={`Error`}
+				>
 					<p>
 						{errorMessage}
 					</p>
 				</ErrorBox>
+			) || /* Only display the document when there's no error message */ (
+				<Document
+					cbSave={onSave}
+					setUnsavedChanges={setUnsavedChanges}
+					setSaving={setSaving}
+					savePrefs={saveDocumentPrefs}
+					setErrorMessage={setErrorMessage}
+					{...openInstance}
+				/>
 			)}
-			<Document
-				cbSaveMod={onSave}
-				setUnsavedChanges={setUnsavedChanges}
-				setSaving={setSaving}
-				savePrefs={saveDocumentPrefs}
-				{...openInstance}
-			/>
+
+			<MultipleFileDownload
+				visible={!!downloads || saveErrorMessage}
+				title="Save"
+				onClose={onSaveClose}
+				unsavedChanges={props.unsavedChanges}
+				warnings={warnings || []}
+				errorMessage={saveErrorMessage}
+				downloads={downloads || {}}
+			>
+				<p>
+					Download these files to save your changes.
+				</p>
+			</MultipleFileDownload>
 		</div>
 	);
 }

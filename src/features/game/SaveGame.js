@@ -10,23 +10,12 @@ import iconDownload from '@iconify/icons-fa-solid/download';
 
 import { saveAs } from 'file-saver';
 
-import ErrorBox from '../../components/ErrorBox.js';
-import Tip from '../../components/Tip.js';
+import MultipleFileDownload from '../../components/MultipleFileDownload.js';
 
 function SaveGame(props) {
 	const [ downloads, setDownloads ] = useState({});
-	const [ downloadsComplete, setDownloadsComplete ] = useState({});
 	const [ errorMessage, setErrorMessage ] = useState(null);
 	const [ warnings, setWarnings ] = useState([]);
-
-	function onDownload(filename, content) {
-		const blobContent = new Blob([content]);
-		saveAs(blobContent, filename.toLowerCase(), { type: 'application/octet-stream' });
-		setDownloadsComplete({
-			...downloadsComplete,
-			[filename]: true,
-		});
-	}
 
 	useEffect(() => {
 		if (!props.visible) {
@@ -37,6 +26,7 @@ function SaveGame(props) {
 
 		async function regenerateGame() {
 			setDownloads({});
+			setErrorMessage(null);
 
 			let output, preflight;
 			try {
@@ -53,12 +43,6 @@ function SaveGame(props) {
 				...preflight.map(pf => pf.detail) || [],
 				...warnings || [],
 			]);
-
-			let dlc = {};
-			for (const filename of Object.keys(files)) {
-				dlc[filename] = false;
-			}
-			setDownloadsComplete(dlc);
 		}
 		regenerateGame();
 	}, [
@@ -70,33 +54,19 @@ function SaveGame(props) {
 		// Erase the downloads first, otherwise they are still visible (instead of
 		// the 'loading' animation) when the dialog appears a second time.
 		setDownloads({});
-		setDownloadsComplete({});
 
 		props.onClose();
 	}
 
-	// The close button is primary only if all downloads are complete.
-	const closeButtonPrimary = !Object.values(downloadsComplete).includes(false);
-
-	const downloadEntries = Object.entries(downloads);
-
 	return (
-		<Modal
+		<MultipleFileDownload
 			visible={props.visible}
-			width={600}
-			title={props.title || 'Save game'}
-			onClose={props.onClose}
-			footer={(
-				<>
-					<span className="flex-spacer"/>
-					<Button
-						onClick={onClose}
-						type={closeButtonPrimary ? 'primary' : 'default'}
-					>
-						Done
-					</Button>
-				</>
-			)}
+			title="Save game"
+			onClose={onClose}
+			unsavedChanges={props.unsavedChanges}
+			errorMessage={errorMessage}
+			warnings={warnings}
+			downloads={downloads}
 		>
 			<p>
 				Download these files to save your modifications to the game.  You can
@@ -104,66 +74,7 @@ function SaveGame(props) {
 				game files, to create an independent copy of the mod (or if you want to
 				transfer the mod to Camoto running on a different device).
 			</p>
-
-			<ErrorBox
-				summary={`Error`}
-				style={{display: errorMessage === null ? 'none' : 'block' }}
-			>
-				<p>
-					{errorMessage}
-				</p>
-			</ErrorBox>
-
-			<div style={{display: warnings.length ? 'block' : 'none' }}>
-				<Tip icon="warning">
-					<p>
-						The following issues were found while saving this game.  You should
-						address these issues and save again.
-					</p>
-					<ul>
-						{warnings.map((warning, index) => (
-							<li key={index}>
-								{warning}
-							</li>
-						))}
-					</ul>
-					<p>
-						You can save anyway but you may get incomplete or incorrect data
-						saved if one of the above messages is warning you of this.
-					</p>
-				</Tip>
-			</div>
-
-			<h4>Files to download</h4>
-
-			{props.unsavedChanges && (
-				<Tip icon="warning">
-					<p>
-						You have unsaved changes in the item currently open.  These changes
-						won't be included in the files below!
-					</p>
-				</Tip>
-			)}
-
-			<div style={{marginLeft: '1em'}}>
-				{(downloadEntries.length === 0) && (errorMessage === null) && (
-					<Spin name="four-dots" />
-				)}
-				{downloadEntries.map(([filename, content]) => (
-					<div key={filename}>
-						<Button
-							onClick={() => onDownload(filename, content)}
-							type={downloadsComplete[filename] ? 'default' : 'primary'}
-							style={{marginBottom: '1ex'}}
-						>
-							<Icon icon={iconDownload} className="icon" />
-							{(filename && filename.toLowerCase()) || 'Download'}
-						</Button>
-					</div>
-				))}
-			</div>
-
-		</Modal>
+		</MultipleFileDownload>
 	);
 }
 
