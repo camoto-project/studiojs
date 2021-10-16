@@ -29,8 +29,8 @@ function Frame(props) {
 
 	useEffect(() => {
 		// Abort early in the render when we don't have enough data yet.
-		if (!props.frames) return [];
-		if (!refCanvas.current) return [];
+		if (!props.frames) return;
+		if (!refCanvas.current) return;
 
 		const canvas = refCanvas.current;
 		const ctx = canvas.getContext('2d');
@@ -42,9 +42,8 @@ function Frame(props) {
 			const frameWidth = (frame.width === undefined) ? props.imgWidth : frame.width;
 			const frameHeight = (frame.height === undefined) ? props.imgHeight : frame.height;
 
-			// If the image is 0x0 just create a dummy 1x1 to avoid an exception.
 			if ((frameWidth === 0) || (frameHeight === 0)) {
-				return ctx.createImageData(1, 1);
+				return;
 			}
 
 			const pal = props.palette;
