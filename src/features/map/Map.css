@@ -1,3 +1,11 @@
+/* Make the main document pane take up all available space */
+.document .map {
+	flex-grow: 1;
+	height: 100%; /* Limit to screen height so we get scroll bars */
+	display: flex;
+	flex-direction: column;
+}
+
 /* Checkerbox background for transparent images
  * From: https://stackoverflow.com/a/65887831/308237
  */
@@ -20,4 +28,9 @@
 .content canvas {
 	image-rendering: pixelated;   /* Chrome */
 	image-rendering: crisp-edges; /* Firefox */
+}
+
+.layer-list th.colID,
+.layer-list td.colID {
+	width: 2em;
 }

@@ -20,6 +20,8 @@ import MessageBox from '../../components/MessageBox.js';
 import Tooltip from '../../components/Tooltip.js';
 import WarningListModal from '../../components/WarningListModal.js';
 
+import LayerList from './LayerList.js';
+import TileSelector from './TileSelector.js';
 import drawLayer2DTiled from './drawLayer2DTiled.js';
 import drawLayer2DList from './drawLayer2DList.js';
 
@@ -102,21 +104,7 @@ function Map(props) {
 
 		const render = () => {
 			frameCount++;
-			/*
-			if (props.animation.length > 0) {
-				frameCount = (frameCount + 1) % props.animation.length;
-				const frameInfo = props.animation[frameCount];
-				draw(ctx, frameInfo.index);
-				if (props.frames.length > 1) {
-					timerId = setTimeout(() => {
-						animationFrameId = window.requestAnimationFrame(render);
-					}, frameInfo.postDelay || 1000);
-				}
-			} else {
-				// Non-animation.
-*/
-				draw(ctx, frameCount);
-//			}
+			draw(ctx, frameCount);
 
 			if (map.animationDelay) {
 				timerId = setTimeout(() => {
@@ -155,12 +143,22 @@ function Map(props) {
 				</button>
 
 			</div>
-			<div className="content">
-				<canvas
-					ref={refCanvas}
-					width={mapSize.x}
-					height={mapSize.y}
-					style={{width: mapSize.x * zoom, height: mapSize.y * zoom}}
+			<div className="map">
+				<div className="layers content-container">
+					<div className="content">
+						<canvas
+							ref={refCanvas}
+							width={mapSize.x}
+							height={mapSize.y}
+							style={{width: mapSize.x * zoom, height: mapSize.y * zoom}}
+						/>
+					</div>
+				</div>
+				<TileSelector
+					zoom={zoom}
+				/>
+				<LayerList
+					map={map}
 				/>
 			</div>
 			<MessageBox
