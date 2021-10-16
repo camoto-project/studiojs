@@ -1,3 +1,26 @@
+/*
+ * Camoto Studio Online - OpenFile
+ *
+ * Allow the user to select a file from disk supported by one of the game*.js
+ * libraries, request any supplementary files, then open it and obtain an
+ * instance to the supported object, such as `Archive` or `Music`.
+ *
+ * Copyright (C) 2010-2021 Adam Nielsen <malvineous@shikadi.net>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import React, { useState } from 'react';
 
 import {
@@ -47,46 +70,22 @@ function OpenFile(props) {
 
 	// User opened the file
 	function onOpen() {
-		setErrorMessage(null);
-		if (!file) {
-			setErrorMessage(`File doesn't seem to have been loaded?`);
-			return;
+		let files = {};
+		{
+			const { name, content } = file[0];
+			files[name] = content;
 		}
-
-		const handler = catFormats.find(h => h.metadata().id === chosenFormat);
-		if (!handler) {
-			setErrorMessage(`Somehow selected a file handler ("${chosenFormat}") that doesn't exist!`);
-			return;
-		}
-
-		let content = {
-			main: file[0].content,
-		};
-		content.main.filename = file[0].name;
-		// Keep the filenames separately for when we need to save the files later.
-		let originalFilenames = {
-			main: file[0].name,
-		};
-
 		for (const [idSupp, s] of Object.entries(supps)) {
-			content[idSupp] = s.virtualUpload[0].content;
-			content[idSupp].filename = s.virtualUpload[0].name;
-			originalFilenames[idSupp] = s.virtualUpload[0].name;
+			const { name, content } = s.virtualUpload[0];
+			files[name] = content;
 		}
-		switch (props.category) {
-			case 'archive':
-				try {
-					const archive = handler.parse(content);
-					props.onOpen(archive, chosenFormat, originalFilenames);
-				} catch (e) {
-					setErrorMessage(e.message);
-				}
-				break;
 
-			default:
-				setErrorMessage(`Unable to open files of type "${props.category}".`);
-				break;
-		}
+		props.onOpen({
+			idEditor: props.category,
+			idFormat: chosenFormat,
+			mainFilename: file[0].name,
+			files,
+		});
 	}
 
 	// User supplied a main file to use.
