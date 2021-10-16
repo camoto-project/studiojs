@@ -67,8 +67,12 @@ function OpenGame(props) {
 
 	function onModChange(mod) {
 		// Open the mod as soon as it's selected.
-		history.push(`/game/${mod}`);
-	}
+		if (mod.standalone) {
+			history.push(`/item/${mod.id}`);
+		} else {
+			history.push(`/game/${mod.id}`);
+		}
+	});
 
 	function onCancel() {
 		history.push('/');
@@ -98,24 +102,12 @@ function OpenGame(props) {
 
 	setPageTitle();
 	return (
-		<div className="mainCard">
+		<div className="mainCard openGame">
 			<Card>
 				<Card.Header>
 					Get started
 				</Card.Header>
 				<Card.Body>
-					<h3>
-						Resume work on a previous mod
-					</h3>
-					<div className="postH3">
-						<ModSelector
-							visible={true}
-							onModChange={onModChange}
-						/>
-					</div>
-
-					<Divider />
-
 					<h3>
 						Start a new mod
 					</h3>

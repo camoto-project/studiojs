@@ -28,7 +28,7 @@ div.postH3 {
 }
 
 /* Make the form labels appear above instead of to the left. */
-.so-form-item {
+.openGame .so-form-item {
 	flex-direction: column;
 }
 

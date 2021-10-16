@@ -19,8 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
-import { Link as RRLink } from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { Link as RRLink, useHistory } from 'react-router-dom';
 
 import {
 	Card,
@@ -32,11 +32,24 @@ import {
 	iconMusic,
 } from '../util/icons.js';
 
+import ModSelector from './game/ModSelector.js';
 import setPageTitle from '../util/setPageTitle.js';
 import './Welcome.css';
 
 function Welcome() {
+	const history = useHistory();
+
+	const onModChange = useCallback(mod => {
+		// Open the mod as soon as it's selected.
+		if (mod.standalone) {
+			history.push(`/item/${mod.id}`);
+		} else {
+			history.push(`/game/${mod.id}`);
+		}
+	});
+
 	setPageTitle();
+
 	return (
 		<div className="mainCard welcome">
 			<Card style={{ width: 600 }}>
@@ -66,6 +79,27 @@ function Welcome() {
 								<Icon icon={iconArchive} className="icon" />
 								Examine an archive file
 							</RRLink>
+						</li>
+						<li>
+							<ModSelector
+								visible={true}
+								includeMods={false}
+								includeStandalone={true}
+								limit={3}
+								onModChange={onModChange}
+								heading="Recently opened items"
+								hideOnEmpty={true}
+							/>
+						</li>
+						<li>
+							<ModSelector
+								visible={true}
+								includeMods={true}
+								includeStandalone={false}
+								onModChange={onModChange}
+								heading="Resume work on a previous mod"
+								hideOnEmpty={true}
+							/>
 						</li>
 					</ul>
 				</Card.Body>

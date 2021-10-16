@@ -19,14 +19,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import {
 	Table,
 	Spin,
 } from 'shineout';
-import { Icon } from '@iconify/react';
-import iconDelete from '@iconify/icons-fa-solid/trash-alt';
+import {
+	Icon,
+	iconDelete,
+	getIconFromEditorId,
+} from '../../util/icons.js';
 
 import Storage from '../../util/storage.js';
 import ErrorBox from '../../components/ErrorBox.js';
@@ -40,26 +43,44 @@ function ModSelector(props) {
 	const [ modToDelete, setModToDelete ] = useState(null);
 	const [ deleteInProgress, setDeleteInProgress ] = useState(false);
 
+	const {
+		includeMods: props_includeMods,
+		includeStandalone: props_includeStandalone,
+	} = props;
+
 	useEffect(() => {
 		async function populateMods() {
 			setErrorMessage(null);
+			setMods(null);
+			let loadedMods;
 			try {
-				setMods(await Storage.getMods());
+				loadedMods = await Storage.getMods();
 			} catch (e) {
 				console.error(e);
 				setErrorMessage('Unable to load mod list: ' + e.message);
 			}
+			if (loadedMods && ((!props_includeMods) || (!props_includeStandalone))) {
+				// Have to filter out some mods.
+				loadedMods = loadedMods.filter(m => (
+					(props_includeMods && !m.standalone)
+					|| (props_includeStandalone && m.idEditor/*m.standalone*/)
+				));
+			}
+			setMods(loadedMods);
 		}
 		populateMods();
-	}, []);
+	}, [
+		props_includeMods,
+		props_includeStandalone,
+	]);
 
-	function deleteMod(mod, event) {
+	const deleteMod = useCallback((mod, event) => {
 		event.stopPropagation(); // prevent mod from being opened
 		setDeleteInProgress(false);
 		setModToDelete(mod); // confirm with user
-	}
+	});
 
-	async function performDelete() {
+	const performDelete = useCallback(async () => {
 		try {
 			setDeleteInProgress(true);
 			await Storage.deleteMod(modToDelete.id);
@@ -70,7 +91,7 @@ function ModSelector(props) {
 		} catch (e) {
 			setErrorMessage('Delete failed: ' + e.message);
 		}
-	}
+	});
 
 	let jsxMods;
 	if (mods) {
@@ -79,7 +100,7 @@ function ModSelector(props) {
 				<Table
 					style={{maxHeight: '25em'}}
 					fixed="y"
-					data={mods}
+					data={props.limit ? mods.slice(0, props.limit) : mods}
 					keygen="id"
 					format="id"
 					columns={[
@@ -87,8 +108,17 @@ function ModSelector(props) {
 							title: 'Name',
 							render: d => (
 								<div className="modItem">
-									<img src={`/game-icons/${d.idGame}.png`} alt="" className="icon" />
-									{d.title || 'Untitled'}
+									{d.idEditor && (
+										<>
+											<Icon icon={getIconFromEditorId(d.idEditor)} className="icon" />
+											{d.mainFilename || '(no filename)'}
+										</>
+									) || (
+										<>
+											<img src={`/game-icons/${d.idGame}.png`} alt="" className="icon" />
+											{d.title || 'Untitled'}
+										</>
+									)}
 									<span className="modActions">
 										<span className="deleteAction" onClick={ev => deleteMod(d, ev)}>
 											<Icon icon={iconDelete} />
@@ -100,14 +130,18 @@ function ModSelector(props) {
 					]}
 					hover={false}
 					radio
-					onRowClick={d => props.onModChange(d.id)}
+					onRowClick={d => props.onModChange(d)}
 					value={props.value}
 				/>
 			);
 		} else {
+			if (props.hideOnEmpty) {
+				// No mods, caller doesn't want anything visible.
+				return null;
+			}
 			jsxMods = (
 				<p>
-					No existing mods found.  Create a new mod below.
+					No existing mods found.
 				</p>
 			);
 		}
@@ -120,13 +154,9 @@ function ModSelector(props) {
 			className="previousMod"
 			style={{display: props.visible ? 'block' : 'none'}}
 		>
-			{errorMessage && (
-				<ErrorBox summary={`Error`}>
-					<p>
-						{errorMessage}
-					</p>
-				</ErrorBox>
-			)}
+			<h3>
+				{props.heading}
+			</h3>
 
 			<MessageBox
 				visible={!!modToDelete}
@@ -139,17 +169,42 @@ function ModSelector(props) {
 				okText="Delete"
 				buttonTypeOK="danger"
 			>
-				<p>
-					Are you sure you want to delete the mod
-					&quot;{modToDelete && modToDelete.title}&quot;?
-				</p>
-				<p>
-					This cannot be undone.  Make sure you have downloaded/saved your mod
-					before deleting it, just in case.
-				</p>
+				{modToDelete && modToDelete.standalone && (
+					<>
+						<p>
+							Are you sure you want to delete
+							&quot;{modToDelete.mainFilename || '(no filename)'}&quot; from the
+							browser cache?  Any files you have downloaded won't be affected.
+						</p>
+						<p>
+							This cannot be undone.  Make sure you have downloaded/saved this
+							file before deleting it.
+						</p>
+					</>
+				) || (
+					<>
+						<p>
+							Are you sure you want to delete the mod
+							&quot;{(modToDelete && modToDelete.title) || 'Untitled'}&quot;?
+						</p>
+						<p>
+							This cannot be undone.  Make sure you have downloaded/saved your
+							mod before deleting it, just in case.
+						</p>
+					</>
+				)}
 			</MessageBox>
 
-			{jsxMods}
+			<div className="postH3">
+				{errorMessage && (
+					<ErrorBox summary={`Error`}>
+						<p>
+							{errorMessage}
+						</p>
+					</ErrorBox>
+				) || jsxMods}
+			</div>
+
 		</div>
 	);
 }

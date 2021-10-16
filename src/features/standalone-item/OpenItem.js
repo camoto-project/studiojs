@@ -52,23 +52,12 @@ function OpenItem(props) {
 	async function createNewMod(newMod) {
 		console.log('createNewMod', newMod);
 		const files = newMod.files;
-		//delete newMod.files;
 		const idNewMod = await Storage.addMod({
+			standalone: true,
 			...newMod,
 			dateCreated: new Date(),
 		}, files);
 
-		/*
-		let storedFiles = {};
-		for (const f of newMod.files) {
-			storedFiles[f.name] = f.content;
-		}
-
-		const idNewMod = await Storage.addMod({
-			idEditor: idEditor,
-			dateCreated: new Date(),
-		}, storedFiles);
-		*/
 		return idNewMod;
 	}
 

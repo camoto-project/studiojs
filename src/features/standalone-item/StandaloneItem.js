@@ -45,6 +45,7 @@ import {
 	iconMenu,
 	iconMusic,
 	iconPalette,
+	getIconFromEditorId,
 } from '../../util/icons.js';
 
 import Document from '../Document.js';
@@ -228,10 +229,7 @@ function StandaloneItem(props) {
 
 	// Work out which icon to show in the top left.
 	const itemIcon = useMemo(() => (
-		{
-			'archive': iconArchive,
-			'music': iconMusic,
-		}[openInstance.item.type]
+		getIconFromEditorId(openInstance.item.type)
 	), [
 		openInstance,
 	]);
