@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -45,7 +45,7 @@ function OpenGame(props) {
 	const [ errorMessage, setErrorMessage ] = useState(null);
 
 	// Create a new mod.
-	async function createNewMod(newMod) {
+	const createNewMod = useCallback(async (newMod) => {
 		if (!newMod.idGame) {
 			console.error('Bad new-mod data:', newMod);
 			throw new Error('Missing game ID.');
@@ -63,9 +63,9 @@ function OpenGame(props) {
 		}, storedFiles);
 
 		return idNewMod;
-	}
+	});
 
-	function onModChange(mod) {
+	const onModChange = useCallback(mod => {
 		// Open the mod as soon as it's selected.
 		if (mod.standalone) {
 			history.push(`/item/${mod.id}`);
@@ -74,11 +74,11 @@ function OpenGame(props) {
 		}
 	});
 
-	function onCancel() {
+	const onCancel = useCallback(() => {
 		history.push('/');
-	}
+	});
 
-	async function onOpen() {
+	const onOpen = useCallback(async () => {
 		setErrorMessage(null);
 		try {
 			const idTargetMod = await createNewMod(newMod);
@@ -91,7 +91,7 @@ function OpenGame(props) {
 				+ "IndexedDB storage area.  The reason given was: " + e.message);
 			return;
 		}
-	}
+	});
 
 	// Only enable the 'new' (open) button if a game has been selected as well
 	// as files chosen.

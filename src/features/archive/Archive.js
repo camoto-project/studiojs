@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -120,9 +120,9 @@ function Archive(props) {
 		if (elRename && elRename.current) elRename.current.focus();
 	});
 
-	function updateFiles(arch) {
+	const updateFiles = useCallback(arch => {
 		setArchiveFiles(arch.files.map((f, i) => ({index: i, ...f})));
-	}
+	});
 
 	useEffect(() => {
 		updateFiles(archive);
