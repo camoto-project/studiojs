@@ -32,13 +32,13 @@ function Welcome() {
 							</RRLink>
 						</li>
 						<li>
-							<RRLink to="/music">
+							<RRLink to="/open/music">
 								<Icon icon={iconMusic} className="icon" />
 								Convert a music file
 							</RRLink>
 						</li>
 						<li>
-							<RRLink to="/archive">
+							<RRLink to="/open/archive">
 								<Icon icon={iconArchive} className="icon" />
 								Examine an archive file
 							</RRLink>

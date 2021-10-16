@@ -25,8 +25,7 @@ table input {
 	height: 90%;
 }
 
-.game,
-.game .document {
+.game {
 	flex-grow: 1;
 	overflow: hidden;
 	display: flex;
@@ -61,42 +60,6 @@ table input {
 .game .itemList .so-tree-content .disabled {
 	color: #ccc;
 	cursor: not-allowed;
-}
-
-/* Document */
-.game .document {
-	flex-direction: column;
-	display: flex;
-xmax-height: 90%;
-	overflow: hidden;
-}
-
-/* Necessary to ensure the sunken border remains on screen and doesn't get
-   cropped or scrolled. */
-.content-container {
-	overflow: hidden;
-}
-
-/* Give it a sunken border */
-.content-container {
-	/* Only give enough padding so the content doesn't overwrite the sunken border */
-	padding: 2px;
-	margin: 1px;
-	box-shadow:
-		inset -1px -1px var(--button-highlight),
-		inset 1px 1px var(--button-shadow),
-		inset -2px -2px var(--button-face),
-		inset 2px 2px var(--window-frame)
-	;
-}
-
-.document .content {
-	flex-grow: 1;
-	overflow: auto;
-	width: 100%;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
 }
 
 /* Dialogs */

@@ -7,6 +7,8 @@ import ErrorBox from '../components/ErrorBox.js';
 import Initial from './initial/Initial.js';
 import Loading from './Loading.js';
 
+import './Document.css';
+
 const Archive = lazy(() => import('./archive/Archive.js'));
 const Attributes = lazy(() => import('./attributes/Attributes.js'));
 const Image = lazy(() => import('./image/Image.js'));
