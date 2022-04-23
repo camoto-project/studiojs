@@ -34,6 +34,7 @@ import {
 	frameFromTileset,
 	tilesetFromFrame,
 	img_png,
+	img_gif_89a,
 } from '@camoto/gamegraphics';
 import { saveAs } from 'file-saver';
 
@@ -193,13 +194,26 @@ function Image(props) {
 			setErrorPopup(`Tried to export invalid image index ${targetImage}.`);
 			return;
 		}
+
+		let outputHandler, fileExtension;
 		if (animationAllowed && img.animation && animation) {
-			setErrorPopup('Sorry, exporting animated images is not implemented yet!  '
-				+ 'Use the toolbar button to turn the animations off before exporting.');
+			// Write an animated GIF.
+			outputHandler = img_gif_89a;
+			fileExtension = 'gif';
+		} else {
+			// Write a single frame as PNG.
+			outputHandler = img_png;
+			fileExtension = 'png';
+		}
+
+		let output;
+		try {
+			output = outputHandler.write(img);
+			setWarnings(output.warnings);
+		} catch (e) {
+			setErrorPopup(`Error exporting image: ${e.message}`);
 			return;
 		}
-		const output = img_png.write(img);
-		setWarnings(output.warnings);
 
 		const blobContent = new Blob([output.content.main]);
 		const targetFilename = (
@@ -208,7 +222,8 @@ function Image(props) {
 			+ props.item.id
 			+ '.img'
 			+ targetImage
-			+ '.png'
+			+ '.'
+			+ fileExtension
 		);
 		saveAs(blobContent, targetFilename, { type: 'application/octet-stream' });
 	}
